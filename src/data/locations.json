@@ -1,0 +1,74 @@
+{
+  "popularLocations": {
+    "eyebrow": "NEIGHBORHOODS",
+    "heading": "Popular Locations in Chennai",
+    "viewAllText": "View all areas",
+    "viewAllHref": "/rooms",
+    "locations": [
+      {
+        "id": "1",
+        "name": "Ramapuram",
+        "price": "₹10,500/mo",
+        "image": "/images/rooms/room_single.png",
+        "href": "/locations/ramapuram"
+      },
+      {
+        "id": "2",
+        "name": "Madanandapuram",
+        "price": "₹10,500/mo",
+        "image": "/images/rooms/room_deluxe.png",
+        "href": "/locations/madanandapuram"
+      },
+      {
+        "id": "3",
+        "name": "Madanandapuram",
+        "price": "₹9,000/mo",
+        "image": "/images/rooms/room_comfort.png",
+        "href": "/locations/madanandapuram"
+      }
+    ]
+  },
+  "everythingYouNeed": {
+    "eyebrow": "OUR AMENITIES",
+    "heading": "Everything you Need, Close By",
+    "description": "Located near IT parks, colleges, metro stations, healthcare, and dining options.",
+    "features": [
+      {
+        "id": "1",
+        "title": "Metro Stations",
+        "description": "easy access to major metro lines",
+        "icon": "/images/locations/metrostation.png"
+      },
+      {
+        "id": "2",
+        "title": "IT parks",
+        "description": "easy access to major metro lines",
+        "icon": "/images/locations/ITparks.png"
+      },
+      {
+        "id": "3",
+        "title": "Colleges",
+        "description": "easy access to major metro lines",
+        "icon": "/images/locations/colleges.png"
+      },
+      {
+        "id": "4",
+        "title": "Healthcare",
+        "description": "easy access to major metro lines",
+        "icon": "/images/locations/healthcare.png"
+      },
+      {
+        "id": "5",
+        "title": "Supermarket",
+        "description": "easy access to major metro lines",
+        "icon": "/images/locations/shoppingcart.png"
+      },
+      {
+        "id": "6",
+        "title": "Food and Dining",
+        "description": "easy access to major metro lines",
+        "icon": "/images/locations/foodAndDinning.png"
+      }
+    ]
+  }
+}

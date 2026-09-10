@@ -1,0 +1,166 @@
+{
+  "hero": {
+    "titleLine1": "Designed For Modern",
+    "titleLine2": "Women",
+    "titleAccent": "Home",
+    "description": "Experience safe, comfortable, and affordable living in the heart of Chennai. Designed exclusively for modern women who seek a perfect blend of privacy and community.",
+    "primaryCtaText": "Explore Rooms",
+    "primaryCtaHref": "/rooms",
+    "secondaryCtaText": "View Locations",
+    "secondaryCtaHref": "#explore-locations",
+    "heroImage": "/images/home/homeHero.png"
+  },
+  "exploreLocations": {
+    "title": "Explore Our PG Locations",
+    "locations": [
+      {
+        "id": "1",
+        "name": "Ramapuram",
+        "price": "₹8,500/mo",
+        "image": "/images/rooms/room_single.png",
+        "href": "/rooms?location=Ramapuram"
+      },
+      {
+        "id": "2",
+        "name": "Madanandapuram",
+        "price": "₹7,200/mo",
+        "image": "/images/rooms/room_deluxe.png",
+        "href": "/rooms?location=Madanandapuram"
+      },
+      {
+        "id": "3",
+        "name": "Madanandapuram",
+        "price": "₹9,000/mo",
+        "image": "/images/rooms/room_sharing.png",
+        "href": "/rooms?location=Madanandapuram"
+      }
+    ]
+  },
+  "amenities": {
+    "eyebrow": "Our Amenities",
+    "heading": "Everything You Need for Comfortable Living",
+    "items": [
+      {
+        "id": "wifi",
+        "title": "High Speed Wi-Fi",
+        "icon": "/images/home/Wifi.png",
+        "description": "Seamless connectivity for work and leisure."
+      },
+      {
+        "id": "ac",
+        "title": "Air Conditioner",
+        "icon": "/images/home/AirConditioner.png",
+        "description": "Climate controlled rooms for ultimate comfort."
+      },
+      {
+        "id": "food",
+        "title": "Homely Food",
+        "icon": "/images/home/HomelyFood.png",
+        "description": "Nutritious and delicious meals daily."
+      },
+      {
+        "id": "geyser",
+        "title": "Geyser",
+        "icon": "/images/home/Geyzer.png",
+        "description": "24/7 hot water supply in all bathrooms."
+      },
+      {
+        "id": "cctv",
+        "title": "CCTV Camera",
+        "icon": "/images/home/Camera.png",
+        "description": "Round-the-clock surveillance for your safety."
+      },
+      {
+        "id": "caretaker",
+        "title": "Caretaker",
+        "icon": "/images/home/Caretaker.png",
+        "description": "Dedicated staff available on premise."
+      },
+      {
+        "id": "digital-locker",
+        "title": "Digital Locker",
+        "icon": "/images/home/DigitalLocker.png",
+        "description": "Secure personal storage in every room."
+      },
+      {
+        "id": "kitchen",
+        "title": "Kitchen Access",
+        "icon": "/images/home/Kitchen.png",
+        "description": "Self-cooking area equipped with essentials."
+      },
+      {
+        "id": "laundry",
+        "title": "Laundry Zones",
+        "icon": "/images/home/LaundryZones.png",
+        "description": "Automatic washing machine facilities."
+      },
+      {
+        "id": "parking",
+        "title": "Parking Space",
+        "icon": "/images/home/ParkingSign.png",
+        "description": "Secure parking for two-wheelers."
+      },
+      {
+        "id": "power-backup",
+        "title": "Power Backup",
+        "icon": "/images/home/PowerBackup.png",
+        "description": "Uninterrupted power supply 24/7."
+      },
+      {
+        "id": "fire-safety",
+        "title": "Fire Safety",
+        "icon": "/images/home/FireSafety.png",
+        "description": "Equipped with safety extinguishers and alarms."
+      }
+    ]
+  },
+  "whyChooseUs": {
+    "headingLine1": "Why Women Choose",
+    "headingLine2": "Urban Living?",
+    "description": "We provide more than just a room. We provide safety, comfort and a supportive community for women on their professional journey.",
+    "features": [
+      "Fully furnished premium rooms",
+      "Regular housekeeping services",
+      "24/7 CCTV security & biometric access",
+      "High-speed Wi-Fi connectivity"
+    ],
+    "backgroundImage": "/images/home/homewhy.png"
+  },
+  "reviews": {
+    "eyebrow": "Read Reviews,",
+    "headingLine1": "Stay with",
+    "headingLine2": "confidence.",
+    "ratingScore": "4.2/5",
+    "ratingSource": "Google",
+    "reviewsCountText": "Based on 5210 reviews",
+    "reviews": [
+      {
+        "id": "1",
+        "author": "Priya S.",
+        "avatar": "/images/home/Priya S..png",
+        "location": "Ramapuram",
+        "quote": "My staying experience is so nice, and received me very politely. Living experience is also very good. Very good performance. I never experienced such a kind of performance. Very good...",
+        "rating": 5,
+        "date": "1 week ago"
+      },
+      {
+        "id": "2",
+        "author": "Swathi R.",
+        "avatar": "/images/home/Swathi R..png",
+        "location": "Madanandapuram",
+        "quote": "I love my room and the customer service is excellent. They respond in a timely manner with loads of information about amenities, accessories and maintenance...",
+        "rating": 5,
+        "date": "10 days ago"
+      },
+      {
+        "id": "3",
+        "author": "Swathi R.",
+        "avatar": "/images/home/Swathi R..png",
+        "location": "Porur",
+        "quote": "I love my room and the customer service is excellent. They respond in a timely manner with loads of information about amenities, accessories and maintenance...",
+        "rating": 5,
+        "date": "10 days ago"
+      }
+    ]
+  }
+}

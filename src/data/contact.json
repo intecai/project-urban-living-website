@@ -1,0 +1,52 @@
+{
+  "hero": {
+    "heading": "Contact Us",
+    "subtitle": "We are here to answer your questions and help you find your ideal space.",
+    "bgImage": "/images/contactus/contactHero.png"
+  },
+  "talkToOurTeam": {
+    "title": "Talk To our Team",
+    "description": "Share a few details and we'll get back to you shortly.",
+    "formFields": {
+      "fullNameLabel": "Full Name*",
+      "fullNamePlaceholder": "Jane Doe",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "+91 00000 00000",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "jane@example.com",
+      "preferredLocationLabel": "Preferred Branch",
+      "roomTypeLabel": "Room Preference",
+      "messageLabel": "Your Message",
+      "messagePlaceholder": "Tell us what you're looking for..",
+      "submitButtonText": "Let's Find Your Perfect Space"
+    },
+    "contactCards": [
+      {
+        "id": "phone",
+        "title": "Call Us Direct",
+        "value": "+91 98765 43210",
+        "iconName": "Phone",
+        "actionHref": "tel:+919876543210"
+      },
+      {
+        "id": "email",
+        "title": "Email Support",
+        "value": "info@urbanlivingpg.com",
+        "iconName": "Mail",
+        "actionHref": "mailto:info@urbanlivingpg.com"
+      },
+      {
+        "id": "address",
+        "title": "Main Office",
+        "value": "123 Main Road, Ramapuram, Chennai - 600089",
+        "iconName": "MapPin"
+      },
+      {
+        "id": "hours",
+        "title": "Business Hours",
+        "value": "Mon - Sun: 9:00 AM - 8:00 PM",
+        "iconName": "Clock"
+      }
+    ]
+  }
+}

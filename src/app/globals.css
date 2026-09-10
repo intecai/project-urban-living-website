@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@font-face {
+  font-family: 'Brittany Signature';
+  src: local('Brittany Signature'), local('BrittanySignature'), local('Brittany'), url('/fonts/BrittanySignature.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-inter: var(--font-inter), sans-serif;
+  --font-figtree: var(--font-figtree), sans-serif;
+  --font-montserrat: var(--font-montserrat), sans-serif;
+  --font-plus-jakarta-sans: var(--font-plus-jakarta-sans), sans-serif;
+  --font-jakarta: var(--font-plus-jakarta-sans), sans-serif;
+  --font-lato: var(--font-lato), 'Lato', sans-serif;
+  --font-alex-brush: var(--font-alex-brush), cursive;
+  --font-great-vibes: var(--font-great-vibes), cursive;
+  --font-brittany: 'Brittany Signature', var(--font-alex-brush), var(--font-great-vibes), cursive;
+  --font-manrope: var(--font-manrope), sans-serif;
+  --font-bricolage-grotesque: var(--font-bricolage-grotesque), sans-serif;
+  --font-bricolage: var(--font-bricolage-grotesque), sans-serif;
+}
+
+.font-lato {
+  font-family: var(--font-lato), 'Lato', sans-serif;
+}
+
+.font-brittany {
+  font-family: 'Brittany Signature', var(--font-alex-brush), var(--font-great-vibes), cursive;
+}
+
+.font-jakarta, .font-Plus_Jakarta_Sans {
+  font-family: var(--font-plus-jakarta-sans), sans-serif;
+}
+
+.font-inter {
+  font-family: var(--font-inter), 'Inter', sans-serif;
+}
+
+.font-manrope {
+  font-family: var(--font-manrope), 'Manrope', sans-serif;
+}
+
+.font-bricolage, .font-bricolage-grotesque {
+  font-family: var(--font-bricolage-grotesque), 'Bricolage Grotesque', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-figtree), sans-serif;
+}

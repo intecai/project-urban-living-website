@@ -1,0 +1,60 @@
+{
+  "navbar": {
+    "logo": {
+      "src": "/images/common/mainLogo1.png",
+      "alt": "Urban Living PG Logo"
+    },
+    "navLinks": [
+      { "label": "Home", "href": "/" },
+      { "label": "Our Rooms", "href": "/rooms" },
+      { "label": "Locations", "href": "/locations" },
+      { "label": "Contact Us", "href": "/contact" }
+    ],
+    "phoneNumber": "+91 98765 43210",
+    "phoneRaw": "+919876543210",
+    "ctaButton": {
+      "label": "Book a Visit",
+      "href": "/contact"
+    }
+  },
+  "enquiryBanner": {
+    "heading": "Ready to experience urban living at its best?",
+    "description": "Book a visit today or contact our team to find your perfect room.",
+    "phoneCallText": "Or call us directly at",
+    "phoneNumber": "+91 98765 43210",
+    "phoneRaw": "+919876543210",
+    "formLabels": {
+      "fullName": "Full Name",
+      "phoneNumber": "Phone Number",
+      "preferredLocation": "Select Preferred Location",
+      "roomType": "Select Room Type",
+      "submitButton": "Schedule a Visit"
+    },
+    "locationOptions": ["Ramapuram", "Madanandapuram", "Porur", "Guindy", "Velachery"],
+    "roomTypeOptions": ["Single Room", "Double Sharing", "Triple Sharing", "Premium Suite"]
+  },
+  "footer": {
+    "brandDescription": "Urban Living provides premium, fully-furnished PG accommodation for women in prime Chennai locations.",
+    "quickLinksTitle": "Quick Links",
+    "quickLinks": [
+      { "label": "Home", "href": "/" },
+      { "label": "Our Rooms", "href": "/rooms" },
+      { "label": "Locations", "href": "/locations" },
+      { "label": "Contact Us", "href": "/contact" }
+    ],
+    "locationsTitle": "Locations",
+    "locations": [
+      { "label": "Ramapuram", "href": "/rooms?location=Ramapuram" },
+      { "label": "Madanandapuram", "href": "/rooms?location=Madanandapuram" },
+      { "label": "Porur", "href": "/rooms?location=Porur" },
+      { "label": "Guindy", "href": "/rooms?location=Guindy" }
+    ],
+    "contactTitle": "Contact Info",
+    "contactInfo": {
+      "address": "123 Main Road, Ramapuram, Chennai - 600089",
+      "phone": "+91 98765 43210",
+      "email": "info@urbanlivingpg.com"
+    },
+    "copyrightText": "© 2026 Urban Living. All rights reserved."
+  }
+}

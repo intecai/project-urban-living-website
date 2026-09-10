@@ -1,0 +1,77 @@
+[
+  {
+    "id": "room-001",
+    "title": "Single Room",
+    "category": "single",
+    "amenities": ["WiFi", "AC", "Food", "Laundry"],
+    "price": 10500,
+    "priceLabel": "month",
+    "image": "/images/rooms/room_single.png",
+    "badge": "Most Popular"
+  },
+  {
+    "id": "room-002",
+    "title": "Single Room",
+    "category": "single",
+    "amenities": ["WiFi", "AC", "Food", "Housekeeping"],
+    "price": 11000,
+    "priceLabel": "month",
+    "image": "/images/rooms/room_deluxe.png"
+  },
+  {
+    "id": "room-003",
+    "title": "Three sharing Room",
+    "category": "triple",
+    "amenities": ["WiFi", "AC", "Food"],
+    "price": 7200,
+    "priceLabel": "month",
+    "image": "/images/rooms/room_sharing.png"
+  },
+  {
+    "id": "room-004",
+    "title": "Three sharing Room",
+    "category": "triple",
+    "amenities": ["WiFi", "AC", "Food", "Laundry"],
+    "price": 11800,
+    "priceLabel": "month",
+    "image": "/images/rooms/room_comfort.png"
+  },
+  {
+    "id": "room-005",
+    "title": "Two Sharing",
+    "category": "double",
+    "amenities": ["WiFi", "AC", "Food", "Laundry"],
+    "price": 11500,
+    "priceLabel": "month",
+    "image": "/images/rooms/room_single.png",
+    "badge": "Most Popular"
+  },
+  {
+    "id": "room-006",
+    "title": "Four Sharing",
+    "category": "double",
+    "amenities": ["WiFi", "AC", "Food", "Housekeeping"],
+    "price": 10000,
+    "priceLabel": "month",
+    "image": "/images/rooms/room_sharing.png"
+  },
+  {
+    "id": "room-007",
+    "title": "Three sharing Room",
+    "category": "triple",
+    "amenities": ["WiFi", "AC", "Food"],
+    "price": 10500,
+    "priceLabel": "month",
+    "image": "/images/rooms/room_comfort.png",
+    "badge": "New"
+  },
+  {
+    "id": "room-008",
+    "title": "Three Sharing Room",
+    "category": "triple",
+    "amenities": ["WiFi", "AC", "Food", "Laundry"],
+    "price": 11500,
+    "priceLabel": "month",
+    "image": "/images/rooms/room_deluxe.png"
+  }
+]
