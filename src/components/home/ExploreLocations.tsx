@@ -15,21 +15,21 @@ const defaultLocations = [
     name: "Ramapuram",
     price: "₹8,500/mo",
     image: "/images/rooms/room_single.png",
-    href: "/locations/ramapuram",
+    href: "/locations?slug=ramapuram",
   },
   {
     id: "2",
     name: "Madanandapuram",
     price: "₹7,200/mo",
     image: "/images/rooms/room_deluxe.png",
-    href: "/locations/madanandapuram",
+    href: "/locations?slug=madanandapuram",
   },
   {
     id: "3",
     name: "Madanandapuram",
     price: "₹9,000/mo",
     image: "/images/rooms/room_sharing.png",
-    href: "/locations/madanandapuram",
+    href: "/locations?slug=madanandapuram",
   },
 ];
 

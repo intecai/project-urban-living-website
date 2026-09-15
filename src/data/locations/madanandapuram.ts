@@ -32,13 +32,20 @@ export interface AboutPropertyData {
   mapImage: string;
 }
 
-export interface RamapuramData {
+export interface FloorOption {
+  id: string;
+  label: string;
+  detailsLabel: string;
+  gallery: GalleryItem[];
+}
+
+export interface MadanandapuramData {
   hero: {
     title: string;
     subtitle: string;
     breadcrumbs: { label: string; href?: string }[];
   };
-  gallery: GalleryItem[];
+  floors: FloorOption[];
   pricingPlans: {
     heading: string;
     items: PricingPlanItem[];
@@ -48,59 +55,142 @@ export interface RamapuramData {
     items: AmenityItemData[];
   };
   aboutProperty: AboutPropertyData;
-  about: {
-    badge: string;
-    title: string;
-    description: string;
-    highlights: string[];
-  };
-  whatsIncluded: {
-    title: string;
-    items: string[];
-  };
-  location: {
-    title: string;
-    address: string;
-    area: string;
-    city: string;
-    mapSrc?: string;
-  };
 }
 
-export const ramapuramData: RamapuramData = {
+export const madanandapuramData: MadanandapuramData = {
   hero: {
-    title: "Urban Living - Ramapuram",
+    title: "Urban Living - Madhanandapuram",
     subtitle: "Comfortable PG Living • Private & Shared Rooms • All Essential Amenities",
     breadcrumbs: [
       { label: "Home", href: "/" },
       { label: "Locations", href: "/locations" },
-      { label: "Ramapuram" },
+      { label: "Madhanandapuram" },
     ],
   },
-  gallery: [
+  floors: [
     {
-      id: "1",
-      src: "/images/rooms/room_comfort.png",
-      alt: "Ramapuram Main Living Room",
-      span: "main",
+      id: "ground",
+      label: "Ground Floor",
+      detailsLabel: "Ground Floor",
+      gallery: [
+        {
+          id: "1",
+          src: "/images/rooms/room_deluxe.png",
+          alt: "Ground Floor Living Room",
+          span: "main",
+        },
+        {
+          id: "2",
+          src: "/images/rooms/room_comfort.png",
+          alt: "Ground Floor Dining Area",
+          span: "center-top",
+        },
+        {
+          id: "3",
+          src: "/images/rooms/room_single.png",
+          alt: "Ground Floor Bedroom View",
+          span: "center-bottom",
+        },
+        {
+          id: "4",
+          src: "/images/rooms/room_sharing.png",
+          alt: "Ground Floor Lounge",
+          span: "right",
+        },
+      ],
     },
     {
-      id: "2",
-      src: "/images/rooms/room_deluxe.png",
-      alt: "TV & Entertainment Lounge",
-      span: "center-top",
+      id: "first",
+      label: "First Floor",
+      detailsLabel: "First Floor",
+      gallery: [
+        {
+          id: "1",
+          src: "/images/rooms/room_single.png",
+          alt: "First Floor Living Area",
+          span: "main",
+        },
+        {
+          id: "2",
+          src: "/images/rooms/room_sharing.png",
+          alt: "First Floor Dining Area",
+          span: "center-top",
+        },
+        {
+          id: "3",
+          src: "/images/rooms/room_deluxe.png",
+          alt: "First Floor Bedroom",
+          span: "center-bottom",
+        },
+        {
+          id: "4",
+          src: "/images/rooms/room_comfort.png",
+          alt: "First Floor Balcony View",
+          span: "right",
+        },
+      ],
     },
     {
-      id: "3",
-      src: "/images/rooms/room_single.png",
-      alt: "Study Desk & Bedroom View",
-      span: "center-bottom",
+      id: "4a",
+      label: "4A",
+      detailsLabel: "4A",
+      gallery: [
+        {
+          id: "1",
+          src: "/images/rooms/room_comfort.png",
+          alt: "4A Living Suite",
+          span: "main",
+        },
+        {
+          id: "2",
+          src: "/images/rooms/room_single.png",
+          alt: "4A Dining Table",
+          span: "center-top",
+        },
+        {
+          id: "3",
+          src: "/images/rooms/room_sharing.png",
+          alt: "4A Bedroom View",
+          span: "center-bottom",
+        },
+        {
+          id: "4",
+          src: "/images/rooms/room_deluxe.png",
+          alt: "4A View",
+          span: "right",
+        },
+      ],
     },
     {
-      id: "4",
-      src: "/images/rooms/room_sharing.png",
-      alt: "Spacious Double Bedroom",
-      span: "right",
+      id: "4b",
+      label: "4B",
+      detailsLabel: "4B",
+      gallery: [
+        {
+          id: "1",
+          src: "/images/rooms/room_sharing.png",
+          alt: "4B Suite Room",
+          span: "main",
+        },
+        {
+          id: "2",
+          src: "/images/rooms/room_deluxe.png",
+          alt: "4B Dining Lounge",
+          span: "center-top",
+        },
+        {
+          id: "3",
+          src: "/images/rooms/room_comfort.png",
+          alt: "4B Bedroom View",
+          span: "center-bottom",
+        },
+        {
+          id: "4",
+          src: "/images/rooms/room_single.png",
+          alt: "4B Balcony",
+          span: "right",
+        },
+      ],
     },
   ],
   pricingPlans: {
@@ -108,7 +198,7 @@ export const ramapuramData: RamapuramData = {
     items: [
       {
         id: "1",
-        title: "Double Sharing",
+        title: "Two Sharing",
         description: "Comfortable shared space with access to all essential amenities",
         price: "₹11,000/",
         pricePrefix: "Starting From",
@@ -159,38 +249,11 @@ export const ramapuramData: RamapuramData = {
   aboutProperty: {
     title: "About this property",
     paragraph1:
-      "Urban Living - Ramapuram offers comfortable and affordable PG accommodation in Ramapuram, Coimbatore, designed for students and working professionals. Located in a convenient residential area, our fully furnished PG provides single, double, and triple sharing rooms with essential amenities for a comfortable stay.",
+      "Urban Living - Madhanandapuram offers comfortable and affordable PG accommodation in Madhanandapuram, Chennai, designed for students and working professionals. Located in a convenient residential area, our fully furnished PG provides single, double, and triple sharing rooms with essential amenities for a comfortable stay.",
     paragraph2:
       "With homely food and EB charges included, residents can enjoy a hassle-free living experience without worrying about additional monthly expenses. The property is equipped with Wi-Fi, air conditioning, washing machine, geyser, power backup, and essential kitchen facilities. With a secure and well-maintained environment, Urban Living makes everyday living comfortable and convenient.",
     readMoreLabel: "See More",
     readLessLabel: "See Less",
     mapImage: "/images/rooms/urbanlivingMap.png",
-  },
-  about: {
-    badge: "Most Popular",
-    title: "About This Property",
-    description:
-      "A comfortable PG in Ramapuram with attached bath, high speed WiFi, nutritious food, and 24/7 security. Located close to DLF IT Park and SRM University.",
-    highlights: [
-      "Ideal for students & IT professionals",
-      "Regular housekeeping & laundry options",
-      "Access to all modern amenities",
-    ],
-  },
-  whatsIncluded: {
-    title: "What's Included",
-    items: [
-      "High-speed Wi-Fi",
-      "3 Times Nutritious Meals",
-      "Air Conditioning & Power Backup",
-      "Housekeeping & Laundry Service",
-      "24/7 CCTV & Gated Security",
-    ],
-  },
-  location: {
-    title: "Location",
-    address: "Ramapuram, Chennai, Tamil Nadu 600089",
-    area: "Ramapuram",
-    city: "Chennai",
   },
 };

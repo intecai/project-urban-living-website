@@ -9,55 +9,48 @@ export interface RamapuramPricingCardProps {
 }
 
 export default function RamapuramPricingCard({ item }: RamapuramPricingCardProps) {
+  const prefix = item.pricePrefix || "Starting From";
+  const suffix = item.priceSuffix || "* month";
+  // Ensure no duplicate suffix if price string already contains "* month"
+  const displayPrice = item.price.replace(/\s*\*?\s*month.*$/i, "").trim();
+
   return (
-    <div className="bg-[#FDFDFD] sm:bg-white rounded-[16px] border border-[#E2E8F0] p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-2xs hover:border-[#0053B0]/40 transition-all duration-200 group">
+    <div className="bg-[#F8FAFC] rounded-[16px] p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between  gap-5 transition-all duration-200 w-full">
       {/* Left Room Thumbnail Image */}
-      <div className="relative w-full sm:w-[180px] md:w-[210px] h-[130px] sm:h-[135px] rounded-[12px] overflow-hidden shrink-0 bg-slate-100">
+      <div className="relative w-full sm:w-[190px] md:w-[210px] h-[130px] sm:h-[135px] rounded-[12px] overflow-hidden shrink-0 bg-slate-100">
         <Image
           src={item.image}
           alt={item.title}
           fill
           sizes="(max-width: 640px) 100vw, 210px"
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
+          className="object-cover"
         />
       </div>
 
-      {/* Room Title & Description */}
-      <div className="flex-1 flex flex-col justify-between h-full space-y-2">
-        <div>
-          <h3 className="text-base sm:text-lg font-bold text-[#011A2A] font-Plus_Jakarta_Sans">
-            {item.title}
-          </h3>
-          <p className="text-xs sm:text-sm text-[#64748B] font-normal mt-1 leading-relaxed font-Plus_Jakarta_Sans">
-            {item.description}
-          </p>
-        </div>
-
-        {/* Availability Badge (Visible on mobile here) */}
-        {item.available && (
-          <div className="hidden sm:flex items-center gap-1.5 pt-2">
-            <span className="w-2 h-2 rounded-full bg-[#10B981]" />
-            <span className="text-xs font-semibold text-[#10B981] font-Plus_Jakarta_Sans">
-              Available Now
-            </span>
-          </div>
-        )}
+      {/* Middle: Room Title & Description */}
+      <div className="flex-1 flex flex-col justify-center space-y-1.5 self-center">
+        <h3 className="text-base sm:text-lg font-bold text-[#011A2A] font-Plus_Jakarta_Sans">
+          {item.title}
+        </h3>
+        <p className="text-xs sm:text-sm text-[#64748B] font-normal leading-relaxed font-Plus_Jakarta_Sans">
+          {item.description}
+        </p>
       </div>
 
-      {/* Right Price & Status Block */}
-      <div className="sm:text-right shrink-0 self-end sm:self-center pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 w-full sm:w-auto flex sm:flex-col justify-between items-center sm:items-end">
-        <div>
-          <span className="block text-[10px] sm:text-[11px] font-semibold text-[#9CA3AF] tracking-wider uppercase font-Plus_Jakarta_Sans">
-            Starting From
+      {/* Right: Price & Available Status Badge */}
+      <div className="shrink-0 flex flex-col items-start sm:items-end justify-between w-full sm:w-auto h-auto sm:h-[135px] py-1 self-stretch sm:self-center gap-2 sm:gap-0 border-t sm:border-t-0 border-slate-200/60 pt-3 sm:pt-1">
+        {/* Inline Price Line */}
+        <div className="text-left sm:text-right text-xs sm:text-sm text-[#64748B] font-normal font-Plus_Jakarta_Sans">
+          <span>{prefix} </span>
+          <span className="font-bold text-[#011A2A] text-sm sm:text-base md:text-lg">
+            {displayPrice}{" "}
           </span>
-          <span className="block text-base sm:text-lg font-bold text-[#011A2A] sm:text-[#0053B0] font-Plus_Jakarta_Sans tracking-tight mt-0.5">
-            {item.price}
-          </span>
+          <span>{suffix}</span>
         </div>
 
-        {/* Availability Badge (Visible on mobile bottom right) */}
+        {/* Availability Badge at Bottom Right */}
         {item.available && (
-          <div className="flex sm:hidden items-center gap-1.5">
+          <div className="flex items-center gap-1.5 mt-auto">
             <span className="w-2 h-2 rounded-full bg-[#10B981]" />
             <span className="text-xs font-semibold text-[#10B981] font-Plus_Jakarta_Sans">
               Available Now
@@ -68,3 +61,6 @@ export default function RamapuramPricingCard({ item }: RamapuramPricingCardProps
     </div>
   );
 }
+
+
+

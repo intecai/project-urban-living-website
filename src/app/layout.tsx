@@ -50,6 +50,11 @@ const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
 });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   title: "Urban Living PG",
   description: "Providing safe, comfortable and affordable living spaces for working women in Chennai",

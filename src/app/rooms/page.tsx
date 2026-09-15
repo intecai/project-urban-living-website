@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import RoomsHero from "@/components/ourRooms/RoomsHero";
 import RoomsSection from "@/components/ourRooms/RoomsSection";
@@ -6,6 +7,14 @@ import EnquiryBanner from "@/components/EnquiryBanner";
 import Footer from "@/components/Footer";
 import { getRoomsData } from "@/services/roomsService";
 import { getCommonData } from "@/services/commonService";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const roomsData = await getRoomsData();
+  return {
+    title: "Our Rooms & Pricing | Urban Living PG",
+    description: roomsData?.description || "Explore fully furnished rooms in Chennai with premium amenities, high-speed Wi-Fi, and 24/7 security.",
+  };
+}
 
 export default async function RoomsPage() {
   const roomsPageData = await getRoomsData();

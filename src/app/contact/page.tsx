@@ -1,9 +1,18 @@
+import type { Metadata } from "next";
 import ContactHero from "@/components/contactus/ContactHero";
 import TalkToOurTeam from "@/components/contactus/TalkToOurTeam";
 import EnquiryBanner from "@/components/EnquiryBanner";
 import Footer from "@/components/Footer";
 import { getContactData } from "@/services/contactService";
 import { getCommonData } from "@/services/commonService";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const contactData = await getContactData();
+  return {
+    title: `${contactData.hero.heading} | Urban Living PG`,
+    description: contactData.hero.subtitle || "Get in touch with Urban Living PG to book a visit or inquire about available rooms.",
+  };
+}
 
 export default async function ContactPage() {
   const contactData = await getContactData();

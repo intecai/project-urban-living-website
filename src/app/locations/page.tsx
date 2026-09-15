@@ -1,32 +1,21 @@
-import Navbar from "@/components/Navbar";
-import PopularLocations from "@/components/locations/PopularLocations";
-import EverythingYouNeed from "@/components/locations/EverythingYouNeed";
-import EnquiryBanner from "@/components/EnquiryBanner";
-import Footer from "@/components/Footer";
+import type { Metadata } from "next";
+import React, { Suspense } from "react";
 import { getLocationsData } from "@/services/locationsService";
 import { getCommonData } from "@/services/commonService";
+import LocationsClientView from "./LocationsClientView";
+
+export const metadata: Metadata = {
+  title: "PG Locations in Chennai | Urban Living PG",
+  description: "Explore our comfortable women's PG locations across Chennai including Ramapuram and Madanandapuram.",
+};
 
 export default async function LocationsPage() {
   const locationsData = await getLocationsData();
   const commonData = await getCommonData();
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-white font-sans text-slate-900">
-      <Navbar variant="solid" activeLink="Locations" data={commonData.navbar} />
-
-      <main className="flex-1">
-        {/* Popular Locations Section */}
-        <PopularLocations data={locationsData.popularLocations} />
-
-        {/* Everything You Need Section */}
-        <EverythingYouNeed data={locationsData.everythingYouNeed} />
-      </main>
-
-      {/* Enquiry Banner Section */}
-      <EnquiryBanner data={commonData.enquiryBanner} />
-
-      {/* Footer Section */}
-      <Footer data={commonData.footer} />
-    </div>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center font-sans text-slate-500">Loading locations...</div>}>
+      <LocationsClientView locationsData={locationsData} commonData={commonData} />
+    </Suspense>
   );
 }

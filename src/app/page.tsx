@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/home/HeroSection";
 import ExploreLocations from "@/components/home/ExploreLocations";
@@ -9,6 +10,15 @@ import EnquiryBanner from "@/components/EnquiryBanner";
 import Footer from "@/components/Footer";
 import { getHomeData } from "@/services/homeService";
 import { getCommonData } from "@/services/commonService";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const homeData = await getHomeData();
+  const hero = homeData?.hero;
+  return {
+    title: hero ? `${hero.titleLine1} ${hero.titleLine2} | Urban Living PG` : "Urban Living PG",
+    description: hero?.description || "Experience safe, comfortable, and affordable living in the heart of Chennai.",
+  };
+}
 
 export default async function Home() {
   const homeData = await getHomeData();
