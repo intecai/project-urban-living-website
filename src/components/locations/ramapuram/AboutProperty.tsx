@@ -14,12 +14,12 @@ export default function AboutProperty({ data }: AboutPropertyProps) {
   return (
     <section className="w-full space-y-5 pt-8 font-Plus_Jakarta_Sans">
       {/* Section Header */}
-      <h2 className="text-xl sm:text-2xl font-bold text-[#0F172A] font-Plus_Jakarta_Sans tracking-tight">
+      <h2 className="text-xl sm:text-2xl font-semibold text-[#000000] font-figtree tracking-tight">
         {data.title}
       </h2>
 
       {/* Description Paragraphs */}
-      <div className="space-y-4 text-[14px] sm:text-[15px] text-[#8C97A8] font-normal leading-relaxed max-w-5xl font-Plus_Jakarta_Sans">
+      <div className="space-y-4 text-[14px] sm:text-[15px] text-[#9CA3AF] font-normal leading-relaxed max-w-5xl font-figtree">
         <p>{data.paragraph1}</p>
         <p>{data.paragraph2}</p>
       </div>
@@ -29,7 +29,7 @@ export default function AboutProperty({ data }: AboutPropertyProps) {
         <button
           type="button"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="text-[14px] sm:text-[15px] font-bold text-[#0F172A] hover:text-[#0053B0] transition-colors focus:outline-none cursor-pointer font-Plus_Jakarta_Sans inline-block mt-1"
+          className="text-[21px] sm:text-[15px] font-medium text-[#272828] hover:text-[#0053B0] transition-colors focus:outline-none cursor-pointer font-figtree inline-block mt-1"
         >
           {data.readMoreLabel}
         </button>

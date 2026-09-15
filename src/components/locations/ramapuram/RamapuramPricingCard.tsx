@@ -29,10 +29,10 @@ export default function RamapuramPricingCard({ item }: RamapuramPricingCardProps
 
       {/* Middle: Room Title & Description */}
       <div className="flex-1 flex flex-col justify-center space-y-1.5 self-center">
-        <h3 className="text-base sm:text-lg font-bold text-[#011A2A] font-Plus_Jakarta_Sans">
+        <h3 className="text-base sm:text-lg font-medium text-[#000000] font-figtree text-[24px]">
           {item.title}
         </h3>
-        <p className="text-xs sm:text-sm text-[#64748B] font-normal leading-relaxed font-Plus_Jakarta_Sans">
+        <p className="text-xs sm:text-sm text-[#272828] text-[21px] leading-relaxed font-figtree">
           {item.description}
         </p>
       </div>
@@ -40,19 +40,19 @@ export default function RamapuramPricingCard({ item }: RamapuramPricingCardProps
       {/* Right: Price & Available Status Badge */}
       <div className="shrink-0 flex flex-col items-start sm:items-end justify-between w-full sm:w-auto h-auto sm:h-[135px] py-1 self-stretch sm:self-center gap-2 sm:gap-0 border-t sm:border-t-0 border-slate-200/60 pt-3 sm:pt-1">
         {/* Inline Price Line */}
-        <div className="text-left sm:text-right text-xs sm:text-sm text-[#64748B] font-normal font-Plus_Jakarta_Sans">
+        <div className="text-left sm:text-right text-xs sm:text-sm text-[#6C6F73] font-figtree text-[12px]">
           <span>{prefix} </span>
-          <span className="font-bold text-[#011A2A] text-sm sm:text-base md:text-lg">
+          <span className="font-semibold text-[#000000] text-[24px] text-sm sm:text-base md:text-lg">
             {displayPrice}{" "}
           </span>
-          <span>{suffix}</span>
+          <span className="text-[#000000] text-[16px] font-figtree">{suffix}</span>
         </div>
 
         {/* Availability Badge at Bottom Right */}
         {item.available && (
           <div className="flex items-center gap-1.5 mt-auto">
-            <span className="w-2 h-2 rounded-full bg-[#10B981]" />
-            <span className="text-xs font-semibold text-[#10B981] font-Plus_Jakarta_Sans">
+            <span className="w-2 h-2 rounded-full bg-[#22C55E]" />
+            <span className="text-xs font-semibold text-[#22C55E] font-inter text-[14px]">
               Available Now
             </span>
           </div>

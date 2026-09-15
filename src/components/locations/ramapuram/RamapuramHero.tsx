@@ -32,10 +32,10 @@ export default function RamapuramHero({ title, subtitle, breadcrumbs }: Ramapura
       </nav>
 
       {/* Main Title & Subtitle */}
-      <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#011A2A] font-Plus_Jakarta_Sans tracking-tight">
+      <h1 className="text-2xl sm:text-3xl lg:text-[24px] font-semibold text-[#212529] font-figtree tracking-tight">
         {title}
       </h1>
-      <p className="text-xs sm:text-sm text-[#64748B] font-normal mt-1 font-Plus_Jakarta_Sans">
+      <p className="text-xs sm:text-sm text-[#272828]  mt-1 font-figtree text-[15px]">
         {subtitle}
       </p>
     </div>

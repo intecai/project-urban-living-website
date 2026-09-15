@@ -17,7 +17,7 @@ export interface MadanandapuramViewProps {
 }
 
 export default function MadanandapuramView({ commonData }: MadanandapuramViewProps) {
-  const [selectedFloorId, setSelectedFloorId] = useState<string>("ground");
+  const [selectedFloorId, setSelectedFloorId] = useState<string>("first");
 
   const currentFloor =
     madanandapuramData.floors.find((f) => f.id === selectedFloorId) ||
