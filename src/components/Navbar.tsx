@@ -58,22 +58,20 @@ export default function Navbar({
   if (isTransparent) {
     inactiveLinkStyles = darkText
       ? "text-[#011A2A] hover:text-[#2563EB] font-medium transition-colors"
-      : "text-white/90 hover:text-white font-medium transition-colors";
+      : "text-[#011A2A] hover:text-[#2563EB] font-medium transition-colors";
   } else if (isTranslucent) {
     inactiveLinkStyles =
       "text-[#011A2A] hover:text-[#2563EB] font-medium transition-colors";
   }
 
-  const activeLinkStyles = "bg-[#2563EB] text-white font-medium shadow-xs";
+  const activeLinkStyles = "bg-[#2571A5] text-white font-medium shadow-xs px-4 py-2 rounded-full";
 
   // Mobile menu button icon color
-  const menuIconColor =
-    isTransparent && !darkText ? "text-white" : "text-[#011A2A]";
+  const menuIconColor = "text-[#011A2A]";
 
   // Mobile menu drawer background
-  const mobileMenuBg = isTransparent && !darkText
-    ? "bg-[#011A2A]/95 text-white backdrop-blur-md border-b border-white/10"
-    : "bg-white/95 text-[#011A2A] backdrop-blur-md border-b border-slate-200 shadow-lg";
+  const mobileMenuBg =
+    "bg-white/95 text-[#011A2A] backdrop-blur-md border-b border-slate-200 shadow-xl";
 
   return (
     <header className={headerContainerStyles}>
@@ -112,7 +110,7 @@ export default function Navbar({
         <div className="hidden md:flex items-center">
           <a
             href={ctaHref}
-            className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-5 sm:px-6 py-2.5 rounded-full text-sm font-medium font-figtree shadow-xs transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+            className="bg-[#2571A5] hover:bg-[#02569B] text-white px-5 sm:px-6 py-2.5 rounded-full text-sm font-medium font-figtree shadow-xs transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
           >
             {ctaLabel}
           </a>
@@ -123,7 +121,7 @@ export default function Navbar({
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`p-2 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-[#2563EB] ${menuIconColor}`}
+            className={`p-2 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-[#2571A5] ${menuIconColor}`}
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? (
@@ -137,7 +135,7 @@ export default function Navbar({
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className={`md:hidden px-4 pt-2 pb-6 space-y-3 ${mobileMenuBg}`}>
+        <div className={`md:hidden px-4 pt-2 pb-6 space-y-3 ${mobileMenuBg} absolute top-full left-0 right-0 z-50`}>
           <div className="flex flex-col space-y-2">
             {links.map((link) => {
               const isActive = activeLink === link.label;
@@ -148,7 +146,7 @@ export default function Navbar({
                   onClick={() => setMobileMenuOpen(false)}
                   className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     isActive
-                      ? "bg-[#2563EB] text-white font-semibold"
+                      ? "bg-[#2571A5] text-white font-semibold"
                       : "text-[#011A2A] hover:bg-slate-100"
                   }`}
                 >
@@ -162,7 +160,7 @@ export default function Navbar({
             <a
               href={ctaHref}
               onClick={() => setMobileMenuOpen(false)}
-              className="block w-full text-center bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-5 py-3 rounded-xl text-sm font-semibold shadow-xs"
+              className="block w-full text-center bg-[#2571A5] hover:bg-[#02569B] text-white px-5 py-3 rounded-xl text-sm font-semibold shadow-xs"
             >
               {ctaLabel}
             </a>

@@ -21,9 +21,9 @@ export default async function RoomsPage() {
   const commonData = await getCommonData();
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-white font-sans text-slate-900">
-      {/* Navbar with activeLink="Our Rooms" */}
-      <Navbar variant="solid" activeLink="Our Rooms" data={commonData.navbar} />
+    <div className="relative min-h-screen flex flex-col justify-between bg-white font-sans text-slate-900">
+      {/* Navbar with activeLink="Our Rooms" and transparent overlay */}
+      <Navbar variant="transparent" activeLink="Our Rooms" data={commonData.navbar} />
 
       <main className="flex-1">
         {/* Rooms Hero Banner Section */}

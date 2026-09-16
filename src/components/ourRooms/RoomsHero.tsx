@@ -22,7 +22,7 @@ export default function RoomsHero() {
       </div>
 
       {/* Hero Content Container */}
-      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 w-full py-10 lg:py-14">
+      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 w-full pt-24 sm:pt-28 md:pt-32 pb-10 lg:pb-14">
         <div className="max-w-lg lg:max-w-xl">
           {/* Breadcrumb Navigation */}
           <nav className="flex items-center gap-2 text-sm text-[#011A2A] font-manrope text-[15px] font-medium mb-4">

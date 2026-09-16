@@ -26,44 +26,55 @@ export default function WhyChooseUsSection({ data }: WhyChooseUsSectionProps) {
   const bgImage = data?.backgroundImage || "/images/home/homewhy.png";
 
   return (
-    <section id="why-choose-us" className="relative w-full bg-[#072B45] text-white overflow-hidden py-16 sm:py-20 lg:py-24 min-h-[500px] sm:min-h-[540px] lg:min-h-[580px] flex items-center font-figtree">
-      {/* 1. Background Image Asset (homewhy.png) */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
+    <section id="why-choose-us" className="relative w-full bg-[#072B45] text-white overflow-hidden py-10 sm:py-14 lg:py-24 min-h-auto lg:min-h-[580px] flex items-center font-figtree">
+      {/* 1. Desktop Background Image Asset (homewhy.png) */}
+      <div className="hidden lg:block absolute inset-0 z-0 pointer-events-none">
         <Image
           src={bgImage}
           alt="Why Women Choose Urban Living Background"
           fill
           priority
           sizes="100vw"
-          className="object-contain object-right opacity-90 lg:opacity-100"
+          className="object-contain object-right opacity-100"
         />
       </div>
 
-      {/* 2. Overlay Left Content */}
+      {/* 2. Content Container */}
       <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 w-full">
-        <div className="max-w-[560px] space-y-6 sm:space-y-8">
+        <div className="max-w-[560px] space-y-5 sm:space-y-8">
           {/* Main Title */}
-          <h2 className="text-3xl sm:text-4xl lg:text-[38px] text-[#FFFFFF] tracking-tight font-figtree leading-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-[38px] text-[#FFFFFF] tracking-tight font-figtree leading-tight">
             {headingLine1} <br />
             <span className="text-[#EFC53F] italic font-figtree">{headingLine2}</span>
           </h2>
 
           {/* Subtitle Paragraph */}
-          <p className="text-sm sm:text-base text-[#F5F6F7] text-[20px] font-Plus_Jakarta_Sans leading-relaxed max-w-[480px]">
+          <p className="text-xs sm:text-sm lg:text-base text-[#F5F6F7] font-Plus_Jakarta_Sans leading-relaxed max-w-[480px]">
             {description}
           </p>
 
           {/* Checklist Feature Points */}
-          <div className="space-y-3.5 pt-2">
+          <div className="space-y-3 sm:space-y-3.5 pt-1 sm:pt-2">
             {featureList.map((feature, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-[#F2BE41] shrink-0" />
-                <span className="text-sm sm:text-base text-[18px] text-[#F5F6F7] font-figtree">
+              <div key={index} className="flex items-center gap-2.5 sm:gap-3">
+                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#F2BE41] shrink-0" />
+                <span className="text-xs sm:text-sm lg:text-base text-[#F5F6F7] font-figtree font-medium">
                   {feature}
                 </span>
               </div>
             ))}
           </div>
+        </div>
+
+        {/* 3. Mobile/Tablet Bottom Illustration Image matching Figma */}
+        <div className="lg:hidden relative w-full h-[220px] sm:h-[300px] mt-8 overflow-hidden rounded-2xl">
+          <Image
+            src={bgImage}
+            alt="Why Women Choose Urban Living Mobile Illustration"
+            fill
+            sizes="100vw"
+            className="object-contain object-bottom opacity-90"
+          />
         </div>
       </div>
     </section>

@@ -40,11 +40,22 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
   return (
     <section className="w-full py-12 sm:py-16 bg-white font-figtree">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 space-y-8">
-        {/* Section Heading */}
-        <div>
-          <h2 className="text-2xl sm:text-3xl lg:text-[28px] text-[#0E1C36] text-left tracking-tight font-figtree">
-            {title}
-          </h2>
+        {/* Section Heading matching Figma */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <span className="block text-xs font-bold text-[#2571A5] uppercase tracking-widest font-figtree mb-1">
+              NEIGHBORHOODS
+            </span>
+            <h2 className="text-2xl sm:text-3xl lg:text-[28px] font-bold text-[#0E1C36] text-left tracking-tight font-lato">
+              Popular Locations in Chennai
+            </h2>
+          </div>
+          <Link
+            href="/locations"
+            className="text-xs sm:text-sm font-semibold text-[#2571A5] hover:text-[#00428C] transition-colors flex items-center gap-1 shrink-0 font-figtree cursor-pointer"
+          >
+            View all areas &rarr;
+          </Link>
         </div>
 
         {/* 3 Location Cards Grid */}

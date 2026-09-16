@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { RoomItem } from "./types";
 import { MapPin, Camera } from "lucide-react";
 
@@ -11,9 +12,12 @@ interface RoomCardProps {
 
 export default function RoomCard({ room }: RoomCardProps) {
   return (
-    <div className="w-full bg-white border border-[#E2E8F0] rounded-[24px] p-4 sm:p-5 flex flex-col md:flex-row gap-5 lg:gap-8 justify-between items-stretch transition-all duration-300 font-jakarta">
+    <Link
+      href="/rooms/premium-single-room"
+      className="w-full bg-white border border-[#E2E8F0] hover:border-[#02569B]/40 hover:shadow-md rounded-[24px] p-4 sm:p-5 flex flex-col md:flex-row gap-5 lg:gap-8 justify-between items-stretch transition-all duration-300 font-jakarta group cursor-pointer"
+    >
       {/* 1. LEFT ROOM IMAGE FRAME (16px border-radius as shown in Figma Dev Mode) */}
-      <div className="relative w-full md:w-[320px] lg:w-[350px] shrink-0 h-[210px] sm:h-[225px] rounded-[16px] overflow-hidden bg-slate-100 group">
+      <div className="relative w-full md:w-[320px] lg:w-[350px] shrink-0 h-[210px] sm:h-[225px] rounded-[16px] overflow-hidden bg-slate-100">
         <Image
           src={room.image}
           alt={room.name}
@@ -35,7 +39,7 @@ export default function RoomCard({ room }: RoomCardProps) {
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
           {/* Title & Amenities */}
           <div>
-            <h3 className="text-xl sm:text-2xl font-semibold text-[#011A2A] text-[20px] font-figtree tracking-tight leading-snug">
+            <h3 className="text-xl sm:text-2xl font-semibold text-[#011A2A] group-hover:text-[#02569B] transition-colors text-[20px] font-figtree tracking-tight leading-snug">
               {room.name}
             </h3>
 
@@ -123,6 +127,7 @@ export default function RoomCard({ room }: RoomCardProps) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
+

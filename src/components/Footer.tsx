@@ -28,11 +28,11 @@ export default function Footer({ data }: FooterProps) {
   return (
     <footer className="w-full bg-[#011A2A]">
       {/* Main Footer Content */}
-      <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 pt-16 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 justify-between">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 pt-12 sm:pt-16 pb-12">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 lg:gap-8 justify-between">
           
           {/* Column 1: Logo & Tagline */}
-          <div className="lg:col-span-1 flex flex-col space-y-4">
+          <div className="col-span-2 lg:col-span-1 flex flex-col space-y-3 sm:space-y-4 mb-2 lg:mb-0">
             {/* UL Urban Living Logo */}
             <div className="flex flex-col items-start">
               <Image
@@ -40,86 +40,86 @@ export default function Footer({ data }: FooterProps) {
                 alt="Urban Living Logo"
                 width={120}
                 height={100}
-                className="h-16 w-auto object-contain"
+                className="h-14 sm:h-16 w-auto object-contain"
                 priority
               />
             </div>
 
-            <p className="text-[#DBDEE3] text-[15px] sm:text-sm leading-relaxed max-w-[260px] font-figtree">
+            <p className="text-[#94A3B8] text-xs sm:text-sm leading-relaxed max-w-sm lg:max-w-[260px] font-figtree">
               {brandDescription}
             </p>
           </div>
 
           {/* Column 2: Quick Links */}
-          <div className="flex flex-col space-y-4">
-            <h3 className="text-base font-semibold font-inter text-[#FFFFFF] tracking-tight">
+          <div className="flex flex-col space-y-3 sm:space-y-4">
+            <h3 className="text-sm sm:text-base font-semibold font-inter text-[#FFFFFF] tracking-tight">
               {data?.quickLinksTitle || "Quick Links"}
             </h3>
-            <ul className="space-y-3 text-xs sm:text-sm font-figtree text-[15px] text-[#DBDEE3]">
+            <ul className="space-y-2.5 sm:space-y-3 text-xs sm:text-sm font-figtree text-[#DBDEE3]">
               {quickLinks.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href}>{link.label}</a>
+                  <a href={link.href} className="hover:text-white transition-colors">{link.label}</a>
                 </li>
               ))}
             </ul>
           </div>
 
           {/* Column 3: Rooms */}
-          <div className="flex flex-col space-y-4">
-            <h3 className="text-base font-semibold font-inter text-[#FFFFFF] tracking-tight">
+          <div className="flex flex-col space-y-3 sm:space-y-4">
+            <h3 className="text-sm sm:text-base font-semibold font-inter text-[#FFFFFF] tracking-tight">
               Rooms
             </h3>
-            <ul className="space-y-3 text-xs sm:text-sm font-figtree text-[15px] text-[#DBDEE3]">
+            <ul className="space-y-2.5 sm:space-y-3 text-xs sm:text-sm font-figtree text-[#DBDEE3]">
               <li>
-                <a href="/rooms?category=single">Single Occupancy</a>
+                <a href="/rooms?category=single" className="hover:text-white transition-colors">Single Occupancy</a>
               </li>
               <li>
-                <a href="/rooms?category=double">Double Sharing</a>
+                <a href="/rooms?category=double" className="hover:text-white transition-colors">Double Sharing</a>
               </li>
               <li>
-                <a href="/rooms?category=triple">Triple Sharing</a>
+                <a href="/rooms?category=triple" className="hover:text-white transition-colors">Triple Sharing</a>
               </li>
               <li>
-                <a href="/rooms">All Rooms</a>
+                <a href="/rooms" className="hover:text-white transition-colors">All Rooms</a>
               </li>
             </ul>
           </div>
 
           {/* Column 4: Amenities */}
-          <div className="flex flex-col space-y-4">
-            <h3 className="text-base font-inter font-semibold text-[#FFFFFF] tracking-tight">
+          <div className="flex flex-col space-y-3 sm:space-y-4">
+            <h3 className="text-sm sm:text-base font-inter font-semibold text-[#FFFFFF] tracking-tight">
               Amenities
             </h3>
-            <ul className="space-y-3 text-xs sm:text-sm font-figtree text-[15px] text-[#DBDEE3]">
+            <ul className="space-y-2.5 sm:space-y-3 text-xs sm:text-sm font-figtree text-[#DBDEE3]">
               <li>
-                <a href="#furnished">Fully Furnished Rooms</a>
+                <a href="#furnished" className="hover:text-white transition-colors">Fully Furnished Rooms</a>
               </li>
               <li>
-                <a href="#security">24/7 Security</a>
+                <a href="#security" className="hover:text-white transition-colors">24/7 Security</a>
               </li>
               <li>
-                <a href="#wifi">High-Speed Wi-Fi</a>
+                <a href="#wifi" className="hover:text-white transition-colors">High-Speed Wi-Fi</a>
               </li>
               <li>
-                <a href="#housekeeping">Housekeeping</a>
+                <a href="#housekeeping" className="hover:text-white transition-colors">Housekeeping</a>
               </li>
               <li>
-                <a href="#laundry">Laundry Service</a>
+                <a href="#laundry" className="hover:text-white transition-colors">Laundry Service</a>
               </li>
               <li>
-                <a href="#power-backup">Power Backup</a>
+                <a href="#power-backup" className="hover:text-white transition-colors">Power Backup</a>
               </li>
             </ul>
           </div>
 
           {/* Column 5: Contact Us */}
-          <div className="flex flex-col space-y-4">
-            <h3 className="text-base font-inter font-semibold text-[#FFFFFF] tracking-tight">
+          <div className="flex flex-col space-y-3 sm:space-y-4">
+            <h3 className="text-sm sm:text-base font-inter font-semibold text-[#FFFFFF] tracking-tight">
               {data?.contactTitle || "Contact Us"}
             </h3>
-            <ul className="space-y-3.5 text-xs sm:text-sm font-figtree text-[15px] text-[#DBDEE3]">
-              <li className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-[#F59E0B] shrink-0" />
+            <ul className="space-y-3 text-xs sm:text-sm font-figtree text-[#DBDEE3]">
+              <li className="flex items-center gap-2.5">
+                <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F59E0B] shrink-0" />
                 <a
                   href={`tel:${contactPhone.replace(/\s+/g, "")}`}
                   className="hover:text-white transition-colors"
@@ -127,18 +127,18 @@ export default function Footer({ data }: FooterProps) {
                   {contactPhone}
                 </a>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-[#F59E0B] shrink-0" />
+              <li className="flex items-center gap-2.5">
+                <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F59E0B] shrink-0" />
                 <a
                   href={`mailto:${contactEmail}`}
-                  className="hover:text-white transition-colors break-all"
+                  className="hover:text-white transition-colors break-all text-[11px] sm:text-xs"
                 >
                   {contactEmail}
                 </a>
               </li>
-              <li className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-[#F59E0B] shrink-0 mt-0.5" />
-                <span className="leading-snug">
+              <li className="flex items-start gap-2.5">
+                <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F59E0B] shrink-0 mt-0.5" />
+                <span className="leading-tight text-[11px] sm:text-xs">
                   {contactAddress}
                 </span>
               </li>

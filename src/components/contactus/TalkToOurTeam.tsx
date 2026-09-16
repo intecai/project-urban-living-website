@@ -105,7 +105,7 @@ export default function TalkToOurTeam({ data }: TalkToOurTeamProps) {
                   1. How long are you looking to stay? *
                 </label>
 
-                <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-3">
                   {[
                     { label: "Short Stay", icon: Calendar },
                     { label: "Long Stay", icon: Calendar },
@@ -119,14 +119,14 @@ export default function TalkToOurTeam({ data }: TalkToOurTeamProps) {
                         key={item.label}
                         type="button"
                         onClick={() => setStayDuration(item.label as StayDuration)}
-                        className={`flex items-center justify-center gap-1.5 sm:gap-2 py-3 px-2 sm:px-3 rounded-xl border text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+                        className={`flex items-center justify-center gap-1 sm:gap-2 py-2.5 px-1 sm:px-3 rounded-xl border text-[11px] sm:text-sm font-medium transition-all cursor-pointer ${
                           isSelected
                             ? "border-[#011A2A] bg-white text-[#011A2A] font-semibold shadow-xs"
                             : "border-slate-200/90 bg-slate-50/50 text-slate-500 hover:bg-slate-100/60"
                         }`}
                       >
-                        <Icon className={`w-4 h-4 ${isSelected ? "text-[#D97706]" : "text-amber-500/70"}`} />
-                        <span className="whitespace-nowrap">{item.label}</span>
+                        <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isSelected ? "text-[#D97706]" : "text-amber-500/70"}`} />
+                        <span className="truncate sm:whitespace-nowrap">{item.label}</span>
                       </button>
                     );
                   })}
@@ -147,7 +147,7 @@ export default function TalkToOurTeam({ data }: TalkToOurTeamProps) {
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       className={`w-full h-11 px-4 rounded-xl border bg-white text-xs sm:text-sm text-[#011A2A] placeholder:text-slate-300 focus:outline-hidden transition-all ${
-                        errors.fullName ? "border-red-500 focus:border-red-500" : "border-slate-200 focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]"
+                        errors.fullName ? "border-red-500 focus:border-red-500" : "border-slate-200 focus:border-[#2571A5] focus:ring-1 focus:ring-[#2571A5]"
                       }`}
                     />
                     {errors.fullName && <p className="text-[11px] text-red-500 mt-1">{errors.fullName}</p>}
@@ -163,7 +163,7 @@ export default function TalkToOurTeam({ data }: TalkToOurTeamProps) {
                         onChange={(e) => setPreferredBranch(e.target.value)}
                         className={`w-full h-11 px-4 pr-10 rounded-xl border bg-white text-xs sm:text-sm appearance-none focus:outline-hidden transition-all cursor-pointer ${
                           preferredBranch ? "text-[#011A2A]" : "text-slate-300"
-                        } ${errors.preferredBranch ? "border-red-500" : "border-slate-200 focus:border-[#2563EB]"}`}
+                        } ${errors.preferredBranch ? "border-red-500" : "border-slate-200 focus:border-[#2571A5]"}`}
                       >
                         <option value="" disabled>
                           Select a branch
@@ -192,7 +192,7 @@ export default function TalkToOurTeam({ data }: TalkToOurTeamProps) {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className={`w-full h-11 px-4 rounded-xl border bg-white text-xs sm:text-sm text-[#011A2A] placeholder:text-slate-300 focus:outline-hidden transition-all ${
-                        errors.email ? "border-red-500" : "border-slate-200 focus:border-[#2563EB]"
+                        errors.email ? "border-red-500" : "border-slate-200 focus:border-[#2571A5]"
                       }`}
                     />
                     {errors.email && <p className="text-[11px] text-red-500 mt-1">{errors.email}</p>}
@@ -208,7 +208,7 @@ export default function TalkToOurTeam({ data }: TalkToOurTeamProps) {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       className={`w-full h-11 px-4 rounded-xl border bg-white text-xs sm:text-sm text-[#011A2A] placeholder:text-slate-300 focus:outline-hidden transition-all ${
-                        errors.phone ? "border-red-500" : "border-slate-200 focus:border-[#2563EB]"
+                        errors.phone ? "border-red-500" : "border-slate-200 focus:border-[#2571A5]"
                       }`}
                     />
                     {errors.phone && <p className="text-[11px] text-red-500 mt-1">{errors.phone}</p>}
@@ -229,8 +229,8 @@ export default function TalkToOurTeam({ data }: TalkToOurTeamProps) {
                         type="date"
                         value={checkInDate}
                         onChange={(e) => handleCheckInChange(e.target.value)}
-                        className={`w-full h-11 px-3 sm:px-4 rounded-xl border bg-white text-xs sm:text-sm text-[#011A2A] focus:outline-hidden transition-all ${
-                          errors.checkInDate ? "border-red-500" : "border-slate-200 focus:border-[#2563EB]"
+                        className={`w-full h-11 px-2.5 sm:px-4 rounded-xl border bg-white text-xs sm:text-sm text-[#011A2A] focus:outline-hidden transition-all ${
+                          errors.checkInDate ? "border-red-500" : "border-slate-200 focus:border-[#2571A5]"
                         }`}
                       />
                     </div>
@@ -252,8 +252,8 @@ export default function TalkToOurTeam({ data }: TalkToOurTeamProps) {
                         min={checkInDate}
                         value={checkOutDate}
                         onChange={(e) => setCheckOutDate(e.target.value)}
-                        className={`w-full h-11 px-3 sm:px-4 rounded-xl border bg-white text-xs sm:text-sm text-[#011A2A] focus:outline-hidden transition-all ${
-                          errors.checkOutDate ? "border-red-500" : "border-slate-200 focus:border-[#2563EB]"
+                        className={`w-full h-11 px-2.5 sm:px-4 rounded-xl border bg-white text-xs sm:text-sm text-[#011A2A] focus:outline-hidden transition-all ${
+                          errors.checkOutDate ? "border-red-500" : "border-slate-[#2571A5] focus:border-[#2571A5]"
                         }`}
                       />
                     </div>
@@ -272,14 +272,14 @@ export default function TalkToOurTeam({ data }: TalkToOurTeamProps) {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   rows={3}
-                  className="w-full h-24 p-4 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm text-[#011A2A] placeholder:text-slate-300 focus:outline-hidden focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] font-montserrat resize-none transition-all"
+                  className="w-full h-24 p-4 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm text-[#011A2A] placeholder:text-slate-300 focus:outline-hidden focus:border-[#2571A5] focus:ring-1 focus:ring-[#2571A5] font-montserrat resize-none transition-all"
                 />
               </div>
 
               {/* 5. SUBMIT BUTTON */}
               <button
                 type="submit"
-                className="w-full h-12 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs sm:text-sm font-semibold font-montserrat rounded-xl shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer transform active:scale-[0.99]"
+                className="w-full h-12 bg-[#2571A5] hover:bg-[#02569B] text-white text-xs sm:text-sm font-semibold font-montserrat rounded-xl shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer transform active:scale-[0.99]"
               >
                 <span>Let's Find Your Perfect Space</span>
                 <Send className="w-4 h-4 text-white" />

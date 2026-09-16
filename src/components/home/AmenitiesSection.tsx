@@ -73,12 +73,12 @@ export default function AmenitiesSection({ data }: AmenitiesSectionProps) {
               </h2>
             </div>
 
-            {/* 12 Amenities Grid (6 Columns × 2 Rows on Desktop) */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-y-8 gap-x-4 justify-items-center py-4">
+            {/* 12 Amenities Grid (2 Cols on Mobile, 4 Cols on Tablet, 6 Cols on Desktop) */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-y-6 sm:gap-y-8 gap-x-4 justify-items-center py-2 sm:py-4">
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex flex-col items-center text-center space-y-3 group cursor-pointer"
+                  className="flex flex-col items-center text-center space-y-2.5 sm:space-y-3 group cursor-pointer"
                 >
                   {/* PNG Image Asset */}
                   <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center p-1">
@@ -92,18 +92,24 @@ export default function AmenitiesSection({ data }: AmenitiesSectionProps) {
                   </div>
 
                   {/* Amenity Title */}
-                  <h3 className="text-xs sm:text-sm font-semibold text-[#011A2A] text-[16px] font-figtree tracking-tight text-center">
+                  <h3 className="text-xs sm:text-sm font-semibold text-[#011A2A] font-figtree tracking-tight text-center">
                     {item.title}
                   </h3>
                 </div>
               ))}
             </div>
 
-            {/* Bottom Centered Description Paragraph */}
-            <div className="pt-2 text-center">
-              <p className="text-xs sm:text-sm text-[#6C6F73] text-[18px] font-figtree max-w-[720px] mx-auto leading-relaxed text-center">
-                At Urban Living, we create a safe, comfortable and inspiring home where you can focus on your dreams and grow every day. At Urban Living, we create a safe, comfortable and inspiring
+            {/* Bottom Centered Description Paragraph / View More */}
+            <div className="pt-2 text-center space-y-3">
+              <p className="text-xs sm:text-sm lg:text-base text-[#6C6F73] font-figtree max-w-[720px] mx-auto leading-relaxed text-center">
+                At Urban Living, we create a safe, comfortable and inspiring home where you can focus on your dreams and grow every day.
               </p>
+              <a
+                href="/rooms"
+                className="inline-block text-xs font-semibold text-[#2571A5] hover:underline font-figtree"
+              >
+                View More
+              </a>
             </div>
 
           </div>

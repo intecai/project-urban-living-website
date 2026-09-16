@@ -30,7 +30,7 @@ export default function ContactHero({ data, navbarData }: ContactHeroProps) {
       </div>
 
       {/* 2. Navbar Overlay (absolute top-0 overlaying image) */}
-      <Navbar variant="translucent" activeLink="Contact Us" data={navbarData} />
+      <Navbar variant="transparent" activeLink="Contact Us" data={navbarData} />
 
       {/* 3. Centered Heading over Image & below Navbar */}
       <div className="relative z-10 flex-1 flex items-center justify-center pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-24 px-4 text-center">
