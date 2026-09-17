@@ -23,6 +23,11 @@ export interface AmenityItemData {
   imageIcon?: string;
 }
 
+export const MADHANANDAPURAM_MAP_URL =
+  "https://www.google.com/maps?q=13.018336296081543,80.15691375732422&z=17&hl=en";
+export const MADHANANDAPURAM_LAT = 13.018336296081543;
+export const MADHANANDAPURAM_LNG = 80.15691375732422;
+
 export interface AboutPropertyData {
   title: string;
   paragraph1: string;
@@ -30,16 +35,23 @@ export interface AboutPropertyData {
   readMoreLabel: string;
   readLessLabel: string;
   mapImage: string;
+  mapUrl?: string;
 }
 
 export interface FloorOption {
   id: string;
   label: string;
   detailsLabel: string;
+  mapUrl?: string;
   gallery: GalleryItem[];
 }
 
 export interface MadanandapuramData {
+  name: string;
+  slug: string;
+  mapUrl: string;
+  latitude: number;
+  longitude: number;
   hero: {
     title: string;
     subtitle: string;
@@ -58,6 +70,11 @@ export interface MadanandapuramData {
 }
 
 export const madanandapuramData: MadanandapuramData = {
+  name: "Madhanandapuram",
+  slug: "madanandapuram",
+  mapUrl: MADHANANDAPURAM_MAP_URL,
+  latitude: MADHANANDAPURAM_LAT,
+  longitude: MADHANANDAPURAM_LNG,
   hero: {
     title: "Urban Living - Madhanandapuram",
     subtitle: "Comfortable PG Living • Private & Shared Rooms • All Essential Amenities",
@@ -72,6 +89,7 @@ export const madanandapuramData: MadanandapuramData = {
       id: "ground",
       label: "Ground Floor",
       detailsLabel: "Ground Floor",
+      mapUrl: MADHANANDAPURAM_MAP_URL,
       gallery: [
         {
           id: "1",
@@ -103,6 +121,7 @@ export const madanandapuramData: MadanandapuramData = {
       id: "first",
       label: "First Floor",
       detailsLabel: "First Floor",
+      mapUrl: MADHANANDAPURAM_MAP_URL,
       gallery: [
         {
           id: "1",
@@ -134,6 +153,7 @@ export const madanandapuramData: MadanandapuramData = {
       id: "4a",
       label: "4A",
       detailsLabel: "4A",
+      mapUrl: MADHANANDAPURAM_MAP_URL,
       gallery: [
         {
           id: "1",
@@ -165,6 +185,7 @@ export const madanandapuramData: MadanandapuramData = {
       id: "4b",
       label: "4B",
       detailsLabel: "4B",
+      mapUrl: MADHANANDAPURAM_MAP_URL,
       gallery: [
         {
           id: "1",
@@ -255,5 +276,6 @@ export const madanandapuramData: MadanandapuramData = {
     readMoreLabel: "See More",
     readLessLabel: "See Less",
     mapImage: "/images/rooms/urbanlivingMap.png",
+    mapUrl: MADHANANDAPURAM_MAP_URL,
   },
 };

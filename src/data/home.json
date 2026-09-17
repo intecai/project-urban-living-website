@@ -7,7 +7,7 @@
     "primaryCtaText": "Explore Rooms",
     "primaryCtaHref": "/rooms",
     "secondaryCtaText": "View Locations",
-    "secondaryCtaHref": "#explore-locations",
+    "secondaryCtaHref": "/locations",
     "heroImage": "/images/home/homeHero.png"
   },
   "exploreLocations": {
@@ -21,21 +21,24 @@
         "name": "Ramapuram",
         "price": "₹8,500/mo",
         "image": "/images/rooms/room_single.png",
-        "href": "/locations?slug=ramapuram"
+        "href": "/locations?slug=ramapuram",
+        "buttonText": "Explore Location"
       },
       {
         "id": "2",
-        "name": "Madanandapuram",
+        "name": "Madhanandapuram",
         "price": "₹7,200/mo",
         "image": "/images/rooms/room_deluxe.png",
-        "href": "/locations?slug=madanandapuram"
+        "href": "/locations?slug=madanandapuram",
+        "buttonText": "Explore Location"
       },
       {
         "id": "3",
-        "name": "Madanandapuram",
+        "name": "Madhanandapuram",
         "price": "₹9,000/mo",
         "image": "/images/rooms/room_sharing.png",
-        "href": "/locations?slug=madanandapuram"
+        "href": "/locations?slug=madanandapuram",
+        "buttonText": "Explore Location"
       }
     ]
   },

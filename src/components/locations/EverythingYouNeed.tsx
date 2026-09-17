@@ -52,23 +52,23 @@ export default function EverythingYouNeed({ data }: EverythingYouNeedProps) {
   const features = data?.features || defaultNearbyItems;
 
   return (
-    <section className="w-full py-12 lg:py-16 bg-white font-montserrat">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 space-y-8 sm:space-y-10">
+    <section className="w-full py-8 sm:py-12 lg:py-16 bg-white font-montserrat">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 space-y-6 sm:space-y-8 lg:space-y-10">
         
         {/* Left-Aligned Heading */}
-        <h2 className="text-2xl sm:text-3xl font-semibold text-[#0B1C30] text-[26px] tracking-tight mt-8 font-figtree text-left">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-[#0B1C30] text-[26px] tracking-tight mt-0 sm:mt-8 font-figtree text-left">
           {heading}
         </h2>
 
         {/* 6 Nearby Items Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 justify-items-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-6 sm:gap-8 justify-items-center">
           {features.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col items-center text-center space-y-2.5 max-w-[160px]"
+              className="flex flex-col items-center text-center space-y-2 sm:space-y-2.5 max-w-[160px] w-full"
             >
               {/* Circular Background with PNG Image */}
-              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#EFF6FF] flex items-center justify-center shadow-2xs mb-4 transition-transform hover:scale-105 duration-300">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#EFF6FF] flex items-center justify-center shadow-2xs mb-1 sm:mb-4 transition-transform hover:scale-105 duration-300 shrink-0">
                 <Image
                   src={item.icon || (item as any).image}
                   alt={item.title}

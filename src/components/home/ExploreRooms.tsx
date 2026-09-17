@@ -13,6 +13,8 @@ const categoryTabs = [
   { id: "single", label: "Single room", icon: "/images/home/SingleRoom.png", isGold: false },
   { id: "double", label: "Double Sharing", icon: "/images/home/DoubleSharing.png", isGold: false },
   { id: "triple", label: "Triple sharing", icon: "/images/home/TripleSharing.png", isGold: false },
+  { id: "four", label: "Four Sharing", icon: "/images/home/fourSharingHome.png", isGold: false },
+  { id: "five", label: "Five Sharing", icon: "/images/home/fiveSharingHome.png", isGold: false },
 ];
 
 export interface ExploreRoomsProps {
@@ -33,10 +35,21 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
       return room.category === "single" || room.title.toLowerCase().includes("single");
     }
     if (activeCategory === "double") {
-      return room.category === "double" || room.title.toLowerCase().includes("double") || room.title.toLowerCase().includes("four") || room.title.toLowerCase().includes("two");
+      return (
+        (room.category === "double" && !room.title.toLowerCase().includes("four")) ||
+        room.title.toLowerCase().includes("double") ||
+        room.title.toLowerCase().includes("two") ||
+        room.title.toLowerCase().includes("twin")
+      );
     }
     if (activeCategory === "triple") {
       return room.category === "triple" || room.title.toLowerCase().includes("three") || room.title.toLowerCase().includes("triple");
+    }
+    if (activeCategory === "four") {
+      return room.title.toLowerCase().includes("four") || room.slug?.includes("four");
+    }
+    if (activeCategory === "five") {
+      return room.title.toLowerCase().includes("five") || room.slug?.includes("five");
     }
     return true;
   });

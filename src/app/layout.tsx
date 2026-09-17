@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Figtree, Montserrat, Plus_Jakarta_Sans, Lato, Alex_Brush, Great_Vibes, Manrope, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -73,6 +74,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         {children}
+        <FloatingWhatsApp />
       </body>
     </html>
   );

@@ -23,7 +23,7 @@ export default function RamapuramLocation({ location }: RamapuramLocationProps) 
       </p>
 
       <a
-        href={`https://maps.google.com/?q=${encodeURIComponent(location.address)}`}
+        href={location.mapUrl || "https://maps.google.com/?q=13.029858,80.187920"}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center text-xs font-semibold text-[#0053B0] hover:underline"

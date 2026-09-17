@@ -2,6 +2,7 @@
   {
     "id": "room-001",
     "title": "Single Room",
+    "slug": "single-room",
     "category": "single",
     "location": "Ramapuram, Chennai",
     "area": "Ramapuram",
@@ -15,7 +16,8 @@
   },
   {
     "id": "room-002",
-    "title": "Single Room",
+    "title": "Deluxe Single Room",
+    "slug": "deluxe-single-room",
     "category": "single",
     "location": "Madanandapuram, Chennai",
     "area": "Madanandapuram",
@@ -28,7 +30,8 @@
   },
   {
     "id": "room-003",
-    "title": "Three sharing Room",
+    "title": "Three Sharing Room",
+    "slug": "three-sharing-room",
     "category": "triple",
     "location": "Ramapuram, Chennai",
     "area": "Ramapuram",
@@ -41,20 +44,23 @@
   },
   {
     "id": "room-004",
-    "title": "Three sharing Room",
-    "category": "triple",
+    "title": "Premium Single Room",
+    "slug": "premium-single-room",
+    "category": "single",
     "location": "Madanandapuram, Chennai",
     "area": "Madanandapuram",
     "deposit": 4500,
     "availableNow": true,
     "amenities": ["WiFi", "AC", "Food", "Laundry"],
-    "price": 11800,
+    "price": 8500,
     "priceLabel": "month",
-    "image": "/images/rooms/room_comfort.png"
+    "image": "/images/rooms/premium_single_main.png",
+    "badge": "Most Popular"
   },
   {
     "id": "room-005",
-    "title": "Two Sharing",
+    "title": "Double Sharing Room",
+    "slug": "double-sharing-room",
     "category": "double",
     "location": "Anna Nagar, Chennai",
     "area": "Anna Nagar",
@@ -68,7 +74,8 @@
   },
   {
     "id": "room-006",
-    "title": "Four Sharing",
+    "title": "Four Sharing Room",
+    "slug": "four-sharing-room",
     "category": "double",
     "location": "Guindy, Chennai",
     "area": "Guindy",
@@ -81,8 +88,9 @@
   },
   {
     "id": "room-007",
-    "title": "Three sharing Room",
-    "category": "triple",
+    "title": "Two Sharing Room",
+    "slug": "two-sharing-room",
+    "category": "double",
     "location": "Porur, Chennai",
     "area": "Porur",
     "deposit": 4500,
@@ -95,8 +103,9 @@
   },
   {
     "id": "room-008",
-    "title": "Three Sharing Room",
-    "category": "triple",
+    "title": "Twin Sharing Room",
+    "slug": "twin-sharing-room",
+    "category": "double",
     "location": "Velachery, Chennai",
     "area": "Velachery",
     "deposit": 5000,
@@ -105,5 +114,19 @@
     "price": 11500,
     "priceLabel": "month",
     "image": "/images/rooms/room_deluxe.png"
+  },
+  {
+    "id": "room-009",
+    "title": "Five Sharing Room",
+    "slug": "five-sharing-room",
+    "category": "triple",
+    "location": "Madanandapuram, Chennai",
+    "area": "Madanandapuram",
+    "deposit": 4000,
+    "availableNow": true,
+    "amenities": ["WiFi", "AC", "Food", "Housekeeping"],
+    "price": 6800,
+    "priceLabel": "month",
+    "image": "/images/rooms/room_sharing.png"
   }
 ]

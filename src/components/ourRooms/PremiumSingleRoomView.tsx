@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -20,12 +20,14 @@ import {
 import Navbar from "@/components/Navbar";
 import EnquiryBanner from "@/components/EnquiryBanner";
 import Footer from "@/components/Footer";
+import { RoomDetailData } from "@/services/roomsService";
 
 export interface PremiumSingleRoomViewProps {
   commonData?: any;
+  roomData?: RoomDetailData;
 }
 
-const galleryImages = [
+const defaultGalleryImages = [
   {
     id: 1,
     src: "/images/rooms/premium_single_main.png",
@@ -52,7 +54,7 @@ const galleryImages = [
   },
 ];
 
-const roomAmenitiesList = [
+const defaultRoomAmenitiesList = [
   { id: "kitchen", label: "Kitchen", icon: "/images/rooms/Amenities-kitchen.png" },
   { id: "geyser", label: "Geyser", icon: "/images/rooms/Amenities-Geyser.png" },
   { id: "tv", label: "TV", icon: "/images/rooms/Amenities-TV.png" },
@@ -68,79 +70,65 @@ const roomAmenitiesList = [
   { id: "caretaker", label: "Caretaker", icon: "/images/rooms/Amenities-Caretaker.png" },
 ];
 
-const whatsIncludedList = [
-  {
-    id: "room",
-    title: "Room",
-    desc: "Fully furnished private room with attached bathroom",
-    iconImage: "/images/rooms/room-abt.png",
-  },
-  {
-    id: "food",
-    title: "Food",
-    desc: "Homely food included (Breakfast, Lunch & Dinner)",
-    iconImage: "/images/rooms/food-abt.png",
-  },
-  {
-    id: "connectivity",
-    title: "Connectivity",
-    desc: "High-speed Wi-Fi internet access",
-    iconImage: "/images/rooms/connectivity-abt.png",
-  },
-  {
-    id: "utilities",
-    title: "Utilities",
-    desc: "EB (Electricity) & water supply included",
-    iconImage: "/images/rooms/utilities-abt.png",
-  },
-  {
-    id: "commonFacilities",
-    title: "Common Facilities",
-    desc: "Access to all shared amenities and common areas",
-    iconImage: "/images/rooms/connectionFacilities-abt.png",
-  },
-];
+const getNearbyIcon = (name?: string, fallbackIcon: any = MapPin) => {
+  if (!name) return fallbackIcon;
+  switch (name) {
+    case "MapPin": return MapPin;
+    case "Footprints": return Footprints;
+    case "Car": return Car;
+    case "Bus": return Bus;
+    case "Train": return Train;
+    default: return fallbackIcon;
+  }
+};
 
-const whatsNearbyList = [
+const defaultWhatsNearbyList = [
   {
     id: "1",
     name: "Shine Sports Academy",
     time: "3 min",
-    leftIcon: MapPin,
-    modeIcon: Footprints,
+    leftIconName: "MapPin",
+    modeIconName: "Footprints",
   },
   {
     id: "2",
     name: "Sunshine Badminton Academy",
     time: "4 min",
-    leftIcon: MapPin,
-    modeIcon: Footprints,
+    leftIconName: "MapPin",
+    modeIconName: "Footprints",
   },
   {
     id: "3",
     name: "Kovai Medical Center & Hospital",
     time: "7 min",
-    leftIcon: MapPin,
-    modeIcon: Car,
+    leftIconName: "MapPin",
+    modeIconName: "Car",
   },
   {
     id: "4",
     name: "Peelamedu Bus Stand",
     time: "12 min",
-    leftIcon: Bus,
-    modeIcon: Bus,
+    leftIconName: "Bus",
+    modeIconName: "Bus",
   },
   {
     id: "5",
     name: "Coimbatore Railway Station",
     time: "15 min",
-    leftIcon: Train,
-    modeIcon: Train,
+    leftIconName: "Train",
+    modeIconName: "Train",
   },
 ];
 
-export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomViewProps) {
-  const [selectedImage, setSelectedImage] = useState(galleryImages[0]);
+export default function PremiumSingleRoomView({ commonData, roomData }: PremiumSingleRoomViewProps) {
+  const images = roomData?.galleryImages || defaultGalleryImages;
+  const [selectedImage, setSelectedImage] = useState(images[0]);
+
+  useEffect(() => {
+    if (images && images.length > 0) {
+      setSelectedImage(images[0]);
+    }
+  }, [roomData?.slug]);
 
   const handleEnquireScroll = () => {
     const banner = document.getElementById("enquiry-section");
@@ -148,6 +136,42 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
       banner.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  const whatsIncludedList = [
+    {
+      id: "room",
+      title: "Room",
+      desc: roomData?.whatsIncluded?.room || "Fully furnished private room with attached bathroom",
+      iconImage: "/images/rooms/room-abt.png",
+    },
+    {
+      id: "food",
+      title: "Food",
+      desc: roomData?.whatsIncluded?.food || "Homely food included (Breakfast, Lunch & Dinner)",
+      iconImage: "/images/rooms/food-abt.png",
+    },
+    {
+      id: "connectivity",
+      title: "Connectivity",
+      desc: roomData?.whatsIncluded?.connectivity || "High-speed Wi-Fi internet access",
+      iconImage: "/images/rooms/connectivity-abt.png",
+    },
+    {
+      id: "utilities",
+      title: "Utilities",
+      desc: roomData?.whatsIncluded?.utilities || "EB (Electricity) & water supply included",
+      iconImage: "/images/rooms/utilities-abt.png",
+    },
+    {
+      id: "commonFacilities",
+      title: "Common Facilities",
+      desc: roomData?.whatsIncluded?.commonFacilities || "Access to all shared amenities and common areas",
+      iconImage: "/images/rooms/connectionFacilities-abt.png",
+    },
+  ];
+
+  const amenitiesList = roomData?.amenities || defaultRoomAmenitiesList;
+  const nearbyList = roomData?.whatsNearby || defaultWhatsNearbyList;
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-[#FAFCFF] font-figtree text-slate-900">
@@ -166,7 +190,9 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
             Rooms
           </Link>
           <ChevronRight className="w-3.5 h-3.5 text-[#111827]" />
-          <span className="text-[#111827] font-medium font-figtree">Premium Single Room</span>
+          <span className="text-[#111827] font-medium font-figtree">
+            {roomData?.name || "Premium Single Room"}
+          </span>
         </nav>
 
         {/* 3. UPPER 2-COLUMN LAYOUT MATCHING FIGMA TOP ALIGNMENT */}
@@ -187,40 +213,44 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
                   className="object-cover transition-all duration-300"
                 />
 
-                {/* Most Popular Badge */}
-                <div className="absolute top-4 left-4 z-10">
-                  <span className="inline-block px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-full text-white bg-[#0E1C36]/90 backdrop-blur-md border border-white/20 shadow-md">
-                    Most Popular
-                  </span>
-                </div>
+                {/* Badge Overlay */}
+                {roomData?.badge && (
+                  <div className="absolute top-4 left-4 z-10">
+                    <span className="inline-block px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-full text-white bg-[#0E1C36]/90 backdrop-blur-md border border-white/20 shadow-md">
+                      {roomData.badge}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* 3 Thumbnails Directly Below Main Image */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-4">
-                {galleryImages.slice(1, 4).map((img) => {
-                  const isSelected = selectedImage.id === img.id;
-                  return (
-                    <button
-                      key={img.id}
-                      type="button"
-                      onClick={() => setSelectedImage(img)}
-                      className={`relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-100 border-2 transition-all cursor-pointer ${
-                        isSelected
-                          ? "border-[#02569B] ring-2 ring-[#02569B]/20 scale-[1.02]"
-                          : "border-transparent opacity-80 hover:opacity-100 hover:border-slate-300"
-                      }`}
-                    >
-                      <Image
-                        src={img.src}
-                        alt={img.alt}
-                        fill
-                        sizes="(max-width: 768px) 33vw, 20vw"
-                        className="object-cover"
-                      />
-                    </button>
-                  );
-                })}
-              </div>
+              {images.length > 1 && (
+                <div className="grid grid-cols-3 gap-3 sm:gap-4">
+                  {images.slice(1, 4).map((img) => {
+                    const isSelected = selectedImage.id === img.id;
+                    return (
+                      <button
+                        key={img.id}
+                        type="button"
+                        onClick={() => setSelectedImage(img)}
+                        className={`relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-100 border-2 transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-[#02569B] ring-2 ring-[#02569B]/20 scale-[1.02]"
+                            : "border-transparent opacity-80 hover:opacity-100 hover:border-slate-300"
+                        }`}
+                      >
+                        <Image
+                          src={img.src}
+                          alt={img.alt}
+                          fill
+                          sizes="(max-width: 768px) 33vw, 20vw"
+                          className="object-cover"
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* About This Room Card */}
@@ -231,55 +261,32 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
               </div>
 
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-                A comfortable private space designed for your privacy and convenience. This fully furnished single room comes with an attached bathroom and all essential amenities for a peaceful and hassle-free stay.
+                {roomData?.description || "A comfortable private space designed for your privacy and convenience. This fully furnished single room comes with an attached bathroom and all essential amenities for a peaceful and hassle-free stay."}
               </p>
 
               {/* Checkmarks Checklist */}
               <div className="pt-2 space-y-3">
-                <div className="flex items-center gap-3 text-sm sm:text-base text-slate-700 font-medium">
-                  <Image
-                    src="/images/rooms/checkmark.png"
-                    alt="Checkmark"
-                    width={20}
-                    height={20}
-                    className="w-5 h-5 object-contain shrink-0"
-                  />
-                  <span>Ideal for students and working professionals</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm sm:text-base text-slate-700 font-medium">
-                  <Image
-                    src="/images/rooms/checkmark.png"
-                    alt="Checkmark"
-                    width={20}
-                    height={20}
-                    className="w-5 h-5 object-contain shrink-0"
-                  />
-                  <span>Well-ventilated with natural light</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm sm:text-base text-slate-700 font-medium">
-                  <Image
-                    src="/images/rooms/checkmark.png"
-                    alt="Checkmark"
-                    width={20}
-                    height={20}
-                    className="w-5 h-5 object-contain shrink-0"
-                  />
-                  <span>Regular housekeeping & laundry facility</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm sm:text-base text-slate-700 font-medium">
-                  <Image
-                    src="/images/rooms/checkmark.png"
-                    alt="Checkmark"
-                    width={20}
-                    height={20}
-                    className="w-5 h-5 object-contain shrink-0"
-                  />
-                  <span>Access to all common PG amenities</span>
-                </div>
+                {(roomData?.highlights || [
+                  "Ideal for students and working professionals",
+                  "Well-ventilated with natural light",
+                  "Regular housekeeping & laundry facility",
+                  "Access to all common PG amenities",
+                ]).map((highlight, idx) => (
+                  <div key={idx} className="flex items-center gap-3 text-sm sm:text-base text-slate-700 font-medium">
+                    <Image
+                      src="/images/rooms/checkmark.png"
+                      alt="Checkmark"
+                      width={20}
+                      height={20}
+                      className="w-5 h-5 object-contain shrink-0"
+                    />
+                    <span>{highlight}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* What's Included Card (5 Vertical Items in a Row) */}
+            {/* What's Included Card */}
             <div className="bg-white border border-[#E2E8F0] rounded-2xl sm:rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xs">
               <div className="flex items-center gap-2.5 text-xl sm:text-2xl font-bold text-[#011A2A]">
                 <Users className="w-5 h-5 text-[#02569B]" />
@@ -324,10 +331,10 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
             {/* Header Title Info Block */}
             <div className="space-y-3">
               <span className="inline-block text-xs sm:text-sm font-medium font-figtree uppercase tracking-wider text-[#2571A5]">
-                URBAN LIVING • RAMAPURAM
+                URBAN LIVING • {(roomData?.area || "RAMAPURAM").toUpperCase()}
               </span>
               <h1 className="text-3xl sm:text-4xl font-medium text-[#111827] tracking-tight leading-tight">
-                Premium Single Room
+                {roomData?.name || "Premium Single Room"}
               </h1>
               <div className="flex items-center gap-1.5 text-xs sm:text-sm text-[#6B7280] font-figtree">
                 <Image
@@ -337,7 +344,7 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
                   height={16}
                   className="w-4 h-4 object-contain"
                 />
-                <span>Ramapuram, Chennai</span>
+                <span>{roomData?.location || "Ramapuram, Chennai"}</span>
               </div>
 
               {/* Feature Tags Individual Pill Badges */}
@@ -346,34 +353,34 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
                   <div className="inline-flex items-center gap-2.5 px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-full text-xs sm:text-sm font-medium text-[#111827] shadow-2xs">
                     <Image
                       src="/images/rooms/singleoccupancy-premium.png"
-                      alt="Single Occupancy"
+                      alt={roomData?.occupancyTag || "Single Occupancy"}
                       width={18}
                       height={18}
                       className="w-4 h-4 object-contain"
                     />
-                    <span>Single Occupancy</span>
+                    <span>{roomData?.occupancyTag || "Single Occupancy"}</span>
                   </div>
 
                   <div className="inline-flex items-center gap-2.5 px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-full text-xs sm:text-sm font-medium text-[#111827] shadow-2xs">
                     <Image
                       src="/images/rooms/fullyfurnished-premium.png"
-                      alt="Fully Furnished"
+                      alt={roomData?.furnishedTag || "Fully Furnished"}
                       width={18}
                       height={18}
                       className="w-4 h-4 object-contain"
                     />
-                    <span>Fully Furnished</span>
+                    <span>{roomData?.furnishedTag || "Fully Furnished"}</span>
                   </div>
 
                   <div className="inline-flex items-center gap-2.5 px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-full text-xs sm:text-sm font-medium text-[#111827] shadow-2xs">
                     <Image
                       src="/images/rooms/attachedbathroom-premium.png"
-                      alt="Attached Bathroom"
+                      alt={roomData?.bathroomTag || "Attached Bathroom"}
                       width={18}
                       height={18}
                       className="w-4 h-4 object-contain"
                     />
-                    <span>Attached Bathroom</span>
+                    <span>{roomData?.bathroomTag || "Attached Bathroom"}</span>
                   </div>
                 </div>
               </div>
@@ -386,21 +393,24 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
                   Starting From
                 </span>
                 <span className="text-3xl sm:text-4xl lg:text-[37px] font-bold text-[#2571A5] font-figtree leading-none">
-                  ₹8,500
+                  ₹{roomData?.price ? roomData.price.toLocaleString("en-IN") : "8,500"}
                 </span>
                 <span className="text-base sm:text-xl text-[#6B7280] font-normal font-figtree">
-                  / month
+                  / {roomData?.priceLabel || "month"}
                 </span>
               </div>
               <span className="text-sm sm:text-base text-[#6B7280] font-normal font-figtree block pt-0.5">
-                Food Included
+                {roomData?.foodInfo || "Food Included"}
               </span>
             </div>
 
-            {/* Enquire CTA Button */}
-            <button
-              type="button"
-              onClick={handleEnquireScroll}
+            {/* Enquire CTA Button (WhatsApp +91 90030 79966) */}
+            <a
+              href={`https://wa.me/919003079966?text=${encodeURIComponent(
+                `Hello Urban Living Team,\n\nI would like to enquire about:\n• Room: ${roomData?.name || "Premium Single Room"}\n• Location: ${roomData?.location || "Ramapuram, Chennai"}\n• Price: ₹${roomData?.price ? roomData.price.toLocaleString("en-IN") : "8,500"} / month\n\nPlease share availability and booking details.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-full bg-[#2571A5] hover:bg-[#02569B] text-white py-4 px-6 rounded-[16px] font-medium text-base sm:text-lg shadow-xs transition-all duration-200 transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-3 cursor-pointer"
             >
               <svg className="w-5 h-5 fill-current text-white shrink-0" viewBox="0 0 24 24">
@@ -408,7 +418,7 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
                 <path d="M16.85 14.37c-.267-.134-1.578-.779-1.823-.868-.245-.089-.423-.134-.601.134-.178.267-.69.868-.846 1.046-.156.178-.312.2-.579.067-.267-.134-1.129-.416-2.15-1.327-.795-.709-1.332-1.584-1.488-1.851-.156-.267-.017-.412.117-.545.12-.12.267-.312.401-.468.134-.156.178-.267.267-.446.089-.178.045-.334-.022-.468-.067-.134-.601-1.448-.824-1.983-.217-.522-.438-.451-.601-.459-.156-.008-.334-.008-.512-.008s-.468.067-.713.334c-.245.267-.935.913-.935 2.227 0 1.314.957 2.584 1.09 2.762.134.178 1.884 2.877 4.564 4.034.638.276 1.136.441 1.525.565.64.204 1.222.175 1.682.106.513-.077 1.578-.646 1.801-1.27.223-.624.223-1.159.156-1.27-.067-.111-.245-.178-.512-.312z" />
               </svg>
               <span>Enquire About This Room</span>
-            </button>
+            </a>
 
             {/* Room Amenities Sidebar Card */}
             <div className="bg-white border border-[#E2E8F0] rounded-2xl sm:rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xs">
@@ -419,9 +429,9 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
                 <h2>Room Amenities</h2>
               </div>
 
-              {/* List of Amenities with Golden Outline Icons */}
+              {/* List of Amenities */}
               <div className="space-y-4 pt-1">
-                {roomAmenitiesList.map((amenity) => (
+                {amenitiesList.map((amenity) => (
                   <div
                     key={amenity.id}
                     className="flex items-center gap-3.5 text-sm sm:text-base text-slate-700 font-medium group"
@@ -446,7 +456,7 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
 
         </div>
 
-        {/* 4. LOWER 2-COLUMN LAYOUT MATCHING FIGMA START & END BOUNDS EXACTLY */}
+        {/* 4. LOWER 2-COLUMN LAYOUT MATCHING FIGMA */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch pt-2">
           
           {/* LEFT: Location Card (7 Cols) */}
@@ -460,13 +470,13 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
 
                 <div className="space-y-1">
                   <h3 className="text-base sm:text-lg font-semibold text-[#011A2A] font-figtree">
-                    Urban Living - Ramapuram
+                    Urban Living - {roomData?.area || "Ramapuram"}
                   </h3>
                   <p className="text-xs sm:text-sm text-[#6B7280] font-normal font-figtree">
-                    Chennai
+                    {roomData?.city || "Chennai"}
                   </p>
                   <a
-                    href="https://maps.google.com"
+                    href={roomData?.mapUrl || "https://maps.google.com"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-xs font-medium text-[#2571A5] hover:underline pt-1 font-figtree"
@@ -487,7 +497,7 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
               <div className="relative w-full h-[220px] sm:h-[260px] rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 mt-4 flex-1">
                 <Image
                   src="/images/rooms/urbanlivingMap.png"
-                  alt="Urban Living Ramapuram Map Location"
+                  alt={`Urban Living ${roomData?.area || "Ramapuram"} Map Location`}
                   fill
                   className="object-cover"
                 />
@@ -505,9 +515,9 @@ export default function PremiumSingleRoomView({ commonData }: PremiumSingleRoomV
                 </div>
 
                 <div className="divide-y divide-slate-100">
-                  {whatsNearbyList.map((item) => {
-                    const LeftIcon = item.leftIcon;
-                    const ModeIcon = item.modeIcon;
+                  {nearbyList.map((item: any) => {
+                    const LeftIcon = getNearbyIcon(item.leftIconName, MapPin);
+                    const ModeIcon = getNearbyIcon(item.modeIconName, Footprints);
                     return (
                       <div
                         key={item.id}

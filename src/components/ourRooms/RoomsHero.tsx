@@ -7,7 +7,7 @@ import { ChevronRight } from "lucide-react";
 
 export default function RoomsHero() {
   return (
-    <section className="relative w-full bg-[#F8FAFC] overflow-hidden min-h-[340px] sm:min-h-[400px] lg:min-h-[440px] flex items-center">
+    <section className="relative w-full bg-[#F8FAFC] overflow-hidden min-h-[260px] sm:min-h-[320px] md:min-h-[380px] lg:min-h-[440px] flex items-center">
       {/* Background Image Banner */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -22,10 +22,10 @@ export default function RoomsHero() {
       </div>
 
       {/* Hero Content Container */}
-      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 w-full pt-24 sm:pt-28 md:pt-32 pb-10 lg:pb-14">
+      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 w-full pt-24 sm:pt-28 md:pt-32 pb-8 sm:pb-10 lg:pb-14">
         <div className="max-w-lg lg:max-w-xl">
           {/* Breadcrumb Navigation */}
-          <nav className="flex items-center gap-2 text-sm text-[#011A2A] font-manrope text-[15px] font-medium mb-4">
+          <nav className="flex items-center gap-2 text-xs sm:text-sm text-[#011A2A] font-manrope font-medium mb-3 sm:mb-4">
             <Link href="/" className="hover:text-[#1F2937] transition-colors">
               Home
             </Link>
@@ -34,12 +34,12 @@ export default function RoomsHero() {
           </nav>
 
           {/* Main Hero Headline */}
-          <h1 className="text-3xl sm:text-4xl lg:text-[42px] xl:text-[52px] text-[#000000] font-Plus_Jakarta_Sans tracking-tight leading-[1.15] mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] xl:text-[52px] text-[#000000] font-Plus_Jakarta_Sans tracking-tight leading-[1.15] mb-3 sm:mb-4 font-medium">
             Our Rooms
           </h1>
 
           {/* Subtitle Description */}
-          <p className="text-base sm:text-lg text-[#0A3A5B] font-Plus_Jakarta_Sans font-normal leading-relaxed max-w-md sm:max-w-lg">
+          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-[#0A3A5B] font-Plus_Jakarta_Sans font-normal leading-relaxed max-w-md sm:max-w-lg">
             Choose From Premium, fully furnished rooms across Chennai. Safe, Comfortable and designed for your Lifestyle.
           </p>
         </div>

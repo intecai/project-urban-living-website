@@ -4,6 +4,7 @@ export interface LocationCardData {
   price: string;
   image: string;
   href: string;
+  buttonText?: string;
 }
 
 export interface PopularLocationsData {
@@ -51,6 +52,10 @@ export interface PricingPlan {
 
 export interface LocationDetailData {
   slug: string;
+  name?: string;
+  mapUrl?: string;
+  latitude?: number;
+  longitude?: number;
   title: string;
   subtitle: string;
   gallery: GalleryImage[];

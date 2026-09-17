@@ -3,33 +3,36 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ExploreLocationsData } from "@/types/home";
+import { ExploreLocationsData, LocationCardItem } from "@/types/home";
 
 export interface ExploreLocationsProps {
   data?: ExploreLocationsData;
 }
 
-const defaultLocations = [
+const defaultLocations: LocationCardItem[] = [
   {
-    id: "1",
-    name: "Ramapuram",
-    price: "₹8,500/mo",
-    image: "/images/rooms/room_single.png",
-    href: "/locations?slug=ramapuram",
+    "id": "1",
+    "name": "Ramapuram",
+    "price": "₹8,500/mo",
+    "image": "/images/rooms/room_single.png",
+    "href": "/locations?slug=ramapuram",
+    "buttonText": "Explore Location"
   },
   {
-    id: "2",
-    name: "Madanandapuram",
-    price: "₹7,200/mo",
-    image: "/images/rooms/room_deluxe.png",
-    href: "/locations?slug=madanandapuram",
+    "id": "2",
+    "name": "Madhanandapuram",
+    "price": "₹7,200/mo",
+    "image": "/images/rooms/room_deluxe.png",
+    "href": "/locations?slug=madanandapuram",
+    "buttonText": "Explore Location"
   },
   {
-    id: "3",
-    name: "Madanandapuram",
-    price: "₹9,000/mo",
-    image: "/images/rooms/room_sharing.png",
-    href: "/locations?slug=madanandapuram",
+    "id": "3",
+    "name": "Madhanandapuram",
+    "price": "₹9,000/mo",
+    "image": "/images/rooms/room_sharing.png",
+    "href": "/locations?slug=madanandapuram",
+    "buttonText": "Explore Location"
   },
 ];
 
@@ -39,7 +42,7 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
 
   return (
     <section className="w-full py-12 sm:py-16 bg-white font-figtree">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 space-y-8">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-16 space-y-8">
         {/* Section Heading matching Figma */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
@@ -59,7 +62,7 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
         </div>
 
         {/* 3 Location Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
           {locationList.map((card) => (
             <div
               key={card.id}
@@ -93,12 +96,12 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
                   </div>
                 </div>
 
-                {/* Explore Rooms Button */}
+                {/* Explore Location Button */}
                 <Link
                   href={card.href}
                   className="w-full py-2.5 sm:py-3 rounded-full border border-[#0053B0] text-[#0053B0] text-[16px] bg-white hover:bg-[#02569B] hover:text-white text-xs sm:text-sm font-semibold text-center transition-colors duration-200 shadow-2xs font-figtree flex items-center justify-center cursor-pointer mt-3"
                 >
-                  Explore Rooms
+                  {card.buttonText || "Explore Location"}
                 </Link>
               </div>
             </div>

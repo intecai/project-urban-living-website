@@ -1,8 +1,10 @@
-export type RoomCategory = "all" | "single" | "double" | "triple" | "private";
+export type RoomCategory = "all" | "single" | "double" | "triple" | "four" | "five" | "private";
 
 export interface RoomItem {
   id: string;
   name: string;
+  slug?: string;
+  badge?: string;
   category: RoomCategory;
   location: string;
   area: string;

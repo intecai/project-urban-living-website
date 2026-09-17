@@ -103,7 +103,7 @@ export default function ReviewsSection({ data }: ReviewsSectionProps) {
             </h3>
 
             {/* Slider Navigation Controls */}
-            {/* <div className="hidden sm:flex items-center gap-3 pt-2">
+            <div className="hidden sm:flex items-center gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => scroll("left")}
@@ -120,7 +120,7 @@ export default function ReviewsSection({ data }: ReviewsSectionProps) {
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
-            </div> */}
+            </div>
           </div>
 
           {/* Right Column: Horizontally Scrollable Review Cards Carousel */}

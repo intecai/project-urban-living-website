@@ -23,6 +23,10 @@ export interface AmenityItemData {
   imageIcon?: string;
 }
 
+export const RAMAPURAM_MAP_URL = "https://maps.google.com/?q=13.029858,80.187920";
+export const RAMAPURAM_LAT = 13.029858;
+export const RAMAPURAM_LNG = 80.187920;
+
 export interface AboutPropertyData {
   title: string;
   paragraph1: string;
@@ -30,9 +34,15 @@ export interface AboutPropertyData {
   readMoreLabel: string;
   readLessLabel: string;
   mapImage: string;
+  mapUrl?: string;
 }
 
 export interface RamapuramData {
+  name: string;
+  slug: string;
+  mapUrl: string;
+  latitude: number;
+  longitude: number;
   hero: {
     title: string;
     subtitle: string;
@@ -64,10 +74,16 @@ export interface RamapuramData {
     area: string;
     city: string;
     mapSrc?: string;
+    mapUrl?: string;
   };
 }
 
 export const ramapuramData: RamapuramData = {
+  name: "Ramapuram",
+  slug: "ramapuram",
+  mapUrl: RAMAPURAM_MAP_URL,
+  latitude: RAMAPURAM_LAT,
+  longitude: RAMAPURAM_LNG,
   hero: {
     title: "Urban Living - Ramapuram",
     subtitle: "Comfortable PG Living • Private & Shared Rooms • All Essential Amenities",
@@ -165,6 +181,7 @@ export const ramapuramData: RamapuramData = {
     readMoreLabel: "See More",
     readLessLabel: "See Less",
     mapImage: "/images/rooms/urbanlivingMap.png",
+    mapUrl: RAMAPURAM_MAP_URL,
   },
   about: {
     badge: "Most Popular",
@@ -192,5 +209,6 @@ export const ramapuramData: RamapuramData = {
     address: "Ramapuram, Chennai, Tamil Nadu 600089",
     area: "Ramapuram",
     city: "Chennai",
+    mapUrl: RAMAPURAM_MAP_URL,
   },
 };

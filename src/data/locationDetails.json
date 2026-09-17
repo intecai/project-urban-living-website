@@ -1,6 +1,10 @@
 {
   "ramapuram": {
+    "name": "Ramapuram",
     "slug": "ramapuram",
+    "mapUrl": "https://maps.google.com/?q=13.029858,80.187920",
+    "latitude": 13.029858,
+    "longitude": 80.187920,
     "title": "Urban Living - Ramapuram",
     "subtitle": "Comfortable PG Living • Private & Shared Rooms • All Essential Amenities",
     "gallery": [
@@ -74,7 +78,11 @@
     ]
   },
   "madanandapuram": {
+    "name": "Madhanandapuram",
     "slug": "madanandapuram",
+    "mapUrl": "https://www.google.com/maps?q=13.018336296081543,80.15691375732422&z=17&hl=en",
+    "latitude": 13.018336296081543,
+    "longitude": 80.15691375732422,
     "title": "Urban Living - Madanandapuram",
     "subtitle": "Comfortable PG Living • Private & Shared Rooms • All Essential Amenities",
     "gallery": [

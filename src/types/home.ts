@@ -4,6 +4,7 @@ export interface LocationCardItem {
   price: string;
   image: string;
   href: string;
+  buttonText?: string;
 }
 
 export interface ExploreLocationsData {

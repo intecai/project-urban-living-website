@@ -46,13 +46,11 @@ export default function FloorSelector({
 
       {/* Second Row: Small Green Indicator + Compact Status Text */}
       <div className="flex items-center gap-1.5 mt-2 sm:mt-2.5">
-        <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] inline-block shrink-0" />
-        <span className="text-[11px] sm:text-[12px] text-[#6B7280] font-normal font-Plus_Jakarta_Sans">
-          Showing details for {currentFloor.detailsLabel}
-        </span>
-      </div>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] inline-block shrink-0" />
+          <span className="text-[11px] sm:text-[12px] text-[#6B7280] font-normal font-Plus_Jakarta_Sans">
+            Showing details for {currentFloor.detailsLabel}
+          </span>
+        </div>
     </div>
   );
 }
-
-

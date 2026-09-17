@@ -3,33 +3,36 @@
 import React from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { PopularLocationsData } from "@/types/locations";
+import { PopularLocationsData, LocationCardData } from "@/types/locations";
 
 export interface PopularLocationsProps {
   data?: PopularLocationsData;
 }
 
-const defaultLocationCards = [
+const defaultLocationCards: LocationCardData[] = [
   {
     id: "1",
     name: "Ramapuram",
     price: "₹10,500/mo",
     image: "/images/rooms/room_single.png",
-    href: "/rooms?location=Ramapuram",
+    href: "/locations?slug=ramapuram",
+    buttonText: "Explore Location",
   },
   {
     id: "2",
-    name: "Madanandapuram",
+    name: "Madhanandapuram",
     price: "₹10,500/mo",
     image: "/images/rooms/room_deluxe.png",
-    href: "/rooms?location=Madanandapuram",
+    href: "/locations?slug=madanandapuram",
+    buttonText: "Explore Location",
   },
   {
     id: "3",
-    name: "Madanandapuram",
+    name: "Madhanandapuram",
     price: "₹9,000/mo",
     image: "/images/rooms/room_comfort.png",
-    href: "/rooms?location=Madanandapuram",
+    href: "/locations?slug=madanandapuram",
+    buttonText: "Explore Location",
   },
 ];
 
@@ -42,7 +45,7 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
 
   return (
     <section className="w-full py-12 lg:py-16 bg-white font-Plus_Jakarta_Sans">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 space-y-6">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-16 space-y-6">
 
         {/* Section Eyebrow & Header Row */}
         <div>
@@ -66,7 +69,7 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
         </div>
 
         {/* 3 Location Cards Grid - Exact Figma 16px Padding & Inner Image Frame */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 pt-2">
           {locations.map((card) => (
             <div
               key={card.id}
@@ -78,35 +81,35 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
                   src={card.image}
                   alt={card.name}
                   fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover"
                 />
               </div>
 
               {/* Card Title & Price Area */}
-              <div className="flex items-center justify-between gap-2 mb-4 px-0.5">
+              <div className="flex items-start sm:items-center justify-between gap-2 mb-4 px-0.5">
                 {/* Location Name */}
-                <h3 className="text-base sm:text-lg font-bold text-[#0B1C30] text-[16px] font-figtree tracking-tight">
+                <h3 className="text-base sm:text-lg font-bold text-[#0B1C30] text-[16px] font-figtree tracking-tight leading-snug">
                   {card.name}
                 </h3>
 
                 {/* Price Block */}
                 <div className="text-right shrink-0">
-                  <span className="block text-[10px] sm:text-[11px] font-semibold text-[#424753] text-[12px] tracking-wider uppercase font-figtree">
+                  <span className="block text-[10px] sm:text-[11px] font-semibold text-[#424753] text-[12px] tracking-wider uppercase font-figtree whitespace-nowrap">
                     STARTS FROM
                   </span>
-                  <span className="block text-base sm:text-lg font-bold text-[#0053B0] text-[16px] font-figtree tracking-tight">
+                  <span className="block text-base sm:text-lg font-bold text-[#0053B0] text-[16px] font-figtree tracking-tight whitespace-nowrap">
                     {card.price}
                   </span>
                 </div>
               </div>
 
-              {/* Explore Rooms Button */}
+              {/* Explore Location Button */}
               <a
                 href={card.href}
                 className="w-full h-10 sm:h-[42px] bg-white hover:bg-[#0053B0] hover:text-white border border-[#0053B0] text-[#0053B0] text-xs sm:text-sm font-semibold font-figtree rounded-full flex items-center justify-center transition-colors shadow-2xs cursor-pointer"
               >
-                Explore Rooms
+                {card.buttonText || "Explore Location"}
               </a>
             </div>
           ))}

@@ -5,18 +5,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { Room } from "@/types/room";
 
+import { getRoomSlug } from "@/utils/slug";
+
 export interface RoomCardProps {
   room: Room;
 }
 
 export default function RoomCard({ room }: RoomCardProps) {
+  const roomSlug = room.slug || getRoomSlug(room.title);
+
   const formattedAmenities = Array.isArray(room.amenities)
     ? room.amenities.join(" • ")
     : room.amenities;
 
   return (
     <Link
-      href="/rooms/premium-single-room"
+      href={`/rooms/${roomSlug}`}
       className="group bg-white rounded-2xl sm:rounded-[24px] border border-[#E5E7EB] overflow-hidden shadow-2xs hover:shadow-md hover:border-[#02569B]/40 transition-all duration-300 flex flex-col justify-between h-full font-figtree cursor-pointer"
     >
       {/* 1. Image & Badge Container */}

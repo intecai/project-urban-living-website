@@ -18,17 +18,17 @@
     }
   },
   "enquiryBanner": {
-    "heading": "Ready to experience urban living at its best?",
-    "description": "Book a visit today or contact our team to find your perfect room.",
+    "heading": "Safe. Comfortable. Yours.",
+    "description": "Enquire now and our team will help you find this perfect room.",
     "phoneCallText": "Or call us directly at",
-    "phoneNumber": "+91 98765 43210",
-    "phoneRaw": "+919876543210",
+    "phoneNumber": "+91 90030 79966",
+    "phoneRaw": "+919003079966",
     "formLabels": {
       "fullName": "Full Name",
       "phoneNumber": "Phone Number",
       "preferredLocation": "Select Preferred Location",
       "roomType": "Select Room Type",
-      "submitButton": "Schedule a Visit"
+      "submitButton": "Enquiry Now"
     },
     "locationOptions": ["Ramapuram", "Madanandapuram", "Porur", "Guindy", "Velachery"],
     "roomTypeOptions": ["Single Room", "Double Sharing", "Triple Sharing", "Premium Suite"]

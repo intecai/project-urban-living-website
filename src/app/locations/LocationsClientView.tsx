@@ -243,8 +243,8 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
 
   // Default Locations Overview Page
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-white font-sans text-slate-900">
-      <Navbar variant="solid" activeLink="Locations" data={commonData.navbar} />
+    <div className="min-h-screen flex flex-col justify-between bg-white font-sans text-slate-900 relative">
+      <Navbar variant="transparent" activeLink="Locations" data={commonData.navbar} />
       <main className="flex-1">
         <LocationsHero />
         <PopularLocations data={locationsData.popularLocations} />
