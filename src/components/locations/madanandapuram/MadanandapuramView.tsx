@@ -11,17 +11,36 @@ import RamapuramEnquiry from "@/components/locations/ramapuram/RamapuramEnquiry"
 import RamapuramFooter from "@/components/locations/ramapuram/RamapuramFooter";
 import FloorSelector from "./FloorSelector";
 import { madanandapuramData } from "@/data/locations/madanandapuram";
+import { LocationDTO } from "@/services/locationsService";
 
 export interface MadanandapuramViewProps {
   commonData: any;
+  apiLocation?: LocationDTO | null;
 }
 
-export default function MadanandapuramView({ commonData }: MadanandapuramViewProps) {
+export default function MadanandapuramView({ commonData, apiLocation }: MadanandapuramViewProps) {
   const [selectedFloorId, setSelectedFloorId] = useState<string>("first");
 
   const currentFloor =
     madanandapuramData.floors.find((f) => f.id === selectedFloorId) ||
     madanandapuramData.floors[0];
+
+  const heroTitle = apiLocation
+    ? `${apiLocation.pgName} - ${apiLocation.name}`
+    : madanandapuramData.hero.title;
+
+  const galleryItems = [...currentFloor.gallery];
+  if (apiLocation?.images && apiLocation.images.length > 0 && galleryItems.length > 0) {
+    galleryItems[0] = {
+      ...galleryItems[0],
+      src: apiLocation.images[0],
+    };
+  }
+
+  const aboutPropertyData = {
+    ...madanandapuramData.aboutProperty,
+    mapUrl: apiLocation?.mapUrl || madanandapuramData.aboutProperty.mapUrl,
+  };
 
   return (
     <div className="min-h-screen flex flex-col justify-between font-Plus_Jakarta_Sans text-slate-900 bg-white">
@@ -29,7 +48,7 @@ export default function MadanandapuramView({ commonData }: MadanandapuramViewPro
 
       <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 md:px-12 lg:px-16 py-8 sm:py-12 space-y-8 sm:space-y-10">
         <RamapuramHero
-          title={madanandapuramData.hero.title}
+          title={heroTitle}
           subtitle={madanandapuramData.hero.subtitle}
           breadcrumbs={madanandapuramData.hero.breadcrumbs}
         />
@@ -42,7 +61,7 @@ export default function MadanandapuramView({ commonData }: MadanandapuramViewPro
         />
 
         {/* Dynamic Gallery based on floor selection */}
-        <RamapuramGallery items={currentFloor.gallery} />
+        <RamapuramGallery items={galleryItems} />
 
         <RamapuramPricingPlans
           heading={madanandapuramData.pricingPlans.heading}
@@ -54,7 +73,7 @@ export default function MadanandapuramView({ commonData }: MadanandapuramViewPro
           items={madanandapuramData.amenities.items}
         />
 
-        <AboutProperty data={madanandapuramData.aboutProperty} />
+        <AboutProperty data={aboutPropertyData} />
       </main>
 
       <RamapuramEnquiry data={commonData.enquiryBanner} />
@@ -62,3 +81,4 @@ export default function MadanandapuramView({ commonData }: MadanandapuramViewPro
     </div>
   );
 }
+

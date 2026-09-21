@@ -1,12 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { getLocationsData } from "@/services/locationsService";
+import { LocationCardData } from "@/types/locations";
 import { ExploreLocationsData, LocationCardItem } from "@/types/home";
 
 export interface ExploreLocationsProps {
-  data?: ExploreLocationsData;
+  data?: any;
 }
 
 const defaultLocations: LocationCardItem[] = [
@@ -37,8 +39,35 @@ const defaultLocations: LocationCardItem[] = [
 ];
 
 export default function ExploreLocations({ data }: ExploreLocationsProps) {
-  const title = data?.title || "Explore Our PG Locations";
-  const locationList = data?.locations || defaultLocations;
+  const [locations, setLocations] = useState<LocationCardData[]>(data?.locations || []);
+
+  useEffect(() => {
+    console.log("[HOME LOCATIONS] fetching locations");
+    let isMounted = true;
+
+    async function loadApiLocations() {
+      try {
+        const locationsData = await getLocationsData();
+        console.log("[HOME LOCATIONS] API result:", locationsData);
+        const normalizedLocations = locationsData?.popularLocations?.locations || [];
+        console.log("[HOME LOCATIONS] normalized locations:", normalizedLocations);
+
+        if (isMounted && normalizedLocations.length > 0) {
+          setLocations(normalizedLocations);
+        }
+      } catch (err) {
+        console.error("[HOME LOCATIONS ERROR]", err);
+      }
+    }
+
+    loadApiLocations();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const locationList: (LocationCardData | LocationCardItem)[] = locations.length > 0 ? locations : (data?.locations || defaultLocations);
 
   return (
     <section className="w-full py-12 sm:py-16 bg-white font-figtree">
@@ -63,7 +92,7 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
 
         {/* 3 Location Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
-          {locationList.map((card) => (
+          {locationList.map((card: LocationCardData | LocationCardItem) => (
             <div
               key={card.id}
               className="bg-white rounded-[24px] shadow-2xs shadow-md p-4 pt-4 pb-[18px] flex flex-col justify-between group"

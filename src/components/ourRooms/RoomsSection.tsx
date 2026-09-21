@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { Filter, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { RoomCategory, FilterState, SortOption, RoomItem } from "./types";
@@ -18,7 +18,7 @@ const categoryTabs: { label: string; value: RoomCategory; icon: string }[] = [
   { label: "Single Rooms", value: "single", icon: "/images/rooms/SingRooms.png" },
   { label: "Double Sharing", value: "double", icon: "/images/rooms/twoSharingroom.png" },
   { label: "Triple Sharing", value: "triple", icon: "/images/rooms/threeSharingroom.png" },
-  { label: "Four Sharing", value: "four", icon: "/images/rooms/fourSharingRoom.png" },
+  { label: "Four Sharing", value: "four", icon: "/images/rooms/fourSharing_rooms.png" },
   { label: "Five Sharing", value: "five", icon: "/images/rooms/fiveSharingRoom.png" },
 ];
 
@@ -44,8 +44,64 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
   const [sortBy, setSortBy] = useState<SortOption>("popular");
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [roomList, setRoomList] = useState<RoomItem[]>(data?.rooms || fallbackRoomsData);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const roomList: RoomItem[] = data?.rooms || fallbackRoomsData;
+  // Sync initial prop data if available
+  useEffect(() => {
+    if (data?.rooms && data.rooms.length > 0) {
+      setRoomList(data.rooms);
+    }
+  }, [data]);
+
+  const selectedLocationKey = filters.locations.join(",");
+  const selectedAmenityKey = useMemo(
+    () => filters.amenities ? Object.keys(filters.amenities).filter((k) => filters.amenities[k as keyof FilterState["amenities"]]).sort().join(",") : "",
+    [filters.amenities]
+  );
+
+  // Fetch rooms from backend API whenever room category, budget, or location filter changes
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCategoryRooms() {
+      setIsLoading(true);
+      try {
+        const { fetchRoomsFromApi, resolveLocationId, resolveAmenityValues } = await import("@/services/roomsService");
+
+        // Unconstrained default limits: minPrice <= 5000 and maxPrice >= 20000
+        const isMinActive = filters.minPrice > 5000;
+        const isMaxActive = filters.maxPrice < 20000;
+
+        const reqMinPrice = isMinActive ? filters.minPrice : undefined;
+        const reqMaxPrice = isMaxActive ? filters.maxPrice : undefined;
+
+        // Resolve locationId from selected location filter array if present
+        const selectedLocation = filters.locations.length > 0 ? filters.locations[0] : undefined;
+        const reqLocationId = resolveLocationId(selectedLocation);
+
+        // Resolve selected amenities to backend amenity value names
+        const reqAmenities = resolveAmenityValues(filters.amenities);
+
+        // Resolve availability to backend availability flag (only "Available" state is supported)
+        const reqAvailability = filters.availableOnly ? true : undefined;
+
+        console.log(`[ROOMS SECTION] Fetching rooms with params: category='${filters.category}', minPrice=${reqMinPrice}, maxPrice=${reqMaxPrice}, locationId=${reqLocationId}, amenities=${JSON.stringify(reqAmenities)}, availability=${reqAvailability ?? "''"}`);
+        const rooms = await fetchRoomsFromApi(filters.category, reqMinPrice, reqMaxPrice, reqLocationId, reqAmenities, reqAvailability);
+        if (isMounted && rooms !== null && rooms !== undefined) {
+          setRoomList(rooms);
+        }
+      } catch (err) {
+        console.error("Failed to load category rooms:", err);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    }
+
+    loadCategoryRooms();
+    return () => {
+      isMounted = false;
+    };
+  }, [filters.category, filters.minPrice, filters.maxPrice, selectedLocationKey, selectedAmenityKey, filters.availableOnly]);
 
   const ITEMS_PER_PAGE = 5;
 
@@ -87,6 +143,8 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
       if (filters.amenities.food && !room.amenities.food) return false;
       if (filters.amenities.laundry && !room.amenities.laundry) return false;
       if (filters.amenities.housekeeping && !room.amenities.housekeeping) return false;
+      // Availability filter
+      if (filters.availableOnly && !room.availableNow) return false;
 
       return true;
     });
@@ -133,43 +191,57 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
     return [1, "...", current - 1, current, current + 1, "...", total];
   };
 
+  // Unique location count logic
+  const uniqueLocationCount = useMemo(() => {
+    const locationsSet = new Set<string>();
+    sortedRooms.forEach((r) => {
+      if (r.area) {
+        locationsSet.add(r.area.trim());
+      } else if (r.location) {
+        const firstPart = r.location.split(",")[0].trim();
+        if (firstPart) locationsSet.add(firstPart);
+      }
+    });
+    return locationsSet.size;
+  }, [sortedRooms]);
+
+  const roomCountLabel = `${sortedRooms.length} ${sortedRooms.length === 1 ? "Room" : "Rooms"} Available`;
+  const locationCountLabel = `Across ${uniqueLocationCount} ${uniqueLocationCount === 1 ? "Location" : "Locations"} in Chennai`;
+
   return (
-    <section className="w-full py-10 lg:py-14 font-figtree min-h-[600px]">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 space-y-8">
+    <section className="w-full bg-[#FAFCFF] py-6 sm:py-8 font-figtree">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 space-y-6 sm:space-y-8">
+        
+        {/* 1. Category Navigation Tabs Bar */}
+        <div>
+          <div className="flex items-center justify-start sm:justify-start gap-2 sm:gap-4 overflow-x-auto no-scrollbar pb-2 px-1">
+            {categoryTabs.map((tab) => {
+              const isSelected = filters.category === tab.value;
 
-        {/* 1. Category Filter Tabs - 2-column grid on mobile/tablet, centered flex row on desktop */}
-        <div className="grid grid-cols-2 max-w-md mx-auto sm:max-w-lg lg:max-w-none gap-2.5 sm:gap-3 lg:flex lg:flex-row lg:items-center lg:justify-center lg:gap-4 w-full px-1">
-          {categoryTabs.map((tab, index) => {
-            const isSelected = filters.category === tab.value;
-            const isLastItem = index === categoryTabs.length - 1;
-
-            return (
-              <div
-                key={tab.value}
-                className={`${isLastItem ? "col-span-2 flex justify-center lg:col-span-1 lg:block" : ""
-                  }`}
-              >
-                <button
-                  type="button"
-                  onClick={() => handleCategorySelect(tab.value)}
-                  className={`flex items-center justify-center gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer w-full lg:w-auto ${isLastItem ? "max-w-[200px] sm:max-w-[220px] lg:max-w-none" : ""
-                    } ${isSelected
-                      ? "bg-[#0053B0] text-white shadow-xs"
-                      : "bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+              return (
+                <div key={tab.value} className="relative shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handleCategorySelect(tab.value)}
+                    className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer font-jakarta shadow-xs ${
+                      isSelected
+                        ? "bg-[#0F3D91] text-white shadow-sm"
+                        : "bg-white text-[#4B5563] hover:bg-slate-100 hover:text-[#111827] border border-[#E5E7EB]"
                     }`}
-                >
-                  <Image
-                    src={tab.icon}
-                    alt={tab.label}
-                    width={18}
-                    height={18}
-                    className={`w-4 h-4 object-contain ${isSelected ? "brightness-0 invert" : ""}`}
-                  />
-                  <span>{tab.label}</span>
-                </button>
-              </div>
-            );
-          })}
+                  >
+                    <Image
+                      src={tab.icon}
+                      alt={tab.label}
+                      width={18}
+                      height={18}
+                      className={`w-4 h-4 object-contain ${isSelected ? "brightness-0 invert" : ""}`}
+                    />
+                    <span>{tab.label}</span>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* 2. Header & Controls Toolbar */}
@@ -177,10 +249,10 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
           {/* Left: Page Title Info */}
           <div>
             <h1 className="text-xl sm:text-2xl md:text-[28px] font-bold text-[#1F2937] font-jakarta tracking-tight">
-              {sortedRooms.length} Rooms Available
+              {roomCountLabel}
             </h1>
             <p className="text-xs sm:text-sm md:text-base text-[#9CA3AF] font-jakarta font-normal mt-0.5 sm:mt-1">
-              Across 6 Locations in Chennai
+              {locationCountLabel}
             </p>
           </div>
 
@@ -223,7 +295,11 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
         </div>
 
         {/* 3. Rooms Cards List */}
-        {paginatedRooms.length > 0 ? (
+        {isLoading ? (
+          <div className="py-12 text-center text-slate-500 font-medium text-sm">
+            Loading rooms...
+          </div>
+        ) : paginatedRooms.length > 0 ? (
           <div className="space-y-4 sm:space-y-6">
             {paginatedRooms.map((room) => (
               <RoomCard key={room.id} room={room} />
@@ -279,7 +355,7 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
                     type="button"
                     onClick={() => setCurrentPage(page)}
                     className={`transition-all cursor-pointer ${isActive
-                        ? "w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-[#FAC024] text-white font-bold text-xs sm:text-xl flex items-center justify-center shadow-xs"
+                        ? "w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-[#0F3D91] text-white font-bold text-xs sm:text-xl flex items-center justify-center shadow-xs"
                         : "text-xs sm:text-xl font-medium text-[#4B5563] hover:text-[#1F2937] px-1.5 sm:px-2 py-1"
                       }`}
                   >

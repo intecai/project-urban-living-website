@@ -13,6 +13,7 @@ import {
   Sparkles,
   Car,
   Zap,
+  MapPin,
 } from "lucide-react";
 import { FilterState, RoomCategory } from "./types";
 
@@ -33,8 +34,14 @@ const roomTypeOptions: { label: string; value: RoomCategory; icon: string }[] = 
   { label: "Single Room", value: "single", icon: "/images/rooms/SingRooms.png" },
   { label: "Double Sharing", value: "double", icon: "/images/rooms/twoSharingroom.png" },
   { label: "Triple Sharing", value: "triple", icon: "/images/rooms/threeSharingroom.png" },
-  { label: "Four Sharing", value: "four", icon: "/images/rooms/fourSharingRoom.png" },
+  { label: "Four Sharing", value: "four", icon: "/images/rooms/fourSharing_rooms.png" },
   { label: "Five Sharing", value: "five", icon: "/images/rooms/fiveSharingRoom.png" },
+];
+
+const locationOptions = [
+  { label: "All Locations", value: "all" },
+  { label: "Ramapuram", value: "Ramapuram" },
+  { label: "Madanandapuram", value: "Madanandapuram" },
 ];
 
 const amenityOptions = [
@@ -94,6 +101,31 @@ export default function FilterModal({
     setLocalFilters((prev) => ({ ...prev, maxPrice: value }));
   };
 
+  const isLocationSelected = (locValue: string) => {
+    if (locValue === "all") {
+      return localFilters.locations.length === 0;
+    }
+    return localFilters.locations.includes(locValue);
+  };
+
+  const toggleLocation = (locValue: string) => {
+    if (locValue === "all") {
+      setLocalFilters((prev) => ({ ...prev, locations: [] }));
+    } else {
+      setLocalFilters((prev) => {
+        const currentLocs = prev.locations;
+        const exists = currentLocs.includes(locValue);
+        let updated: string[];
+        if (exists) {
+          updated = currentLocs.filter((l) => l !== locValue);
+        } else {
+          updated = [...currentLocs, locValue];
+        }
+        return { ...prev, locations: updated };
+      });
+    }
+  };
+
   const toggleAmenity = (key: keyof FilterState["amenities"]) => {
     setLocalFilters({
       ...localFilters,
@@ -134,6 +166,13 @@ export default function FilterModal({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#021521]/60 backdrop-blur-xs p-0 sm:p-4 font-figtree overflow-hidden">
       <style>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
         .dual-range-slider input[type="range"]::-webkit-slider-thumb {
           pointer-events: auto;
           width: 20px;
@@ -158,7 +197,7 @@ export default function FilterModal({
         }
       `}</style>
 
-      <div className="bg-white w-full max-w-2xl rounded-t-[24px] sm:rounded-[24px] shadow-2xl border border-slate-100 overflow-y-auto max-h-[90vh] sm:max-h-[85vh] p-5 sm:p-8 flex flex-col space-y-5 sm:space-y-6 relative animate-in fade-in zoom-in duration-200">
+      <div className="bg-white w-full max-w-2xl rounded-t-[24px] sm:rounded-[24px] shadow-2xl border border-slate-100 overflow-y-auto no-scrollbar max-h-[92vh] sm:max-h-[88vh] p-5 sm:p-7 flex flex-col space-y-4 sm:space-y-5 relative animate-in fade-in zoom-in duration-200">
         {/* Close Button */}
         <button
           type="button"
@@ -187,7 +226,7 @@ export default function FilterModal({
             Choose the type of room you are looking for.
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 sm:gap-2">
             {roomTypeOptions.map((cat) => {
               const isSelected = localFilters.category === cat.value;
 
@@ -198,14 +237,14 @@ export default function FilterModal({
                   onClick={() =>
                     setLocalFilters({ ...localFilters, category: cat.value })
                   }
-                  className={`relative flex flex-col items-center justify-center p-2.5 sm:p-3.5 rounded-2xl border transition-all cursor-pointer ${
+                  className={`relative flex flex-col items-center justify-center p-2 sm:p-2.5 rounded-2xl border transition-all cursor-pointer ${
                     isSelected
                       ? "bg-[#0B3558] text-white border-[#0B3558] shadow-xs"
                       : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
                   }`}
                 >
                   <div
-                    className={`absolute top-1.5 right-1.5 sm:top-2 sm:right-2 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border flex items-center justify-center transition-colors ${
+                    className={`absolute top-1 right-1 sm:top-1.5 sm:right-1.5 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border flex items-center justify-center transition-colors ${
                       isSelected
                         ? "bg-white text-[#0B3558] border-white"
                         : "border-slate-300 bg-white"
@@ -219,11 +258,11 @@ export default function FilterModal({
                     alt={cat.label}
                     width={20}
                     height={20}
-                    className={`w-4 h-4 sm:w-5 sm:h-5 mb-1 sm:mb-1.5 object-contain ${
+                    className={`w-4 h-4 sm:w-4 sm:h-4 mb-1 object-contain ${
                       isSelected ? "brightness-0 invert" : ""
                     }`}
                   />
-                  <span className="text-[10px] sm:text-xs font-semibold whitespace-nowrap">
+                  <span className="text-[10px] sm:text-[11px] font-semibold whitespace-nowrap">
                     {cat.label}
                   </span>
                 </button>
@@ -298,7 +337,49 @@ export default function FilterModal({
           </div>
         </div>
 
-        {/* Section 3: Amenities */}
+        {/* Section 3: Location */}
+        <div>
+          <h3 className="text-xs sm:text-sm font-bold text-[#0B3558] tracking-tight">
+            Location
+          </h3>
+          <p className="text-[11px] sm:text-xs text-slate-400 font-normal mb-2.5 sm:mb-3">
+            Choose your preferred location.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            {locationOptions.map((loc) => {
+              const isSelected = isLocationSelected(loc.value);
+
+              return (
+                <button
+                  key={loc.value}
+                  type="button"
+                  onClick={() => toggleLocation(loc.value)}
+                  className={`relative flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-tl-[10px] rounded-bl-[10px] rounded-tr-[10px] rounded-br-[10px] border text-xs font-medium transition-all cursor-pointer ${
+                    isSelected
+                      ? "bg-[#0B3558] text-white border-[#0B3558] shadow-xs"
+                      : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
+                  }`}
+                >
+                  <MapPin className={`w-3.5 h-3.5 ${isSelected ? "text-white" : "text-slate-500"}`} />
+                  <span>{loc.label}</span>
+
+                  <div
+                    className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center ml-1 transition-colors ${
+                      isSelected
+                        ? "bg-white text-[#0B3558] border-white"
+                        : "border-slate-300 bg-white"
+                    }`}
+                  >
+                    {isSelected && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Section 4: Amenities */}
         <div>
           <h3 className="text-xs sm:text-sm font-bold text-[#0B3558] tracking-tight">
             Amenities

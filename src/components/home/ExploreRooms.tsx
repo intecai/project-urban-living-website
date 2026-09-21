@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import RoomCard from "./RoomCard";
-import roomsJson from "@/data/rooms.json";
 import { Room } from "@/types/room";
+import { fetchRoomsFromApi } from "@/services/roomsService";
 
 const categoryTabs = [
-  { id: "premium", label: "Premium Rooms", icon: "/images/home/Crown.png", isGold: true },
+  { id: "all", label: "All Rooms", icon: "/images/home/Crown_home.png", isGold: false },
   { id: "single", label: "Single room", icon: "/images/home/SingleRoom.png", isGold: false },
   { id: "double", label: "Double Sharing", icon: "/images/home/DoubleSharing.png", isGold: false },
   { id: "triple", label: "Triple sharing", icon: "/images/home/TripleSharing.png", isGold: false },
-  { id: "four", label: "Four Sharing", icon: "/images/home/fourSharingHome.png", isGold: false },
+  { id: "four", label: "Four Sharing", icon: "/images/home/fourSharing_home.png", isGold: false },
   { id: "five", label: "Five Sharing", icon: "/images/home/fiveSharingHome.png", isGold: false },
 ];
 
@@ -22,37 +22,61 @@ export interface ExploreRoomsProps {
 }
 
 export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
-  const roomsList: Room[] = initialRooms || (roomsJson as Room[]);
-  const [activeCategory, setActiveCategory] = useState<string>("premium");
+  const [roomsList, setRoomsList] = useState<Room[]>(initialRooms || []);
+  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [isLoading, setIsLoading] = useState<boolean>(!initialRooms || initialRooms.length === 0);
 
-  // Category filter logic
-  const filteredRooms = roomsList.filter((room) => {
-    if (activeCategory === "premium") {
-      // "Premium Rooms" tab displays the showcase set of rooms
-      return true;
+  useEffect(() => {
+    console.log("[HOME] activeCategory:", activeCategory);
+    let isMounted = true;
+    async function loadApiRooms() {
+      setIsLoading(true);
+      console.log("[HOME] fetching category:", activeCategory);
+      try {
+        const apiRooms = await fetchRoomsFromApi(activeCategory);
+        console.log("[HOME] API rooms returned:", apiRooms);
+
+        if (isMounted && apiRooms !== null && apiRooms !== undefined) {
+          const mappedRooms: Room[] = (apiRooms || []).map((r) => {
+            let activeAmenities: string[] = [];
+            if (r.amenities && typeof r.amenities === "object" && !Array.isArray(r.amenities)) {
+              activeAmenities = Object.entries(r.amenities)
+                .filter(([, val]) => Boolean(val))
+                .map(([key]) => key.toUpperCase());
+            } else if (Array.isArray(r.amenities)) {
+              activeAmenities = (r.amenities as any[]).map((a) => String(a).toUpperCase());
+            }
+
+            return {
+              id: r.id,
+              title: r.name,
+              slug: r.slug,
+              category: r.category,
+              amenities: activeAmenities,
+              price: r.price,
+              priceLabel: "month",
+              image: r.image,
+              badge: r.badge,
+            };
+          });
+
+          console.log("[HOME] setting roomsList:", mappedRooms);
+          setRoomsList(mappedRooms);
+        }
+      } catch (err) {
+        console.error("[HOME ERROR] Exception during loadApiRooms:", err);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
     }
-    if (activeCategory === "single") {
-      return room.category === "single" || room.title.toLowerCase().includes("single");
-    }
-    if (activeCategory === "double") {
-      return (
-        (room.category === "double" && !room.title.toLowerCase().includes("four")) ||
-        room.title.toLowerCase().includes("double") ||
-        room.title.toLowerCase().includes("two") ||
-        room.title.toLowerCase().includes("twin")
-      );
-    }
-    if (activeCategory === "triple") {
-      return room.category === "triple" || room.title.toLowerCase().includes("three") || room.title.toLowerCase().includes("triple");
-    }
-    if (activeCategory === "four") {
-      return room.title.toLowerCase().includes("four") || room.slug?.includes("four");
-    }
-    if (activeCategory === "five") {
-      return room.title.toLowerCase().includes("five") || room.slug?.includes("five");
-    }
-    return true;
-  });
+    loadApiRooms();
+    return () => {
+      isMounted = false;
+    };
+  }, [activeCategory]);
+
+  console.log("[HOME] FINAL roomsList:", roomsList);
+  console.log("[HOME] FINAL roomsList length:", roomsList.length);
 
   return (
     <section className="w-full py-10 sm:py-12 lg:py-16 bg-white font-figtree" id="explore-rooms">
@@ -117,11 +141,21 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
         </div>
 
         {/* 3. Room Cards Grid (2 Columns on Mobile, 4 Columns on Desktop) */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 pt-1 sm:pt-2">
-          {filteredRooms.map((room) => (
-            <RoomCard key={room.id} room={room} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="py-10 text-center text-slate-500 font-medium text-sm col-span-full">
+            Loading rooms...
+          </div>
+        ) : roomsList.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 pt-1 sm:pt-2">
+            {roomsList.map((room) => (
+              <RoomCard key={room.id} room={room} />
+            ))}
+          </div>
+        ) : (
+          <div className="py-10 text-center text-slate-500 font-medium text-sm col-span-full">
+            No rooms available in this category.
+          </div>
+        )}
 
         {/* 4. Mobile Bottom Explore All Rooms CTA Pill Button */}
         <div className="sm:hidden pt-2 flex justify-center">

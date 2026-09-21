@@ -7,7 +7,7 @@ import { Crown, User, Users, ArrowRight } from "lucide-react";
 export interface Room {
   id: string;
   title: string;
-  category: "premium" | "single" | "double" | "triple";
+  category: "premium" | "single" | "double" | "triple"|"four"|"five";
   amenities: string;
   price: string;
   image: string;
@@ -99,7 +99,7 @@ const allRooms: Room[] = [
 ];
 
 const tabs = [
-  { id: "premium", label: "Premium Rooms", icon: Crown, isGold: true },
+  { id: "premium", label: "All Rooms", icon: Crown, isGold: true },
   { id: "single", label: "Single room", icon: User },
   { id: "double", label: "Double Sharing", icon: Users },
   { id: "triple", label: "Triple rooms", icon: Users },
@@ -175,7 +175,7 @@ export default function ExploreRooms() {
                   className={`w-4 h-4 ${
                     isActive
                       ? tab.isGold
-                        ? "text-[#F59E0B]"
+                        ? "text-[#6B7280]"
                         : "text-[#2563EB]"
                       : "text-slate-400"
                   }`}

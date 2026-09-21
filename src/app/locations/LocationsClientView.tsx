@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -26,9 +26,10 @@ import MadanandapuramView from "@/components/locations/madanandapuram/Madanandap
 
 import LocationsHero from "@/components/locations/LocationsHero";
 
-// Data types
+// Data types & service
 import locationDetailsData from "@/data/locationDetails.json";
 import { LocationsPageData, LocationDetailData } from "@/types/locations";
+import { fetchLocationByIdOrSlug, LocationDTO } from "@/services/locationsService";
 
 export interface LocationsClientViewProps {
   locationsData: LocationsPageData;
@@ -38,24 +39,87 @@ export interface LocationsClientViewProps {
 export default function LocationsClientView({ locationsData, commonData }: LocationsClientViewProps) {
   const searchParams = useSearchParams();
   const slug = searchParams.get("slug");
+  const id = searchParams.get("id");
 
-  // If a slug query parameter is provided (e.g. /locations?slug=ramapuram)
-  if (slug) {
-    const lowerSlug = slug.toLowerCase();
+  const [apiLocation, setApiLocation] = useState<LocationDTO | null>(null);
+  const [loading, setLoading] = useState<boolean>(Boolean(slug || id));
+
+  useEffect(() => {
+    if (!slug && !id) {
+      setLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+    async function loadApiLocation() {
+      setLoading(true);
+      try {
+        const loc = await fetchLocationByIdOrSlug(id, slug);
+        if (isMounted) {
+          setApiLocation(loc);
+        }
+      } catch (err) {
+        console.error("[LOCATION DETAIL] Failed to fetch API location:", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    loadApiLocation();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [slug, id]);
+
+  // If a slug or id query parameter is provided
+  if (slug || id) {
+    if (loading) {
+      return (
+        <div className="min-h-screen flex flex-col justify-between font-Plus_Jakarta_Sans text-slate-900 bg-white">
+          <Navbar variant="solid" activeLink="Locations" data={commonData.navbar} />
+          <div className="flex-1 flex items-center justify-center py-24 text-slate-500 font-medium">
+            Loading location details...
+          </div>
+          <Footer data={commonData.footer} />
+        </div>
+      );
+    }
+
+    // Determine target location key
+    const rawTarget = apiLocation?.name || slug || "";
+    const lowerSlug = rawTarget.toLowerCase().trim().replace(/\s+/g, "");
 
     // Custom Ramapuram location detail view
     if (lowerSlug === "ramapuram") {
+      const ramapuramHeroTitle = apiLocation
+        ? `${apiLocation.pgName} - ${apiLocation.name}`
+        : ramapuramData.hero.title;
+
+      const ramapuramGalleryItems = [...ramapuramData.gallery];
+      if (apiLocation?.images && apiLocation.images.length > 0 && ramapuramGalleryItems.length > 0) {
+        ramapuramGalleryItems[0] = {
+          ...ramapuramGalleryItems[0],
+          src: apiLocation.images[0],
+        };
+      }
+
+      const ramapuramAboutPropertyData = {
+        ...ramapuramData.aboutProperty,
+        mapUrl: apiLocation?.mapUrl || ramapuramData.aboutProperty.mapUrl,
+      };
+
       return (
         <div className="min-h-screen flex flex-col justify-between font-Plus_Jakarta_Sans text-slate-900">
           <Navbar variant="solid" activeLink="Locations" data={commonData.navbar} />
 
           <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 md:px-12 lg:px-16 py-8 sm:py-12 space-y-12">
             <RamapuramHero
-              title={ramapuramData.hero.title}
+              title={ramapuramHeroTitle}
               subtitle={ramapuramData.hero.subtitle}
               breadcrumbs={ramapuramData.hero.breadcrumbs}
             />
-            <RamapuramGallery items={ramapuramData.gallery} />
+            <RamapuramGallery items={ramapuramGalleryItems} />
             <RamapuramPricingPlans
               heading={ramapuramData.pricingPlans.heading}
               items={ramapuramData.pricingPlans.items}
@@ -64,7 +128,7 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
               heading={ramapuramData.amenities.heading}
               items={ramapuramData.amenities.items}
             />
-            <AboutProperty data={ramapuramData.aboutProperty} />
+            <AboutProperty data={ramapuramAboutPropertyData} />
           </main>
 
           <RamapuramEnquiry data={commonData.enquiryBanner} />
@@ -75,14 +139,28 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
 
     // Custom Madhanandapuram / Madanandapuram location detail view
     if (lowerSlug === "madanandapuram" || lowerSlug === "madhanandapuram") {
-      return <MadanandapuramView commonData={commonData} />;
+      return <MadanandapuramView commonData={commonData} apiLocation={apiLocation} />;
     }
 
     // Generic Location Detail page for other location slugs
     const details = locationDetailsData as Record<string, LocationDetailData>;
-    const locationData = details[lowerSlug] || details["ramapuram"];
+    const baseLocationData = details[lowerSlug] || details["ramapuram"];
 
-    if (locationData) {
+    if (baseLocationData) {
+      const genericGallery = [...baseLocationData.gallery];
+      if (apiLocation?.images && apiLocation.images.length > 0 && genericGallery.length > 0) {
+        genericGallery[0] = {
+          ...genericGallery[0],
+          src: apiLocation.images[0],
+        };
+      }
+
+      const locationData = {
+        ...baseLocationData,
+        title: apiLocation ? `${apiLocation.pgName} - ${apiLocation.name}` : baseLocationData.title,
+        gallery: genericGallery,
+      };
+
       return (
         <div className="min-h-screen flex flex-col justify-between bg-[#F8FAFC] font-Plus_Jakarta_Sans text-slate-900">
           <Navbar variant="solid" activeLink="Locations" data={commonData.navbar} />
@@ -255,3 +333,4 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
     </div>
   );
 }
+

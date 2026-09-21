@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PremiumSingleRoomView from "@/components/ourRooms/PremiumSingleRoomView";
 import { getCommonData } from "@/services/commonService";
+import { getRoomDetailBySlug } from "@/services/roomsService";
 
 export const metadata: Metadata = {
   title: "Premium Single Room | Urban Living PG Ramapuram",
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 
 export default async function PremiumSingleRoomPage() {
   const commonData = await getCommonData();
+  const roomData = await getRoomDetailBySlug("premium-single-room");
 
-  return <PremiumSingleRoomView commonData={commonData} />;
+  return <PremiumSingleRoomView roomData={roomData || undefined} commonData={commonData} />;
 }

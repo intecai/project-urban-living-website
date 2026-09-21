@@ -48,6 +48,55 @@ export default function Footer({ data }: FooterProps) {
             <p className="text-[#94A3B8] text-xs sm:text-sm leading-relaxed max-w-sm lg:max-w-[260px] font-figtree">
               {brandDescription}
             </p>
+
+            {/* Social Media Icons */}
+            <div className="flex items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src="/images/common/insta.png"
+                  alt="Instagram"
+                  width={24}
+                  height={24}
+                  className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
+                />
+              </a>
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src="/images/common/fb.png"
+                  alt="Facebook"
+                  width={24}
+                  height={24}
+                  className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
+                />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+                className="hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src="/images/common/yt.png"
+                  alt="YouTube"
+                  width={24}
+                  height={24}
+                  className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
+                />
+              </a>
+            </div>
           </div>
 
           {/* Column 2: Quick Links */}

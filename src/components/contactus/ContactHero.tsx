@@ -13,10 +13,10 @@ export interface ContactHeroProps {
 
 export default function ContactHero({ data, navbarData }: ContactHeroProps) {
   const heading = data?.heading || "Contact Us";
-  const bgImage = data?.bgImage || "/images/contactus/contactHero.png";
+  const bgImage = data?.bgImage || "/images/contactus/contactHeroImage.png";
 
   return (
-    <section className="relative w-full overflow-hidden min-h-[460px] sm:min-h-[520px] md:min-h-[580px] lg:min-h-[620px] flex flex-col justify-between">
+    <section className="relative w-full overflow-hidden aspect-[1440/627] flex flex-col justify-between bg-[#FAF6EB]">
       {/* 1. Single Hero Background Image (starts at top 0 behind Navbar) */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -33,8 +33,8 @@ export default function ContactHero({ data, navbarData }: ContactHeroProps) {
       <Navbar variant="transparent" activeLink="Contact Us" data={navbarData} />
 
       {/* 3. Centered Heading over Image & below Navbar */}
-      <div className="relative z-10 flex-1 flex items-center justify-center pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-24 px-4 text-center">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-semibold text-[#1D6095] tracking-tight font-montserrat">
+      <div className="relative z-10 flex-1 flex items-center justify-center pt-14 sm:pt-20 md:pt-24 lg:pt-28 pb-4 sm:pb-8 md:pb-12 px-4 text-center">
+        <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-[52px] font-semibold text-[#1D6095] tracking-tight font-montserrat">
           {heading}
         </h1>
       </div>

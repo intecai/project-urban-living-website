@@ -8,10 +8,8 @@ import { TalkToOurTeamData } from "@/types/contact";
 export type StayDuration = "Short Stay" | "Long Stay" | "Daily Stays";
 
 const branchOptions = [
-  "Anna Nagar",
   "Ramapuram",
   "Madanandapuram",
-  "Porur",
 ];
 
 export interface TalkToOurTeamProps {
@@ -99,10 +97,10 @@ I would like to enquire about room availability:
 
       {/* Header */}
       <div className="text-center mb-6 sm:mb-8 pr-6 sm:pr-0">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#000000] tracking-tight font-figtree">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#000000] text-[26px] tracking-tight font-figtree">
           {title}
         </h2>
-        <p className="text-xs sm:text-sm md:text-base text-[#A9AAAD] mt-1.5 sm:mt-2 font-figtree">
+        <p className="text-xs sm:text-sm md:text-base text-[#A9AAAD] text-[17px] mt-1.5 sm:mt-2 font-figtree">
           {description}
         </p>
       </div>
@@ -127,7 +125,7 @@ I would like to enquire about room availability:
           
           {/* 1. STAY DURATION */}
           <div>
-            <label className="block text-xs sm:text-sm font-bold text-[#011A2A] mb-2.5 sm:mb-3 font-montserrat">
+            <label className="block text-xs sm:text-sm font-medium text-[16px] text-[#001B44] mb-2.5 sm:mb-3 font-figtree">
               1. How long are you looking to stay? *
             </label>
 
@@ -147,8 +145,8 @@ I would like to enquire about room availability:
                     onClick={() => setStayDuration(item.label as StayDuration)}
                     className={`flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-2.5 px-1 sm:px-3 rounded-xl border text-[10px] xs:text-xs sm:text-sm font-medium transition-all cursor-pointer ${
                       isSelected
-                        ? "border-[#011A2A] bg-white text-[#011A2A] font-semibold shadow-xs"
-                        : "border-slate-200/90 bg-slate-50/50 text-slate-500 hover:bg-slate-100/60"
+                        ? "border-slate-200/90 bg-slate-50/50 text-[#001B44] hover:bg-slate-100/60"
+                        : "border-[#011A2A] bg-white text-[#011A2A] font-medium shadow-xs"
                     }`}
                   >
                     <Icon className={`w-3 h-3 sm:w-4 sm:h-4 shrink-0 ${isSelected ? "text-[#D97706]" : "text-amber-500/70"}`} />
@@ -164,7 +162,7 @@ I would like to enquire about room availability:
             {/* Row 1: Full Name & Preferred Branch */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1 sm:mb-1.5 font-montserrat">
+                <label className="block text-xs font-medium text-[#374151] text-[16px] font-weight/510 mb-1 sm:mb-1.5 font-figtree">
                   Full Name*
                 </label>
                 <input
@@ -180,7 +178,7 @@ I would like to enquire about room availability:
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1 sm:mb-1.5 font-montserrat">
+                <label className="block text-xs font-medium text-[16px] font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
                   Preferred Branch
                 </label>
                 <div className="relative">
@@ -209,7 +207,7 @@ I would like to enquire about room availability:
             {/* Row 2: Email & Phone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1 sm:mb-1.5 font-montserrat">
+                <label className="block text-xs font-medium text-[16px] font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
                   Email Address
                 </label>
                 <input
@@ -225,7 +223,7 @@ I would like to enquire about room availability:
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1 sm:mb-1.5 font-montserrat">
+                <label className="block text-xs font-medium text-[16px] font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
                   Phone Number
                 </label>
                 <input
@@ -247,7 +245,7 @@ I would like to enquire about room availability:
             <div className="grid grid-cols-1 sm:flex sm:items-center gap-3.5 sm:gap-3">
               {/* Check-in Date */}
               <div className="w-full sm:flex-1">
-                <label className="block text-xs font-semibold text-slate-600 mb-1 sm:mb-1.5 font-montserrat">
+                <label className="block text-xs font-medium text-[16px] font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
                   Check-in Date
                 </label>
                 <div className="relative">
@@ -269,7 +267,7 @@ I would like to enquire about room availability:
 
               {/* Check-out Date */}
               <div className="w-full sm:flex-1">
-                <label className="block text-xs font-semibold text-slate-600 mb-1 sm:mb-1.5 font-montserrat">
+                <label className="block text-xs font-medium text-[16px] font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
                   Check-out Date
                 </label>
                 <div className="relative">
@@ -290,7 +288,7 @@ I would like to enquire about room availability:
 
           {/* 4. MESSAGE */}
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1 sm:mb-1.5 font-montserrat">
+            <label className="block text-xs font-medium text-[16px] font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
               Your Message
             </label>
             <textarea
@@ -305,10 +303,10 @@ I would like to enquire about room availability:
           {/* 5. SUBMIT BUTTON */}
           <button
             type="submit"
-            className="w-full h-11 sm:h-12 bg-[#2571A5] hover:bg-[#02569B] text-white text-xs sm:text-sm font-semibold font-montserrat rounded-xl shadow-xs flex items-center justify-center gap-2 px-3 transition-all cursor-pointer transform active:scale-[0.99]"
+            className="w-full h-11 sm:h-12 bg-[#2571A5] hover:bg-[#02569B] text-[#EFC53F] text-xs sm:text-sm font-medium font-BricolageGrotesque rounded-xl shadow-xs flex items-center justify-center gap-2 px-3 transition-all cursor-pointer transform active:scale-[0.99]"
           >
             <span className="truncate">Let's Find Your Perfect Space</span>
-            <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0" />
+            <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#EFC53F] shrink-0" />
           </button>
 
         </form>
