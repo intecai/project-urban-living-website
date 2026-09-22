@@ -33,8 +33,8 @@ export default function ContactHero({ data, navbarData }: ContactHeroProps) {
       <Navbar variant="transparent" activeLink="Contact Us" data={navbarData} />
 
       {/* 3. Centered Heading over Image & below Navbar */}
-      <div className="relative z-10 flex-1 flex items-center justify-center pt-14 sm:pt-20 md:pt-24 lg:pt-28 pb-4 sm:pb-8 md:pb-12 px-4 text-center">
-        <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-[52px] font-semibold text-[#1D6095] tracking-tight font-montserrat">
+      <div className="relative z-10 flex-1 flex items-center justify-center pt-14 sm:pt-20 md:pt-24 lg:pt-14 pb-4 sm:pb-8 md:pb-12 px-4 text-center">
+        <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-[40px] font-semibold text-[#1D6095] tracking-tight font-montserrat">
           {heading}
         </h1>
       </div>

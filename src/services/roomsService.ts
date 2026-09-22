@@ -257,9 +257,10 @@ export async function getRoomsData(
 ): Promise<RoomsPageData> {
   let roomItems = await fetchRoomsFromApi(categoryFilter, minPrice, maxPrice, locationId, amenities, availability);
 
-  // Fallback to local roomsData.json if API returned no data
-  if (!roomItems || roomItems.length === 0) {
-    console.warn(`[FALLBACK WARNING] API returned 0 rooms. Falling back to rooms.json mock data.`);
+  // Fall back to local roomsData.json ONLY when the API request genuinely failed/unavailable.
+  // A successful API response that contains 0 rooms must stay empty (show the UI empty state).
+  if (roomItems === null || roomItems === undefined) {
+    console.warn(`[FALLBACK WARNING] API request failed. Falling back to rooms.json mock data.`);
     const rawList = Array.isArray(roomsFallbackData) ? (roomsFallbackData as any[]) : [];
     roomItems = rawList.map((r, idx) => {
       const fallback = defaultRoomsData[idx] || defaultRoomsData.find((item) => item.id === r.id);

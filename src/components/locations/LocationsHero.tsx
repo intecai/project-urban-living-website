@@ -74,7 +74,7 @@ export default function LocationsHero() {
         </div>
       </section>
 
-      <section className="relative w-full overflow-hidden font-figtree hidden md:flex items-center min-h-[440px] md:min-h-[480px] lg:min-h-[540px] xl:min-h-[600px] bg-white border-b border-slate-100">
+      <section className="relative w-full overflow-hidden font-figtree hidden md:flex items-center min-h-[440px] md:min-h-[480px] lg:min-h-[540px] xl:min-h-[600px] bg-[#FAF6EB] border-b border-slate-100">
         {/* Full-width background image container */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -83,7 +83,7 @@ export default function LocationsHero() {
             fill
             priority
             sizes="100vw"
-            className="object-contain object-right"
+            className="object-cover object-right"
           />
         </div>
 

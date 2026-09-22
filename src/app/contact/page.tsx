@@ -23,8 +23,8 @@ export default async function ContactPage() {
       {/* 1. Uncropped Full Hero Image with Transparent Navbar & Contact Us Heading */}
       <ContactHero data={contactData.hero} navbarData={commonData.navbar} />
 
-      {/* 2. Form Section starting cleanly near the bottom edge of hero */}
-      <main className="flex-1 -mt-10 sm:-mt-16 md:-mt-20 relative z-30 mb-12">
+      {/* 2. Form Section starting cleanly below full hero image */}
+      <main className="flex-1 relative z-30 mb-12">
         <TalkToOurTeam data={contactData.talkToOurTeam} />
       </main>
 
