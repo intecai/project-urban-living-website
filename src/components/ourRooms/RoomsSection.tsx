@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Filter, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { RoomCategory, FilterState, SortOption, RoomItem } from "./types";
@@ -8,6 +8,7 @@ import { RoomsPageData } from "@/types/rooms";
 import { roomsData as fallbackRoomsData } from "./roomsData";
 import RoomCard from "./RoomCard";
 import FilterModal from "./FilterModal";
+import { fetchRoomsFromApi, resolveLocationId, resolveAmenityValues } from "@/services/roomsService";
 
 export interface RoomsSectionProps {
   data?: RoomsPageData;
@@ -47,6 +48,9 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
   const [roomList, setRoomList] = useState<RoomItem[]>(data?.rooms || fallbackRoomsData);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Request counter to prevent stale out-of-order API responses from overwriting latest user selection
+  const requestIdRef = useRef(0);
+
   // Sync initial prop data if available
   useEffect(() => {
     if (data?.rooms && data.rooms.length > 0) {
@@ -62,12 +66,11 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
 
   // Fetch rooms from backend API whenever room category, budget, or location filter changes
   useEffect(() => {
-    let isMounted = true;
-    async function loadCategoryRooms() {
-      setIsLoading(true);
-      try {
-        const { fetchRoomsFromApi, resolveLocationId, resolveAmenityValues } = await import("@/services/roomsService");
+    const currentRequestId = ++requestIdRef.current;
+    setIsLoading(true);
 
+    async function loadCategoryRooms() {
+      try {
         // Unconstrained default limits: minPrice <= 5000 and maxPrice >= 20000
         const isMinActive = filters.minPrice > 5000;
         const isMaxActive = filters.maxPrice < 20000;
@@ -85,81 +88,41 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
         // Resolve availability to backend availability flag (only "Available" state is supported)
         const reqAvailability = filters.availableOnly ? true : undefined;
 
-        console.log(`[ROOMS SECTION] Fetching rooms with params: category='${filters.category}', minPrice=${reqMinPrice}, maxPrice=${reqMaxPrice}, locationId=${reqLocationId}, amenities=${JSON.stringify(reqAmenities)}, availability=${reqAvailability ?? "''"}`);
+        console.log(`[ROOMS SECTION] Fetching rooms (req #${currentRequestId}) with params: category='${filters.category}', minPrice=${reqMinPrice}, maxPrice=${reqMaxPrice}, locationId=${reqLocationId}, amenities=${JSON.stringify(reqAmenities)}, availability=${reqAvailability ?? "''"}`);
         const rooms = await fetchRoomsFromApi(filters.category, reqMinPrice, reqMaxPrice, reqLocationId, reqAmenities, reqAvailability);
-        if (isMounted && rooms !== null && rooms !== undefined) {
-          setRoomList(rooms);
+
+        // Only update state if this is still the latest active request
+        if (currentRequestId === requestIdRef.current) {
+          if (rooms !== null && rooms !== undefined) {
+            setRoomList(rooms);
+          }
+          setIsLoading(false);
+        } else {
+          console.log(`[ROOMS SECTION] Ignored stale response for req #${currentRequestId} (latest is #${requestIdRef.current})`);
         }
       } catch (err) {
         console.error("Failed to load category rooms:", err);
-      } finally {
-        if (isMounted) setIsLoading(false);
+        if (currentRequestId === requestIdRef.current) {
+          setIsLoading(false);
+        }
       }
     }
 
     loadCategoryRooms();
-    return () => {
-      isMounted = false;
-    };
   }, [filters.category, filters.minPrice, filters.maxPrice, selectedLocationKey, selectedAmenityKey, filters.availableOnly]);
 
   const ITEMS_PER_PAGE = 5;
 
-  // Filter logic
-  const filteredRooms = useMemo(() => {
-    return roomList.filter((room) => {
-      // Category filter
-      if (filters.category !== "all") {
-        if (filters.category === "four") {
-          if (room.category !== "four" && !room.name.toLowerCase().includes("four") && !room.slug?.includes("four")) {
-            return false;
-          }
-        } else if (filters.category === "five") {
-          if (room.category !== "five" && !room.name.toLowerCase().includes("five") && !room.slug?.includes("five")) {
-            return false;
-          }
-        } else if (filters.category === "double") {
-          if ((room.category !== "double" && !room.name.toLowerCase().includes("double") && !room.name.toLowerCase().includes("two")) || room.name.toLowerCase().includes("four")) {
-            return false;
-          }
-        } else if (room.category !== filters.category) {
-          return false;
-        }
-      }
-      // Location filter
-      if (
-        filters.locations.length > 0 &&
-        !filters.locations.some((loc) => room.location.includes(loc))
-      ) {
-        return false;
-      }
-      // Price range filter
-      if (room.price < filters.minPrice || room.price > filters.maxPrice) {
-        return false;
-      }
-      // Amenities filter
-      if (filters.amenities.wifi && !room.amenities.wifi) return false;
-      if (filters.amenities.ac && !room.amenities.ac) return false;
-      if (filters.amenities.food && !room.amenities.food) return false;
-      if (filters.amenities.laundry && !room.amenities.laundry) return false;
-      if (filters.amenities.housekeeping && !room.amenities.housekeeping) return false;
-      // Availability filter
-      if (filters.availableOnly && !room.availableNow) return false;
-
-      return true;
-    });
-  }, [filters]);
-
-  // Sort logic
+  // Sort logic (Backend API result roomList is authoritative)
   const sortedRooms = useMemo(() => {
-    const list = [...filteredRooms];
+    const list = [...roomList];
     if (sortBy === "price-asc") {
       list.sort((a, b) => a.price - b.price);
     } else if (sortBy === "price-desc") {
       list.sort((a, b) => b.price - a.price);
     }
     return list;
-  }, [filteredRooms, sortBy]);
+  }, [roomList, sortBy]);
 
   // Pagination logic
   const totalPages = Math.ceil(sortedRooms.length / ITEMS_PER_PAGE) || 1;
@@ -191,7 +154,7 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
     return [1, "...", current - 1, current, current + 1, "...", total];
   };
 
-  // Unique location count logic
+  // Unique location count logic computed from current displayed API rooms
   const uniqueLocationCount = useMemo(() => {
     const locationsSet = new Set<string>();
     sortedRooms.forEach((r) => {
@@ -394,3 +357,4 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
     </section>
   );
 }
+
