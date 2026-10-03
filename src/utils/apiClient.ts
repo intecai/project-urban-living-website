@@ -3,6 +3,13 @@ const API_BASE_URL =
 
 const isServer = typeof window === "undefined";
 
+// When enabled, a failed request throws instead of returning null. This turns
+// the silent "fall back to sample data" behaviour into a hard build failure,
+// which is what you want in CI/production: a build that cannot reach the API
+// should fail loudly rather than publish placeholder rooms.
+const REQUIRE_LIVE_API =
+  isServer && process.env.REQUIRE_LIVE_API === "true";
+
 const REQUEST_TIMEOUT_MS = 20000;
 const GET_ATTEMPTS = 3;
 const RETRY_BASE_DELAY_MS = 500;
@@ -61,5 +68,15 @@ export async function fetchApi<T>(endpoint: string, options?: RequestInit): Prom
   }
 
   console.error(`Fetch failed for ${url}:`, lastError);
+
+  if (REQUIRE_LIVE_API) {
+    throw new Error(
+      `REQUIRE_LIVE_API is set but the API request to ${url} failed. ` +
+        `Refusing to build with fallback data. Check that the backend is ` +
+        `running and that NEXT_PUBLIC_API_BASE_URL is correct and reachable ` +
+        `from the build environment.`,
+    );
+  }
+
   return null;
 }

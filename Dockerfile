@@ -14,6 +14,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ARG NEXT_PUBLIC_API_BASE_URL
 ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
 
+# Set to "true" in CI/production to make the build FAIL if the API cannot be
+# reached, instead of silently publishing the sample data in src/data/rooms.json.
+ARG REQUIRE_LIVE_API=false
+ENV REQUIRE_LIVE_API=$REQUIRE_LIVE_API
+
 RUN npm run build
 
 
