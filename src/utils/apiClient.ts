@@ -1,50 +1,65 @@
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "https://urbanliving.client.intecai.in/api";
 
+const isServer = typeof window === "undefined";
+
+const REQUEST_TIMEOUT_MS = 20000;
+const GET_ATTEMPTS = 3;
+const RETRY_BASE_DELAY_MS = 500;
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T | null> {
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  const url = `${API_BASE_URL}${cleanEndpoint}`;
+  const method = (options?.method ?? "GET").toUpperCase();
+  const isGet = method === "GET";
 
-  // Determine base URL: use /api-proxy on browser client to avoid CORS blocking when on localhost
-  let url = `${API_BASE_URL}${cleanEndpoint}`;
-  if (typeof window !== "undefined" && window.location.origin.includes("localhost")) {
-    url = `/api-proxy${cleanEndpoint}`;
-  }
+  // During `next build` a static export renders many pages concurrently and each
+  // one re-requests the same endpoints. Marking server-side GETs cacheable lets
+  // Next collapse those duplicate requests instead of stampeding the API.
+  const cacheInit = isServer && isGet ? { next: { revalidate: 3600 } } : {};
 
-  try {
-    const res = await fetch(url, {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...(options?.headers || {}),
-      },
-    });
+  const attempts = isGet ? GET_ATTEMPTS : 1;
+  let lastError: unknown = null;
 
-    if (!res.ok) {
-      console.error(`API Error [${res.status}] ${res.statusText} for URL: ${url}`);
-      return null;
-    }
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      const res = await fetch(url, {
+        ...options,
+        ...cacheInit,
+        headers: {
+          "Content-Type": "application/json",
+          ...(options?.headers || {}),
+        },
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      });
 
-    const data = await res.json();
-    return data as T;
-  } catch (err) {
-    // If proxy failed, fallback to direct URL
-    if (url.startsWith("/api-proxy")) {
-      try {
-        const directUrl = `${API_BASE_URL}${cleanEndpoint}`;
-        const directRes = await fetch(directUrl, {
-          ...options,
-          headers: {
-            "Content-Type": "application/json",
-            ...(options?.headers || {}),
-          },
-        });
-        if (directRes.ok) return (await directRes.json()) as T;
-      } catch (e) {
-        console.error(`Fetch exception for ${url}:`, err);
+      if (!res.ok) {
+        lastError = new Error(`HTTP ${res.status} ${res.statusText}`);
+        // Client errors will not improve on retry.
+        if (res.status < 500) {
+          console.error(`API Error [${res.status}] ${res.statusText} for URL: ${url}`);
+          return null;
+        }
+      } else {
+        return (await res.json()) as T;
       }
-    } else {
-      console.error(`Fetch exception for ${url}:`, err);
+    } catch (err) {
+      lastError = err;
     }
-    return null;
+
+    if (attempt < attempts) {
+      const delay = RETRY_BASE_DELAY_MS * 2 ** (attempt - 1);
+      console.warn(
+        `Request to ${url} failed (attempt ${attempt}/${attempts}), retrying in ${delay}ms.`,
+      );
+      await sleep(delay);
+    }
   }
+
+  console.error(`Fetch failed for ${url}:`, lastError);
+  return null;
 }
