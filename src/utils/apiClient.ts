@@ -2,14 +2,6 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "https://urbanliving.client.intecai.in/api";
 
 const isServer = typeof window === "undefined";
-
-// When enabled, a failed request throws instead of returning null. This turns
-// the silent "fall back to sample data" behaviour into a hard build failure,
-// which is what you want in CI/production: a build that cannot reach the API
-// should fail loudly rather than publish placeholder rooms.
-const REQUIRE_LIVE_API =
-  isServer && process.env.REQUIRE_LIVE_API === "true";
-
 const REQUEST_TIMEOUT_MS = 20000;
 const GET_ATTEMPTS = 3;
 const RETRY_BASE_DELAY_MS = 500;
@@ -24,10 +16,8 @@ export async function fetchApi<T>(endpoint: string, options?: RequestInit): Prom
   const method = (options?.method ?? "GET").toUpperCase();
   const isGet = method === "GET";
 
-  // During `next build` a static export renders many pages concurrently and each
-  // one re-requests the same endpoints. Marking server-side GETs cacheable lets
-  // Next collapse those duplicate requests instead of stampeding the API.
-  const cacheInit = isServer && isGet ? { next: { revalidate: 3600 } } : {};
+  // Enforce request-time fetching on the server without build-time caching
+  const cacheOptions: RequestInit = isServer && isGet ? { cache: "no-store" } : {};
 
   const attempts = isGet ? GET_ATTEMPTS : 1;
   let lastError: unknown = null;
@@ -36,7 +26,7 @@ export async function fetchApi<T>(endpoint: string, options?: RequestInit): Prom
     try {
       const res = await fetch(url, {
         ...options,
-        ...cacheInit,
+        ...cacheOptions,
         headers: {
           "Content-Type": "application/json",
           ...(options?.headers || {}),
@@ -46,7 +36,6 @@ export async function fetchApi<T>(endpoint: string, options?: RequestInit): Prom
 
       if (!res.ok) {
         lastError = new Error(`HTTP ${res.status} ${res.statusText}`);
-        // Client errors will not improve on retry.
         if (res.status < 500) {
           console.error(`API Error [${res.status}] ${res.statusText} for URL: ${url}`);
           return null;
@@ -61,22 +50,12 @@ export async function fetchApi<T>(endpoint: string, options?: RequestInit): Prom
     if (attempt < attempts) {
       const delay = RETRY_BASE_DELAY_MS * 2 ** (attempt - 1);
       console.warn(
-        `Request to ${url} failed (attempt ${attempt}/${attempts}), retrying in ${delay}ms.`,
+        `Request to ${url} failed (attempt ${attempt}/${attempts}), retrying in ${delay}ms.`
       );
       await sleep(delay);
     }
   }
 
   console.error(`Fetch failed for ${url}:`, lastError);
-
-  if (REQUIRE_LIVE_API) {
-    throw new Error(
-      `REQUIRE_LIVE_API is set but the API request to ${url} failed. ` +
-        `Refusing to build with fallback data. Check that the backend is ` +
-        `running and that NEXT_PUBLIC_API_BASE_URL is correct and reachable ` +
-        `from the build environment.`,
-    );
-  }
-
   return null;
 }

@@ -3,6 +3,8 @@ import PremiumSingleRoomView from "@/components/ourRooms/PremiumSingleRoomView";
 import { getCommonData } from "@/services/commonService";
 import { getRoomDetailBySlug } from "@/services/roomsService";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Premium Single Room | Urban Living PG Ramapuram",
   description:
