@@ -355,8 +355,18 @@ export async function getAllRoomSlugs(): Promise<string[]> {
   const data = await getRoomsData();
   const slugs = new Set<string>();
   data.rooms.forEach((r) => {
-    if (r.slug) slugs.add(r.slug.toLowerCase());
-    if (r.id) slugs.add(r.id.toLowerCase());
+    if (r.slug) {
+      slugs.add(r.slug.trim());
+      slugs.add(r.slug.trim().toLowerCase());
+    }
+    if (r.id) {
+      slugs.add(r.id.trim());
+      slugs.add(r.id.trim().toLowerCase());
+    }
+    const nameSlug = getRoomSlug(r.name);
+    if (nameSlug) {
+      slugs.add(nameSlug.trim().toLowerCase());
+    }
   });
   // Add common slug aliases
   slugs.add("premium-single-room");
@@ -366,6 +376,7 @@ export async function getAllRoomSlugs(): Promise<string[]> {
   slugs.add("double-sharing-room");
   slugs.add("two-sharing-room");
   slugs.add("four-sharing-room");
+  slugs.add("five-sharing-room");
   slugs.add("twin-sharing-room");
   slugs.add("private-room");
   return Array.from(slugs);
@@ -387,19 +398,34 @@ export async function getRoomBySlug(slug: string): Promise<RoomItem | undefined>
 }
 
 export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData | null> {
+  if (!slug) return null;
   const cleanSlug = slug.trim().toLowerCase();
 
-  // First check if cleanSlug is a direct UUID or room ID
+  // 1. Direct API fetch if cleanSlug is a UUID or room ID format
   let apiSingleRoom: RoomDTO | null = null;
   if (/^[0-9a-fA-F-]{16,}$/.test(cleanSlug)) {
-    apiSingleRoom = await fetchApi<RoomDTO>(`/rooms/${cleanSlug}`);
+    const raw = await fetchApi<any>(`/rooms/${cleanSlug}`);
+    if (raw) {
+      if (raw.data && typeof raw.data === "object" && !Array.isArray(raw.data) && raw.data.id) {
+        apiSingleRoom = raw.data;
+      } else if (raw.value && typeof raw.value === "object" && !Array.isArray(raw.value) && raw.value.id) {
+        apiSingleRoom = raw.value;
+      } else if (typeof raw === "object" && !Array.isArray(raw) && raw.id) {
+        apiSingleRoom = raw;
+      }
+    }
   }
 
+  // 2. Fetch all rooms list for matching by slug or fallback
   const allRoomsData = await getRoomsData();
   let roomItem = allRoomsData.rooms.find((r) => {
+    const rId = r.id ? r.id.toLowerCase() : "";
+    const rSlug = r.slug ? r.slug.toLowerCase() : "";
+    const nameSlug = getRoomSlug(r.name).toLowerCase();
     return (
-      r.id.toLowerCase() === cleanSlug ||
-      (r.slug && r.slug.toLowerCase() === cleanSlug)
+      rId === cleanSlug ||
+      rSlug === cleanSlug ||
+      nameSlug === cleanSlug
     );
   });
 
@@ -422,19 +448,29 @@ export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData 
     }
   }
 
+  // If neither API nor roomItem gave a result, return null (404 state)
   if (!roomItem && !apiSingleRoom) {
     return null;
   }
 
-  // If we found a roomItem by slug, fetch live details from GET /rooms/:id using its UUID
+  // 3. If roomItem found by slug, fetch live details from GET /rooms/:id using its UUID if not already loaded
   if (roomItem && !apiSingleRoom && roomItem.id && /^[0-9a-fA-F-]{16,}$/.test(roomItem.id)) {
-    console.log(`[API CALL] Fetching room detail from /rooms/${roomItem.id} for slug '${cleanSlug}'`);
-    apiSingleRoom = await fetchApi<RoomDTO>(`/rooms/${roomItem.id}`);
+    const raw = await fetchApi<any>(`/rooms/${roomItem.id}`);
+    if (raw) {
+      if (raw.data && typeof raw.data === "object" && !Array.isArray(raw.data) && raw.data.id) {
+        apiSingleRoom = raw.data;
+      } else if (raw.value && typeof raw.value === "object" && !Array.isArray(raw.value) && raw.value.id) {
+        apiSingleRoom = raw.value;
+      } else if (typeof raw === "object" && !Array.isArray(raw) && raw.id) {
+        apiSingleRoom = raw;
+      }
+    }
   }
 
-  // Construct normalized RoomDetailData
+  // 4. Construct normalized RoomDetailData
   const name = apiSingleRoom?.title || roomItem?.name || "Premium Room";
-  const price = apiSingleRoom?.price ? parseFloat(apiSingleRoom.price) : roomItem?.price || 8000;
+  const rawPrice = apiSingleRoom?.price ?? roomItem?.price ?? 8000;
+  const price = typeof rawPrice === "number" ? rawPrice : parseFloat(rawPrice as string) || 8000;
   const category = apiSingleRoom ? roomTypeEnumToCategory(apiSingleRoom.roomType, apiSingleRoom.title) : roomItem?.category || "double";
   const locationName = apiSingleRoom?.location?.name || roomItem?.area || "Ramapuram";
   const images = apiSingleRoom?.images && apiSingleRoom.images.length > 0 ? apiSingleRoom.images : [roomItem?.image || "/images/rooms/room_single.png"];
@@ -531,3 +567,4 @@ export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData 
     whatsNearby: nearbyList,
   };
 }
+
