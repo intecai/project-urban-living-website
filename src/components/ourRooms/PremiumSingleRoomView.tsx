@@ -121,14 +121,16 @@ const defaultWhatsNearbyList = [
 ];
 
 export default function PremiumSingleRoomView({ commonData, roomData }: PremiumSingleRoomViewProps) {
-  const images = roomData?.galleryImages || defaultGalleryImages;
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const images = (roomData?.galleryImages && roomData.galleryImages.length > 0)
+    ? roomData.galleryImages
+    : defaultGalleryImages;
+  const [selectedImage, setSelectedImage] = useState(images[0] || defaultGalleryImages[0]);
 
   useEffect(() => {
     if (images && images.length > 0) {
       setSelectedImage(images[0]);
     }
-  }, [roomData?.slug]);
+  }, [roomData?.id, roomData?.slug]);
 
   const handleEnquireScroll = () => {
     const banner = document.getElementById("enquiry-section");
@@ -205,8 +207,8 @@ export default function PremiumSingleRoomView({ commonData, roomData }: PremiumS
             <div className="space-y-4">
               <div className="relative w-full aspect-[16/11] sm:h-[430px] rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-100 shadow-xs border border-slate-200">
                 <Image
-                  src={selectedImage.src}
-                  alt={selectedImage.alt}
+                  src={selectedImage?.src || images[0]?.src || "/images/rooms/premium_single_main.png"}
+                  alt={selectedImage?.alt || roomData?.name || "Room Image"}
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 58vw"
