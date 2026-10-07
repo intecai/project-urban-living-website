@@ -4,6 +4,7 @@ import { RoomsPageData } from "@/types/rooms";
 import { RoomItem, RoomCategory } from "@/components/ourRooms/types";
 import { getRoomSlug } from "@/utils/slug";
 import { fetchApi } from "@/utils/apiClient";
+import { resolveImageUrl } from "@/utils/image";
 
 export interface RoomLocationDTO {
   id: string;
@@ -128,7 +129,8 @@ export function normalizeRoomDTO(r: RoomDTO, idx: number): RoomItem {
   const priceNum = typeof r.price === "number" ? r.price : parseFloat(r.price || "0") || 8000;
   const category = roomTypeEnumToCategory(r.roomType, r.title);
   const locationName = r.location?.name || "Ramapuram";
-  const image = r.images && r.images.length > 0 ? r.images[0] : "/images/rooms/room_single.png";
+  const rawImage = r.images && r.images.length > 0 ? r.images[0] : "/images/rooms/room_single.png";
+  const image = resolveImageUrl(rawImage);
   const amenitiesList = Array.isArray(r.amenities) ? r.amenities : [];
 
   return {
@@ -473,7 +475,8 @@ export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData 
   const price = typeof rawPrice === "number" ? rawPrice : parseFloat(rawPrice as string) || 8000;
   const category = apiSingleRoom ? roomTypeEnumToCategory(apiSingleRoom.roomType, apiSingleRoom.title) : roomItem?.category || "double";
   const locationName = apiSingleRoom?.location?.name || roomItem?.area || "Ramapuram";
-  const images = apiSingleRoom?.images && apiSingleRoom.images.length > 0 ? apiSingleRoom.images : [roomItem?.image || "/images/rooms/room_single.png"];
+  const rawImages = apiSingleRoom?.images && apiSingleRoom.images.length > 0 ? apiSingleRoom.images : [roomItem?.image || "/images/rooms/room_single.png"];
+  const images = rawImages.map((img) => resolveImageUrl(img));
   const mapUrl = apiSingleRoom?.location?.mapUrl || "https://maps.google.com/?q=13.029858,80.187920";
 
   let occupancyTag = "Single Occupancy";

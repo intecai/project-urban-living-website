@@ -2,6 +2,7 @@ import locationsData from "@/data/locations.json";
 import locationDetailsData from "@/data/locationDetails.json";
 import { LocationsPageData, LocationDetailData, LocationCardData } from "@/types/locations";
 import { fetchApi } from "@/utils/apiClient";
+import { resolveImageUrl } from "@/utils/image";
 
 export interface LocationDTO {
   id: string;
@@ -81,10 +82,11 @@ export async function getLocationsData(): Promise<LocationsPageData> {
 
   const normalizedCards: LocationCardData[] = apiLocations.map((loc) => {
     const slug = loc.name.toLowerCase().trim().replace(/\s+/g, "");
-    const image =
+    const rawImage =
       loc.images && loc.images.length > 0
         ? loc.images[0]
         : "/images/rooms/room_single.png";
+    const image = resolveImageUrl(rawImage);
 
     // Default starting price per location based on fallback if present
     const matchedFallback = fallback.popularLocations.locations.find(
