@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import PrivateImage from "@/components/PrivateImage";
 import Link from "next/link";
 import { getLocationsData } from "@/services/locationsService";
 import { LocationCardData } from "@/types/locations";
@@ -99,8 +100,8 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
             >
               {/* Image inside card padding with rounded corners */}
               <div className="relative w-full aspect-[4/3] sm:h-[220px] overflow-hidden rounded-[16px] bg-slate-100">
-                <Image
-                  src={card.image}
+                <PrivateImage
+                  fileId={card.image}
                   alt={card.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"

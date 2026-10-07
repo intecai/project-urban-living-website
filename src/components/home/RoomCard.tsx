@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import PrivateImage from "@/components/PrivateImage";
 import Link from "next/link";
 import { Room } from "@/types/room";
 
@@ -25,8 +25,8 @@ export default function RoomCard({ room }: RoomCardProps) {
     >
       {/* 1. Image & Badge Container */}
       <div className="relative w-full aspect-[4/3] overflow-hidden bg-slate-100 rounded-t-2xl sm:rounded-t-[24px]">
-        <Image
-          src={room.image}
+        <PrivateImage
+          fileId={room.image}
           alt={room.title}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"

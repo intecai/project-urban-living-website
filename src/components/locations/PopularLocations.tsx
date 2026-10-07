@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import PrivateImage from "@/components/PrivateImage";
 import { ArrowRight } from "lucide-react";
 import { PopularLocationsData, LocationCardData } from "@/types/locations";
 
@@ -77,8 +78,8 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
             >
               {/* Inner Image Frame with Rounded Corners */}
               <div className="relative w-full h-[200px] sm:h-[215px] overflow-hidden rounded-[14px] sm:rounded-[16px] bg-slate-100 mb-4">
-                <Image
-                  src={card.image}
+                <PrivateImage
+                  fileId={card.image}
                   alt={card.name}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"

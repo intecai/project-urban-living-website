@@ -13,6 +13,12 @@ export function resolveImageUrl(path?: string): string {
   ) {
     return cleanPath;
   }
+  // If it's a UUID (used for our PrivateImage file uploads), return it as is
+  const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/i.test(cleanPath);
+  if (isUUID) {
+    return cleanPath;
+  }
+
   const domainEnv = process.env.NEXT_PUBLIC_IMAGE_DOMAIN || DEFAULT_IMAGE_DOMAIN;
   const domain = domainEnv.replace(/\/+$/, "");
   return `${domain}/${cleanPath.replace(/^\/+/, "")}`;

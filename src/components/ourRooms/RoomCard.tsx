@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import PrivateImage from "@/components/PrivateImage";
 import Link from "next/link";
 import { RoomItem } from "./types";
 import { MapPin, Camera } from "lucide-react";
@@ -22,8 +23,8 @@ export default function RoomCard({ room }: RoomCardProps) {
     >
       {/* 1. LEFT ROOM IMAGE FRAME (16px border-radius as shown in Figma Dev Mode) */}
       <div className="relative w-full md:w-[320px] lg:w-[350px] shrink-0 h-[200px] sm:h-[225px] rounded-[16px] overflow-hidden bg-slate-100">
-        <Image
-          src={room.image}
+        <PrivateImage
+          fileId={room.image}
           alt={room.name}
           fill
           sizes="(max-width: 768px) 100vw, 350px"

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+import PrivateImage from "@/components/PrivateImage";
 import { Crown, User, Users, ArrowRight } from "lucide-react";
 
 export interface Room {
@@ -204,8 +204,8 @@ export default function ExploreRooms() {
             >
               {/* Card Header Image & Overlay Badge */}
               <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-slate-100">
-                <Image
-                  src={room.image}
+                <PrivateImage
+                  fileId={room.image}
                   alt={room.title}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import PrivateImage from "@/components/PrivateImage";
 import {
   MapPin,
   Home,
@@ -206,8 +207,8 @@ export default function PremiumSingleRoomView({ commonData, roomData }: PremiumS
             {/* Main Featured Image Box */}
             <div className="space-y-4">
               <div className="relative w-full aspect-[16/11] sm:h-[430px] rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-100 shadow-xs border border-slate-200">
-                <Image
-                  src={selectedImage?.src || images[0]?.src || "/images/rooms/premium_single_main.png"}
+                <PrivateImage
+                  fileId={selectedImage?.src || images[0]?.src || "/images/rooms/premium_single_main.png"}
                   alt={selectedImage?.alt || roomData?.name || "Room Image"}
                   fill
                   priority
@@ -241,8 +242,8 @@ export default function PremiumSingleRoomView({ commonData, roomData }: PremiumS
                             : "border-transparent opacity-80 hover:opacity-100 hover:border-slate-300"
                         }`}
                       >
-                        <Image
-                          src={img.src}
+                        <PrivateImage
+                          fileId={img.src}
                           alt={img.alt}
                           fill
                           sizes="(max-width: 768px) 33vw, 20vw"

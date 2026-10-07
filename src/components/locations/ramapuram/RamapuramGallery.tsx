@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import PrivateImage from "@/components/PrivateImage";
 import { GalleryItem } from "@/data/locations/ramapuram";
 
 export interface RamapuramGalleryProps {
@@ -19,8 +20,8 @@ export default function RamapuramGallery({ items }: RamapuramGalleryProps) {
       {/* 1. Main Left Image */}
       {mainImage && (
         <div className="md:col-span-2 relative h-[280px] sm:h-[360px] rounded-[16px] overflow-hidden bg-slate-100 shadow-2xs group">
-          <Image
-            src={mainImage.src}
+          <PrivateImage
+            fileId={mainImage.src}
             alt={mainImage.alt}
             fill
             priority
@@ -34,8 +35,8 @@ export default function RamapuramGallery({ items }: RamapuramGalleryProps) {
       <div className="md:col-span-1 flex flex-col gap-4 sm:gap-5">
         {centerTop && (
           <div className="relative h-[132px] sm:h-[170px] rounded-[16px] overflow-hidden bg-slate-100 shadow-2xs group">
-            <Image
-              src={centerTop.src}
+            <PrivateImage
+              fileId={centerTop.src}
               alt={centerTop.alt}
               fill
               sizes="(max-width: 768px) 100vw, 25vw"
@@ -45,8 +46,8 @@ export default function RamapuramGallery({ items }: RamapuramGalleryProps) {
         )}
         {centerBottom && (
           <div className="relative h-[132px] sm:h-[170px] rounded-[16px] overflow-hidden bg-slate-100 shadow-2xs group">
-            <Image
-              src={centerBottom.src}
+            <PrivateImage
+              fileId={centerBottom.src}
               alt={centerBottom.alt}
               fill
               sizes="(max-width: 768px) 100vw, 25vw"
@@ -59,8 +60,8 @@ export default function RamapuramGallery({ items }: RamapuramGalleryProps) {
       {/* 3. Right Column Tall Image */}
       {rightImage && (
         <div className="md:col-span-1 relative h-[280px] sm:h-[360px] rounded-[16px] overflow-hidden bg-slate-100 shadow-2xs group">
-          <Image
-            src={rightImage.src}
+          <PrivateImage
+            fileId={rightImage.src}
             alt={rightImage.alt}
             fill
             sizes="(max-width: 768px) 100vw, 25vw"
