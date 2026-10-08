@@ -521,22 +521,7 @@ export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData 
     title: idx === 0 ? "Main Room View" : `Room View ${idx + 1}`,
   }));
 
-  // Ensure gallery has at least 4 items for grid presentation
-  const fallbackGallery = [
-    "/images/rooms/premium_single_main.png",
-    "/images/rooms/premium_single_bathroom.png",
-    "/images/rooms/premium_single_thumb2.png",
-    "/images/rooms/premium_single_thumb3.png",
-  ];
-  while (galleryImages.length < 4) {
-    const idx = galleryImages.length;
-    galleryImages.push({
-      id: idx + 1,
-      src: fallbackGallery[idx] || fallbackGallery[0],
-      alt: `${name} View ${idx + 1}`,
-      title: `View ${idx + 1}`,
-    });
-  }
+
 
   const nearbyList: WhatsNearbyItem[] = [
     { id: "1", name: "Shine Sports Academy", time: "3 min", leftIconName: "MapPin", modeIconName: "Footprints" },

@@ -226,17 +226,17 @@ export default function PremiumSingleRoomView({ commonData, roomData }: PremiumS
                 )}
               </div>
 
-              {/* 3 Thumbnails Directly Below Main Image */}
+              {/* Horizontal Thumbnail Carousel */}
               {images.length > 1 && (
-                <div className="grid grid-cols-3 gap-3 sm:gap-4">
-                  {images.slice(1, 4).map((img) => {
+                <div className="flex overflow-x-auto gap-3 sm:gap-4 pb-2 snap-x" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+                  {images.map((img) => {
                     const isSelected = selectedImage.id === img.id;
                     return (
                       <button
                         key={img.id}
                         type="button"
                         onClick={() => setSelectedImage(img)}
-                        className={`relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-100 border-2 transition-all cursor-pointer ${
+                        className={`relative w-[110px] sm:w-[140px] shrink-0 snap-start aspect-[4/3] rounded-xl overflow-hidden bg-slate-100 border-2 transition-all cursor-pointer ${
                           isSelected
                             ? "border-[#02569B] ring-2 ring-[#02569B]/20 scale-[1.02]"
                             : "border-transparent opacity-80 hover:opacity-100 hover:border-slate-300"
@@ -246,7 +246,7 @@ export default function PremiumSingleRoomView({ commonData, roomData }: PremiumS
                           fileId={img.src}
                           alt={img.alt}
                           fill
-                          sizes="(max-width: 768px) 33vw, 20vw"
+                          sizes="(max-width: 768px) 110px, 140px"
                           className="object-cover"
                         />
                       </button>
