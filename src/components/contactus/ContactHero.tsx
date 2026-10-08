@@ -16,9 +16,9 @@ export default function ContactHero({ data, navbarData }: ContactHeroProps) {
   const bgImage = data?.bgImage || "/images/contactus/contactHeroImage.png";
 
   return (
-    <section className="relative w-full overflow-hidden aspect-[1440/627] flex flex-col justify-between bg-[#FAF6EB]">
+    <section className="relative z-50 w-full aspect-[1440/627] flex flex-col justify-between bg-[#FAF6EB]">
       {/* 1. Single Hero Background Image (starts at top 0 behind Navbar) */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <Image
           src={bgImage}
           alt="Contact Us Hero Background"

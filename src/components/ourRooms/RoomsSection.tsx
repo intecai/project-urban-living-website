@@ -7,6 +7,7 @@ import { RoomCategory, FilterState, SortOption, RoomItem } from "./types";
 import { RoomsPageData } from "@/types/rooms";
 import { roomsData as fallbackRoomsData } from "./roomsData";
 import RoomCard from "./RoomCard";
+import RoomCardSkeleton from "./RoomCardSkeleton";
 import FilterModal from "./FilterModal";
 import { fetchRoomsFromApi, resolveAmenityValues } from "@/services/roomsService";
 
@@ -187,7 +188,7 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
                     onClick={() => handleCategorySelect(tab.value)}
                     className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer font-jakarta shadow-xs ${
                       isSelected
-                        ? "bg-[#0F3D91] text-white shadow-sm"
+                        ? "bg-[#2571A5] text-white shadow-sm"
                         : "bg-white text-[#4B5563] hover:bg-slate-100 hover:text-[#111827] border border-[#E5E7EB]"
                     }`}
                   >
@@ -258,8 +259,10 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
 
         {/* 3. Rooms Cards List */}
         {isLoading ? (
-          <div className="py-12 text-center text-slate-500 font-medium text-sm">
-            Loading rooms...
+          <div className="space-y-4 sm:space-y-6">
+            {Array.from({ length: 6 }).map((_, idx) => (
+              <RoomCardSkeleton key={idx} />
+            ))}
           </div>
         ) : paginatedRooms.length > 0 ? (
           <div className="space-y-4 sm:space-y-6">
@@ -316,10 +319,11 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
                     key={page}
                     type="button"
                     onClick={() => setCurrentPage(page)}
-                    className={`transition-all cursor-pointer ${isActive
-                        ? "w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-[#0F3D91] text-white font-bold text-xs sm:text-xl flex items-center justify-center shadow-xs"
-                        : "text-xs sm:text-xl font-medium text-[#4B5563] hover:text-[#1F2937] px-1.5 sm:px-2 py-1"
-                      }`}
+                    className={`transition-all cursor-pointer flex items-center justify-center shrink-0 w-8 h-8 sm:w-11 sm:h-11 rounded-full text-xs sm:text-xl ${
+                      isActive
+                        ? "bg-[#2571A5] text-white font-bold shadow-xs"
+                        : "font-medium text-[#4B5563] hover:bg-slate-100 hover:text-[#1F2937]"
+                    }`}
                   >
                     {page}
                   </button>

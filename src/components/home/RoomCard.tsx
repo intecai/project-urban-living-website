@@ -47,7 +47,7 @@ export default function RoomCard({ room }: RoomCardProps) {
       <div className="p-3 sm:p-5 lg:p-6 flex-1 flex flex-col justify-between">
         {/* Title & Amenities */}
         <div>
-          <h3 className="text-sm sm:text-lg lg:text-[20px] font-semibold text-[#011A2A] group-hover:text-[#02569B] transition-colors font-figtree tracking-tight leading-snug mb-1">
+          <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-[#011A2A] group-hover:text-[#02569B] transition-colors font-figtree tracking-tight leading-snug mb-1">
             {room.title}
           </h3>
           <p className="text-[11px] sm:text-xs lg:text-[15px] text-[#6C6F73] font-figtree leading-relaxed line-clamp-2">
@@ -57,7 +57,7 @@ export default function RoomCard({ room }: RoomCardProps) {
 
         {/* Price Info */}
         <div className="mt-3 sm:mt-6">
-          <p className="hidden sm:block text-xs sm:text-[14px] text-[#6C6F73] font-figtree mb-0.5">
+          <p className="hidden sm:block text-xs sm:text-sm text-[#6C6F73] font-figtree mb-0.5">
             Starting from
           </p>
           <div className="flex items-baseline gap-1 sm:gap-1.5 flex-wrap">

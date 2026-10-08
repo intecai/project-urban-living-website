@@ -76,11 +76,8 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
         {/* Section Heading matching Figma */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <span className="block text-xs font-bold text-[#2571A5] uppercase tracking-widest font-figtree mb-1">
-              NEIGHBORHOODS
-            </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-[28px] font-bold text-[#0E1C36] text-left tracking-tight font-lato">
-              Popular Locations in Chennai
+            <h2 className="text-2xl sm:text-3xl lg:text-[28px] font-bold text-[#0E1C36] text-center sm:text-left tracking-tight font-lato">
+              Explore Our PG Locations
             </h2>
           </div>
           <Link
@@ -112,15 +109,15 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
               {/* Card Body */}
               <div className="pt-4 flex flex-col justify-between flex-1 space-y-4">
                 <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-base sm:text-[18px] text-[16px] font-semibold text-[#051125] font-Plus_Jakarta_Sans tracking-tight">
+                  <h3 className="text-base sm:text-[18px] font-semibold text-[#051125] font-Plus_Jakarta_Sans tracking-tight">
                     {card.name}
                   </h3>
 
                   <div className="text-right shrink-0">
-                    <span className="block text-[12px] font-medium text-[#424753] tracking-wider uppercase font-figtree mb-0.5">
+                    <span className="block text-xs font-medium text-[#424753] tracking-wider uppercase font-figtree mb-0.5">
                       STARTS FROM
                     </span>
-                    <span className="block text-base sm:text-lg font-bold text-[#0053B0] text-[16px] font-figtree tracking-tight">
+                    <span className="block text-base sm:text-lg font-bold text-[#0053B0] font-figtree tracking-tight">
                       {card.price}
                     </span>
                   </div>
@@ -129,7 +126,7 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
                 {/* Explore Location Button */}
                 <Link
                   href={card.href}
-                  className="w-full py-2.5 sm:py-3 rounded-full border border-[#0053B0] text-[#0053B0] text-[16px] bg-white hover:bg-[#02569B] hover:text-white text-xs sm:text-sm font-semibold text-center transition-colors duration-200 shadow-2xs font-figtree flex items-center justify-center cursor-pointer mt-3"
+                  className="w-full py-2.5 sm:py-3 rounded-full border border-[#0053B0] text-[#0053B0] bg-white hover:bg-[#02569B] hover:text-white text-xs sm:text-sm font-semibold text-center transition-colors duration-200 shadow-2xs font-figtree flex items-center justify-center cursor-pointer mt-3"
                 >
                   {card.buttonText || "Explore Location"}
                 </Link>

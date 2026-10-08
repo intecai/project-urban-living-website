@@ -78,11 +78,11 @@ export default function Navbar({
 
   if (isTransparent) {
     inactiveLinkStyles = darkText
-      ? "text-[#011A2A] hover:text-[#2563EB] font-medium transition-colors"
-      : "text-[#011A2A] hover:text-[#2563EB] font-medium transition-colors";
+      ? "text-[#011A2A] font-medium transition-colors"
+      : "text-[#011A2A] font-medium transition-colors";
   } else if (isTranslucent) {
     inactiveLinkStyles =
-      "text-[#011A2A] hover:text-[#2563EB] font-medium transition-colors";
+      "text-[#011A2A] font-medium transition-colors";
   }
 
   const activeLinkStyles = "bg-[#2571A5] text-white font-medium shadow-xs px-4 py-2 rounded-full";
@@ -118,9 +118,8 @@ export default function Navbar({
                 <a
                   key={link.label}
                   href={link.href}
-                  className={`px-4 py-2 rounded-full transition-all duration-200 ${
-                    isActive ? activeLinkStyles : inactiveLinkStyles
-                  }`}
+                  className={`px-4 py-2 rounded-full transition-all duration-200 ${isActive ? activeLinkStyles : inactiveLinkStyles
+                    }`}
                 >
                   {link.label}
                 </a>
@@ -157,42 +156,43 @@ export default function Navbar({
         </div>
 
         {/* Mobile Menu Drawer */}
-        {mobileMenuOpen && (
-          <div className={`md:hidden px-4 pt-2 pb-6 space-y-3 ${mobileMenuBg} absolute top-full left-0 right-0 z-50`}>
-            <div className="flex flex-col space-y-2">
-              {links.map((link) => {
-                const isActive = activeLink === link.label;
-                return (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                      isActive
-                        ? "bg-[#2571A5] text-white font-semibold"
-                        : "text-[#011A2A] hover:bg-slate-100"
+        <div
+          className={`md:hidden px-4 pt-2 pb-6 space-y-3 ${mobileMenuBg} absolute top-full left-0 right-0 z-50 transition-all duration-300 ease-in-out origin-top ${
+            mobileMenuOpen ? "opacity-100 scale-y-100 pointer-events-auto" : "opacity-0 scale-y-0 pointer-events-none"
+          }`}
+        >
+          <div className="flex flex-col space-y-2">
+            {links.map((link) => {
+              const isActive = activeLink === link.label;
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive
+                      ? "bg-[#2571A5] text-white font-semibold"
+                      : "text-[#011A2A] hover:bg-slate-100"
                     }`}
-                  >
-                    {link.label}
-                  </a>
-                );
-              })}
-            </div>
-
-            <div className="pt-2 border-t border-slate-200/20">
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setBookNowModalOpen(true);
-                }}
-                className="block w-full text-center bg-[#2571A5] hover:bg-[#02569B] text-white px-5 py-3 rounded-xl text-sm font-semibold shadow-xs cursor-pointer"
-              >
-                {ctaLabel}
-              </button>
-            </div>
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </div>
-        )}
+
+          <div className="pt-3 pb-1 border-t border-slate-200/20 flex justify-center">
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setBookNowModalOpen(true);
+              }}
+              className="bg-[#2571A5] hover:bg-[#02569B] text-white px-6 py-2 rounded-full text-sm font-semibold shadow-xs cursor-pointer"
+            >
+              {ctaLabel}
+            </button>
+          </div>
+        </div>
       </header>
 
       {/* Global Book Now / Talk To Our Team Modal */}

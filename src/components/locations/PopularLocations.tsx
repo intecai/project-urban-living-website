@@ -50,7 +50,7 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
 
         {/* Section Eyebrow & Header Row */}
         <div>
-          <span className="block text-xs sm:text-sm tracking-wider text-[#0053B0] text-[12px] font-figtree uppercase mb-1">
+          <span className="block text-xs sm:text-sm tracking-wider text-[#0053B0] font-figtree uppercase mb-1">
             {eyebrow}
           </span>
 
@@ -90,16 +90,16 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
               {/* Card Title & Price Area */}
               <div className="flex items-start sm:items-center justify-between gap-2 mb-4 px-0.5">
                 {/* Location Name */}
-                <h3 className="text-base sm:text-lg font-bold text-[#0B1C30] text-[16px] font-figtree tracking-tight leading-snug">
+                <h3 className="text-base sm:text-lg font-bold text-[#0B1C30] font-figtree tracking-tight leading-snug">
                   {card.name}
                 </h3>
 
                 {/* Price Block */}
                 <div className="text-right shrink-0">
-                  <span className="block text-[10px] sm:text-[11px] font-semibold text-[#424753] text-[12px] tracking-wider uppercase font-figtree whitespace-nowrap">
+                  <span className="block text-[10px] sm:text-[11px] font-semibold text-[#424753] tracking-wider uppercase font-figtree whitespace-nowrap">
                     STARTS FROM
                   </span>
-                  <span className="block text-base sm:text-lg font-bold text-[#0053B0] text-[16px] font-figtree tracking-tight whitespace-nowrap">
+                  <span className="block text-base sm:text-lg font-bold text-[#0053B0] font-figtree tracking-tight whitespace-nowrap">
                     {card.price}
                   </span>
                 </div>

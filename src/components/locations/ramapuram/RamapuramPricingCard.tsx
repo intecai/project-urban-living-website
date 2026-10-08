@@ -29,7 +29,7 @@ export default function RamapuramPricingCard({ item }: RamapuramPricingCardProps
 
       {/* Middle: Room Title & Description */}
       <div className="flex-1 flex flex-col justify-center space-y-1.5 self-center">
-        <h3 className="text-base sm:text-lg font-medium text-[#000000] font-figtree text-[24px]">
+        <h3 className="text-base sm:text-lg font-medium text-[#000000] font-figtree text-2xl">
           {item.title}
         </h3>
         <p className="text-xs sm:text-sm text-[#272828] text-[21px] leading-relaxed font-figtree">
@@ -40,19 +40,19 @@ export default function RamapuramPricingCard({ item }: RamapuramPricingCardProps
       {/* Right: Price & Available Status Badge */}
       <div className="shrink-0 flex flex-col items-start sm:items-end justify-between w-full sm:w-auto h-auto sm:h-[135px] py-1 self-stretch sm:self-center gap-2 sm:gap-0 border-t sm:border-t-0 border-slate-200/60 pt-3 sm:pt-1">
         {/* Inline Price Line */}
-        <div className="text-left sm:text-right text-xs sm:text-sm text-[#6C6F73] font-figtree text-[12px]">
+        <div className="text-left sm:text-right text-xs sm:text-sm text-[#6C6F73] font-figtree">
           <span>{prefix} </span>
-          <span className="font-semibold text-[#000000] text-[24px] text-sm sm:text-base md:text-lg">
+          <span className="font-semibold text-[#000000] text-2xl text-sm sm:text-base md:text-lg">
             {displayPrice}{" "}
           </span>
-          <span className="text-[#000000] text-[16px] font-figtree">{suffix}</span>
+          <span className="text-[#000000] text-base font-figtree">{suffix}</span>
         </div>
 
         {/* Availability Badge at Bottom Right */}
         {item.available && (
           <div className="flex items-center gap-1.5 mt-auto">
             <span className="w-2 h-2 rounded-full bg-[#22C55E]" />
-            <span className="text-xs font-semibold text-[#22C55E] font-inter text-[14px]">
+            <span className="text-xs font-semibold text-[#22C55E] font-inter">
               Available Now
             </span>
           </div>

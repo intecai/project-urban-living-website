@@ -52,7 +52,7 @@ export default function Footer({ data }: FooterProps) {
             {/* Social Media Icons */}
             <div className="flex items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/urbanlivinghostel/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"

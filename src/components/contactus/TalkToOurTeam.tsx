@@ -125,7 +125,7 @@ I would like to enquire about room availability:
           
           {/* 1. STAY DURATION */}
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-[16px] text-[#001B44] mb-2.5 sm:mb-3 font-figtree">
+            <label className="block text-xs sm:text-sm font-medium text-base text-[#001B44] mb-2.5 sm:mb-3 font-figtree">
               1. How long are you looking to stay? *
             </label>
 
@@ -162,7 +162,7 @@ I would like to enquire about room availability:
             {/* Row 1: Full Name & Preferred Branch */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
               <div>
-                <label className="block text-xs font-medium text-[#374151] text-[16px] font-weight/510 mb-1 sm:mb-1.5 font-figtree">
+                <label className="block text-xs font-medium text-[#374151] text-base font-weight/510 mb-1 sm:mb-1.5 font-figtree">
                   Full Name*
                 </label>
                 <input
@@ -178,7 +178,7 @@ I would like to enquire about room availability:
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[16px] font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
+                <label className="block text-xs font-medium text-base font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
                   Preferred Branch
                 </label>
                 <div className="relative">
@@ -207,7 +207,7 @@ I would like to enquire about room availability:
             {/* Row 2: Email & Phone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
               <div>
-                <label className="block text-xs font-medium text-[16px] font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
+                <label className="block text-xs font-medium text-base font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
                   Email Address
                 </label>
                 <input
@@ -223,7 +223,7 @@ I would like to enquire about room availability:
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[16px] font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
+                <label className="block text-xs font-medium text-base font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
                   Phone Number
                 </label>
                 <input
@@ -245,7 +245,7 @@ I would like to enquire about room availability:
             <div className="grid grid-cols-1 sm:flex sm:items-center gap-3.5 sm:gap-3">
               {/* Check-in Date */}
               <div className="w-full sm:flex-1">
-                <label className="block text-xs font-medium text-[16px] font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
+                <label className="block text-xs font-medium text-base font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
                   Check-in Date
                 </label>
                 <div className="relative">
@@ -267,7 +267,7 @@ I would like to enquire about room availability:
 
               {/* Check-out Date */}
               <div className="w-full sm:flex-1">
-                <label className="block text-xs font-medium text-[16px] font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
+                <label className="block text-xs font-medium text-base font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
                   Check-out Date
                 </label>
                 <div className="relative">
@@ -288,7 +288,7 @@ I would like to enquire about room availability:
 
           {/* 4. MESSAGE */}
           <div>
-            <label className="block text-xs font-medium text-[16px] font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
+            <label className="block text-xs font-medium text-base font-weight-510 text-[#374151] mb-1 sm:mb-1.5 font-figtree">
               Your Message
             </label>
             <textarea
