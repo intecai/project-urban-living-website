@@ -1,10 +1,29 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { fetchApi } from "@/utils/apiClient";
 
 export default function FloatingWhatsApp() {
-  const whatsappUrl = "https://wa.me/919003079966";
+  const [whatsappUrl, setWhatsappUrl] = useState("https://wa.me/919003079966");
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const res = await fetchApi<any>('/settings');
+        const data = res?.data || res?.value || (res && typeof res === 'object' && 'whatsappNumber' in res ? res : null);
+        if (data && data.whatsappNumber) {
+          const num = data.whatsappNumber.replace(/[^0-9]/g, '');
+          if (num) {
+            setWhatsappUrl(`https://wa.me/${num}`);
+          }
+        }
+      } catch (e) {
+        console.error("Failed to load whatsapp settings", e);
+      }
+    }
+    loadSettings();
+  }, []);
 
   return (
     <a

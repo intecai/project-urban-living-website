@@ -52,7 +52,7 @@ export default function Footer({ data }: FooterProps) {
             {/* Social Media Icons */}
             <div className="flex items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
               <a
-                href="https://instagram.com"
+                href={data?.socialLinks?.instagram || "https://instagram.com"}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -67,7 +67,7 @@ export default function Footer({ data }: FooterProps) {
                 />
               </a>
               <a
-                href="https://facebook.com"
+                href={data?.socialLinks?.facebook || "https://facebook.com"}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
@@ -82,7 +82,7 @@ export default function Footer({ data }: FooterProps) {
                 />
               </a>
               <a
-                href="https://youtube.com"
+                href={data?.socialLinks?.youtube || "https://youtube.com"}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"

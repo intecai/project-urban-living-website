@@ -51,6 +51,11 @@ export interface FooterData {
     phone: string;
     email: string;
   };
+  socialLinks?: {
+    instagram: string;
+    facebook: string;
+    youtube: string;
+  };
   copyrightText: string;
 }
 
