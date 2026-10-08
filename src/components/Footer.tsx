@@ -248,7 +248,7 @@ export default function Footer({ data }: FooterProps) {
 
                 <a
                   href={`tel:${contactPhone.replace(/\s+/g, "")}`}
-                  className="hover:text-white transition-colors"
+                  className="hover:text-white transition-colors text-xs sm:text-sm font-figtree"
                 >
                   {contactPhone}
                 </a>
@@ -259,7 +259,7 @@ export default function Footer({ data }: FooterProps) {
 
                 <a
                   href={`mailto:${contactEmail}`}
-                  className="hover:text-white transition-colors break-all text-[11px] sm:text-xs"
+                  className="hover:text-white transition-colors break-all text-xs sm:text-sm font-figtree"
                 >
                   {contactEmail}
                 </a>
@@ -268,7 +268,7 @@ export default function Footer({ data }: FooterProps) {
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F59E0B] shrink-0 mt-0.5" />
 
-                <span className="leading-tight text-[11px] sm:text-xs">
+                <span className="leading-snug text-xs sm:text-sm font-figtree">
                   {contactAddress}
                 </span>
               </li>
