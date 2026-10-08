@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
-import { getRoomsData } from "@/services/roomsService";
+import roomsFallbackData from "@/data/rooms.json";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL || "https://urbanliving.client.intecai.in";
   const now = new Date();
@@ -51,38 +51,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  try {
-    const roomsData = await getRoomsData().catch(() => null);
-    if (roomsData?.rooms && roomsData.rooms.length > 0) {
-      for (const room of roomsData.rooms) {
-        if (room.slug) {
-          routes.push({
-            url: `${baseUrl}/rooms/${encodeURIComponent(room.slug)}`,
-            lastModified: now,
-            changeFrequency: "weekly",
-            priority: 0.8,
-          });
-        }
-      }
-    } else {
-      const fallbackSlugs = [
-        "premium-single-room",
-        "single-room",
-        "double-sharing-room",
-        "triple-sharing-room",
-        "four-sharing-room",
-      ];
-      for (const slug of fallbackSlugs) {
-        routes.push({
-          url: `${baseUrl}/rooms/${slug}`,
-          lastModified: now,
-          changeFrequency: "weekly",
-          priority: 0.8,
-        });
-      }
+  const knownSlugs = new Set<string>([
+    "premium-single-room",
+    "single-room",
+    "double-sharing-room",
+    "triple-sharing-room",
+    "four-sharing-room",
+  ]);
+
+  if (Array.isArray(roomsFallbackData)) {
+    for (const r of roomsFallbackData as any[]) {
+      if (r?.slug) knownSlugs.add(r.slug);
     }
-  } catch {
-    // graceful fallback
+  }
+
+  for (const slug of knownSlugs) {
+    routes.push({
+      url: `${baseUrl}/rooms/${encodeURIComponent(slug)}`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    });
   }
 
   return routes;

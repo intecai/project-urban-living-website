@@ -40,33 +40,10 @@ const defaultLocations: LocationCardItem[] = [
 ];
 
 export default function ExploreLocations({ data }: ExploreLocationsProps) {
-  const [locations, setLocations] = useState<LocationCardData[]>(data?.locations || []);
-
-  useEffect(() => {
-    if (data?.locations && data.locations.length > 0) return;
-    let isMounted = true;
-
-    async function loadApiLocations() {
-      try {
-        const locationsData = await getLocationsData();
-        const normalizedLocations = locationsData?.popularLocations?.locations || [];
-
-        if (isMounted && normalizedLocations.length > 0) {
-          setLocations(normalizedLocations);
-        }
-      } catch (err) {
-        console.error("[HOME LOCATIONS ERROR]", err);
-      }
-    }
-
-    loadApiLocations();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [data?.locations]);
-
-  const locationList: (LocationCardData | LocationCardItem)[] = locations.length > 0 ? locations : (data?.locations || defaultLocations);
+  const locationList: (LocationCardData | LocationCardItem)[] =
+    data?.locations && data.locations.length > 0
+      ? data.locations
+      : defaultLocations;
 
   return (
     <section className="w-full py-12 sm:py-16 bg-white font-figtree">
@@ -80,6 +57,7 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
           </div>
           <Link
             href="/locations"
+            prefetch={false}
             className="text-xs sm:text-sm font-semibold text-[#2571A5] hover:text-[#00428C] transition-colors flex items-center gap-1 shrink-0 font-figtree cursor-pointer"
           >
             View all areas &rarr;
@@ -124,6 +102,7 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
                 {/* Explore Location Button */}
                 <Link
                   href={card.href}
+                  prefetch={false}
                   className="w-full py-2.5 sm:py-3 rounded-full border border-[#0053B0] text-[#0053B0] bg-white hover:bg-[#02569B] hover:text-white text-xs sm:text-sm font-semibold text-center transition-colors duration-200 shadow-2xs font-figtree flex items-center justify-center cursor-pointer mt-3"
                 >
                   {card.buttonText || "Explore Location"}

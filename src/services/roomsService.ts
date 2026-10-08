@@ -228,15 +228,9 @@ export async function fetchRoomsFromApi(
 
   const queryString = params.toString();
   const endpoint = queryString ? `/rooms?${queryString}` : "/rooms";
-
-  console.log(`[SERVICE] requested category: '${category}', minPrice: ${minPrice}, maxPrice: ${maxPrice}, locations: ${locations ? JSON.stringify(locations) : "[]"}, amenities: ${amenities ? JSON.stringify(amenities) : "[]"}, availability: ${availability ?? "''"}`);
-  console.log(`[SERVICE] final URL: '${endpoint}'`);
-  
   const response = await fetchApi<any>(endpoint);
-  console.log(`[SERVICE] raw response for '${endpoint}':`, response);
 
   if (!response) {
-    console.warn(`[SERVICE WARNING] Endpoint ${endpoint} returned null/error.`);
     return null;
   }
 
@@ -249,7 +243,6 @@ export async function fetchRoomsFromApi(
     dtoList = response.value;
   }
 
-  console.log(`[SERVICE] extracted response.data length for '${endpoint}': ${dtoList.length}`, dtoList);
   const normalized = dtoList.map((dto, idx) => normalizeRoomDTO(dto, idx));
   
   // Client-side category filtering to handle broken CMS data
@@ -258,7 +251,6 @@ export async function fetchRoomsFromApi(
     ? normalized.filter(room => room.category === category)
     : normalized;
 
-  console.log(`[SERVICE] normalized result length for '${endpoint}': ${filtered.length}`, filtered);
   return filtered;
 }
 

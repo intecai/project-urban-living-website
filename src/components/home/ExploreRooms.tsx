@@ -25,16 +25,22 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
   const [roomsList, setRoomsList] = useState<Room[]>(initialRooms || []);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [isLoading, setIsLoading] = useState<boolean>(!initialRooms || initialRooms.length === 0);
+  const isFirstRender = React.useRef(true);
 
   useEffect(() => {
-    console.log("[HOME] activeCategory:", activeCategory);
+    // Avoid re-fetching initial rooms on initial mount if server already provided them
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      if (initialRooms && initialRooms.length > 0) {
+        return;
+      }
+    }
+
     let isMounted = true;
     async function loadApiRooms() {
       setIsLoading(true);
-      console.log("[HOME] fetching category:", activeCategory);
       try {
         const apiRooms = await fetchRoomsFromApi(activeCategory);
-        console.log("[HOME] API rooms returned:", apiRooms);
 
         if (isMounted && apiRooms !== null && apiRooms !== undefined) {
           const mappedRooms: Room[] = (apiRooms || []).map((r) => {
@@ -60,7 +66,6 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
             };
           });
 
-          console.log("[HOME] setting roomsList:", mappedRooms);
           setRoomsList(mappedRooms);
         }
       } catch (err) {
@@ -73,10 +78,7 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
     return () => {
       isMounted = false;
     };
-  }, [activeCategory]);
-
-  console.log("[HOME] FINAL roomsList:", roomsList);
-  console.log("[HOME] FINAL roomsList length:", roomsList.length);
+  }, [activeCategory, initialRooms]);
 
   return (
     <section className="w-full py-10 sm:py-12 lg:py-16 bg-white font-figtree" id="explore-rooms">
@@ -90,6 +92,7 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
 
           <Link
             href="/rooms"
+            prefetch={false}
             className="hidden sm:inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#02569B] hover:text-[#01417a] transition-colors group"
           >
             <span>Explore all rooms</span>
@@ -161,6 +164,7 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
         <div className="sm:hidden pt-2 flex justify-center">
           <Link
             href="/rooms"
+            prefetch={false}
             className="inline-flex items-center justify-center gap-2 bg-[#2571A5] hover:bg-[#02569B] text-white text-xs font-semibold px-7 py-3 rounded-full shadow-xs cursor-pointer transition-colors"
           >
             <span>Explore all rooms</span>

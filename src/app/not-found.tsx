@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { getCommonData } from "@/services/commonService";
+import commonDataJson from "@/data/common.json";
 import { Home, SearchX, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -14,8 +14,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function NotFound() {
-  const commonData = await getCommonData();
+export default function NotFound() {
+  const commonData = commonDataJson as any;
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-[#FAFCFF] font-figtree text-slate-900">
