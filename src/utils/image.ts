@@ -17,8 +17,9 @@ export function resolveImageUrl(path?: string): string {
   // Handle keys that come from our backend API uploads
   if (cleanPath.startsWith('uploads/')) {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://urbanliving.client.intecai.in/api";
-    // The endpoint is /api/uploads/:key, so we strip 'uploads/' and append it.
-    return `${baseUrl}/uploads/${cleanPath.replace('uploads/', '')}`;
+    // Typically Express static files are served at /uploads, outside the /api route
+    const rootUrl = baseUrl.replace(/\/api\/?$/, "");
+    return `${rootUrl}/${cleanPath}`;
   }
 
   // If it's a UUID (used for our file uploads), resolve it to the backend endpoint
