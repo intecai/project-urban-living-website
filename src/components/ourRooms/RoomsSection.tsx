@@ -80,7 +80,7 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
 
         // Resolve locationId from selected location filter array if present
         const selectedLocation = filters.locations.length > 0 ? filters.locations[0] : undefined;
-        const reqLocationId = await resolveLocationId(selectedLocation);
+        const reqLocationId = resolveLocationId(selectedLocation);
 
         // Resolve selected amenities to backend amenity value names
         const reqAmenities = resolveAmenityValues(filters.amenities);

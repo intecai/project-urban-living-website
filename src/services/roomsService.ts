@@ -162,26 +162,12 @@ export const LOCATION_NAME_TO_ID_MAP: Record<string, string> = {
   madhanandapuram: "621f272c-daf5-431d-a19f-4a48bb765ac7",
 };
 
-export async function resolveLocationId(locNameOrId?: string): Promise<string | undefined> {
+export function resolveLocationId(locNameOrId?: string): string | undefined {
   if (!locNameOrId || locNameOrId === "all") return undefined;
   if (/^[0-9a-fA-F-]{16,}$/.test(locNameOrId)) {
     return locNameOrId;
   }
   const clean = locNameOrId.toLowerCase().trim().replace(/\s+/g, "");
-
-  try {
-    const res = await fetchApi<any>("/locations");
-    let apiLocations = [];
-    if (Array.isArray(res)) apiLocations = res;
-    else if (res && Array.isArray(res.data)) apiLocations = res.data;
-    else if (res && Array.isArray(res.value)) apiLocations = res.value;
-
-    const matched = apiLocations.find((l: any) => l.name.toLowerCase().trim().replace(/\s+/g, "") === clean);
-    if (matched) return matched.id;
-  } catch (err) {
-    console.error("Failed to fetch locations in resolveLocationId", err);
-  }
-
   return LOCATION_NAME_TO_ID_MAP[clean];
 }
 
