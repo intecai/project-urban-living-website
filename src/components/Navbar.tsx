@@ -74,7 +74,7 @@ export default function Navbar({
 
   // Nav links text styling
   let inactiveLinkStyles =
-    "text-[#011A2A] hover:text-[#2563EB] font-medium transition-colors";
+    "text-[#011A2A] font-medium transition-colors";
 
   if (isTransparent) {
     inactiveLinkStyles = darkText
