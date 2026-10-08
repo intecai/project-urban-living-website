@@ -43,15 +43,13 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
   const [locations, setLocations] = useState<LocationCardData[]>(data?.locations || []);
 
   useEffect(() => {
-    console.log("[HOME LOCATIONS] fetching locations");
+    if (data?.locations && data.locations.length > 0) return;
     let isMounted = true;
 
     async function loadApiLocations() {
       try {
         const locationsData = await getLocationsData();
-        console.log("[HOME LOCATIONS] API result:", locationsData);
         const normalizedLocations = locationsData?.popularLocations?.locations || [];
-        console.log("[HOME LOCATIONS] normalized locations:", normalizedLocations);
 
         if (isMounted && normalizedLocations.length > 0) {
           setLocations(normalizedLocations);
@@ -66,7 +64,7 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [data?.locations]);
 
   const locationList: (LocationCardData | LocationCardItem)[] = locations.length > 0 ? locations : (data?.locations || defaultLocations);
 

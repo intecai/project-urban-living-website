@@ -148,9 +148,9 @@ export function normalizeRoomDTO(r: RoomDTO, idx: number): RoomItem {
     photoCount: r.images?.length || 5,
     image,
     amenities: {
-      wifi: amenitiesList.some((a) => /wifi/i.test(a)) || true,
-      ac: amenitiesList.some((a) => /ac/i.test(a)) || true,
-      food: amenitiesList.some((a) => /food/i.test(a)) || true,
+      wifi: amenitiesList.length > 0 ? amenitiesList.some((a) => /wifi/i.test(a)) : true,
+      ac: amenitiesList.length > 0 ? amenitiesList.some((a) => /ac/i.test(a)) : true,
+      food: amenitiesList.length > 0 ? amenitiesList.some((a) => /food/i.test(a)) : true,
       laundry: amenitiesList.some((a) => /laundry/i.test(a)) || false,
       housekeeping: amenitiesList.some((a) => /housekeeping/i.test(a)) || false,
     },
@@ -447,19 +447,19 @@ export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData 
   // Handle fallback matching for known standard slug aliases
   if (!roomItem) {
     if (cleanSlug === "premium-single-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.slug === "premium-single-room") || allRoomsData.rooms[0];
+      roomItem = allRoomsData.rooms.find((r) => r.slug === "premium-single-room" || r.category === "single");
     } else if (cleanSlug === "single-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.category === "single") || allRoomsData.rooms[0];
+      roomItem = allRoomsData.rooms.find((r) => r.category === "single");
     } else if (cleanSlug === "three-sharing-room" || cleanSlug === "triple-sharing-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.category === "triple" || r.name.toLowerCase().includes("three") || r.name.toLowerCase().includes("triple")) || allRoomsData.rooms[0];
+      roomItem = allRoomsData.rooms.find((r) => r.category === "triple" || r.name.toLowerCase().includes("three") || r.name.toLowerCase().includes("triple"));
     } else if (cleanSlug === "double-sharing-room" || cleanSlug === "two-sharing-room" || cleanSlug === "twin-sharing-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.category === "double" || r.name.toLowerCase().includes("two") || r.name.toLowerCase().includes("double")) || allRoomsData.rooms[0];
+      roomItem = allRoomsData.rooms.find((r) => r.category === "double" || r.name.toLowerCase().includes("two") || r.name.toLowerCase().includes("double"));
     } else if (cleanSlug === "four-sharing-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.category === "four" || r.name.toLowerCase().includes("four")) || allRoomsData.rooms[0];
+      roomItem = allRoomsData.rooms.find((r) => r.category === "four" || r.name.toLowerCase().includes("four"));
     } else if (cleanSlug === "five-sharing-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.category === "five" || r.name.toLowerCase().includes("five")) || allRoomsData.rooms[0];
+      roomItem = allRoomsData.rooms.find((r) => r.category === "five" || r.name.toLowerCase().includes("five"));
     } else if (cleanSlug === "deluxe-single-room" || cleanSlug === "private-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.slug === cleanSlug || r.category === "single") || allRoomsData.rooms[0];
+      roomItem = allRoomsData.rooms.find((r) => r.slug === cleanSlug || r.category === "single");
     }
   }
 
