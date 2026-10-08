@@ -42,24 +42,9 @@ export default function PrivateImage({
       return;
     }
 
-    let isMounted = true;
-    
-    const fetchPresignedUrl = async () => {
-      try {
-        const res = await fetchApi<{ url: string }>(`/upload/${fileId}/presigned-url`);
-        if (isMounted && res?.url) {
-          setUrl(res.url);
-        }
-      } catch (err) {
-        console.error("Failed to load image", err);
-      }
-    };
-
-    fetchPresignedUrl();
-
-    return () => {
-      isMounted = false;
-    };
+    // Fallback for UUIDs - use direct backend endpoint
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://urbanliving.client.intecai.in/api";
+    setUrl(`${baseUrl}/upload/${fileId}`);
   }, [fileId]);
 
   if (!url) {

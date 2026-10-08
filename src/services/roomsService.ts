@@ -95,11 +95,11 @@ export interface RoomDetailData {
 export function categoryToRoomTypeEnum(cat?: string): string | null {
   if (!cat || cat === "all") return null;
   const lower = cat.toLowerCase();
-  if (lower === "single" || lower === "single rooms") return "Single Rooms";
-  if (lower === "double" || lower === "double rooms") return "Double Rooms";
-  if (lower === "triple" || lower === "triple rooms") return "Triple Rooms";
-  if (lower === "four" || lower === "four sharing") return "Four Sharing";
-  if (lower === "five" || lower === "five sharing") return "Five Sharing";
+  if (lower === "single" || lower === "single room") return "Single room";
+  if (lower === "double" || lower === "double sharing") return "Double sharing";
+  if (lower === "triple" || lower === "triple sharing") return "Triple sharing";
+  if (lower === "four" || lower === "four sharing") return "Four sharing";
+  if (lower === "five" || lower === "five sharing") return "Five sharing";
   return null;
 }
 

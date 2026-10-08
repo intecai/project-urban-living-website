@@ -13,10 +13,19 @@ export function resolveImageUrl(path?: string): string {
   ) {
     return cleanPath;
   }
-  // If it's a UUID (used for our PrivateImage file uploads), return it as is
+
+  // Handle keys that come from our backend API uploads
+  if (cleanPath.startsWith('uploads/')) {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://urbanliving.client.intecai.in/api";
+    // The endpoint is /api/uploads/:key, so we strip 'uploads/' and append it.
+    return `${baseUrl}/uploads/${cleanPath.replace('uploads/', '')}`;
+  }
+
+  // If it's a UUID (used for our file uploads), resolve it to the backend endpoint
   const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/i.test(cleanPath);
   if (isUUID) {
-    return cleanPath;
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "https://urbanliving.client.intecai.in/api";
+    return `${baseUrl}/upload/${cleanPath}`;
   }
 
   const domainEnv = process.env.NEXT_PUBLIC_IMAGE_DOMAIN || DEFAULT_IMAGE_DOMAIN;
