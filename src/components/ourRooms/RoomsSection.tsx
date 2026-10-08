@@ -8,7 +8,7 @@ import { RoomsPageData } from "@/types/rooms";
 import { roomsData as fallbackRoomsData } from "./roomsData";
 import RoomCard from "./RoomCard";
 import FilterModal from "./FilterModal";
-import { fetchRoomsFromApi, resolveLocationId, resolveAmenityValues } from "@/services/roomsService";
+import { fetchRoomsFromApi, resolveAmenityValues } from "@/services/roomsService";
 
 export interface RoomsSectionProps {
   data?: RoomsPageData;
@@ -78,9 +78,8 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
         const reqMinPrice = isMinActive ? filters.minPrice : undefined;
         const reqMaxPrice = isMaxActive ? filters.maxPrice : undefined;
 
-        // Resolve locationId from selected location filter array if present
-        const selectedLocation = filters.locations.length > 0 ? filters.locations[0] : undefined;
-        const reqLocationId = resolveLocationId(selectedLocation);
+        // Pass the entire locations array to support multiple locations
+        const reqLocations = filters.locations.length > 0 ? filters.locations : undefined;
 
         // Resolve selected amenities to backend amenity value names
         const reqAmenities = resolveAmenityValues(filters.amenities);
@@ -88,8 +87,8 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
         // Resolve availability to backend availability flag (only "Available" state is supported)
         const reqAvailability = filters.availableOnly ? true : undefined;
 
-        console.log(`[ROOMS SECTION] Fetching rooms (req #${currentRequestId}) with params: category='${filters.category}', minPrice=${reqMinPrice}, maxPrice=${reqMaxPrice}, locationId=${reqLocationId}, amenities=${JSON.stringify(reqAmenities)}, availability=${reqAvailability ?? "''"}`);
-        const rooms = await fetchRoomsFromApi(filters.category, reqMinPrice, reqMaxPrice, reqLocationId, reqAmenities, reqAvailability);
+        console.log(`[ROOMS SECTION] Fetching rooms (req #${currentRequestId}) with params: category='${filters.category}', minPrice=${reqMinPrice}, maxPrice=${reqMaxPrice}, locations=${JSON.stringify(reqLocations)}, amenities=${JSON.stringify(reqAmenities)}, availability=${reqAvailability ?? "''"}`);
+        const rooms = await fetchRoomsFromApi(filters.category, reqMinPrice, reqMaxPrice, reqLocations, reqAmenities, reqAvailability);
 
         // Only update state if this is still the latest active request
         if (currentRequestId === requestIdRef.current) {

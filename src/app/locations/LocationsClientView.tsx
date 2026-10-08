@@ -10,6 +10,7 @@ import PopularLocations from "@/components/locations/PopularLocations";
 import EverythingYouNeed from "@/components/locations/EverythingYouNeed";
 import EnquiryBanner from "@/components/EnquiryBanner";
 import Footer from "@/components/Footer";
+import PrivateImage from "@/components/PrivateImage";
 
 // Ramapuram custom components
 import RamapuramHero from "@/components/locations/ramapuram/RamapuramHero";
@@ -97,11 +98,15 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
         : ramapuramData.hero.title;
 
       const ramapuramGalleryItems = [...ramapuramData.gallery];
-      if (apiLocation?.images && apiLocation.images.length > 0 && ramapuramGalleryItems.length > 0) {
-        ramapuramGalleryItems[0] = {
-          ...ramapuramGalleryItems[0],
-          src: apiLocation.images[0],
-        };
+      if (apiLocation?.images && apiLocation.images.length > 0) {
+        apiLocation.images.slice(0, 4).forEach((imgSrc, idx) => {
+          if (ramapuramGalleryItems[idx]) {
+            ramapuramGalleryItems[idx] = {
+              ...ramapuramGalleryItems[idx],
+              src: imgSrc,
+            };
+          }
+        });
       }
 
       const ramapuramAboutPropertyData = {
@@ -148,11 +153,15 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
 
     if (baseLocationData) {
       const genericGallery = [...baseLocationData.gallery];
-      if (apiLocation?.images && apiLocation.images.length > 0 && genericGallery.length > 0) {
-        genericGallery[0] = {
-          ...genericGallery[0],
-          src: apiLocation.images[0],
-        };
+      if (apiLocation?.images && apiLocation.images.length > 0) {
+        apiLocation.images.slice(0, 4).forEach((imgSrc, idx) => {
+          if (genericGallery[idx]) {
+            genericGallery[idx] = {
+              ...genericGallery[idx],
+              src: imgSrc,
+            };
+          }
+        });
       }
 
       const locationData = {
@@ -190,8 +199,8 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
             {/* Photo Gallery Grid */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-5">
               <div className="md:col-span-2 relative h-[280px] sm:h-[360px] rounded-[16px] overflow-hidden bg-slate-100 shadow-2xs group">
-                <Image
-                  src={locationData.gallery[0]?.src || "/images/rooms/room_comfort.png"}
+                <PrivateImage
+                  fileId={locationData.gallery[0]?.src || "/images/rooms/room_comfort.png"}
                   alt={locationData.gallery[0]?.alt || locationData.title}
                   fill
                   priority
@@ -200,16 +209,16 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
               </div>
               <div className="md:col-span-1 flex flex-col gap-4 sm:gap-5">
                 <div className="relative h-[132px] sm:h-[170px] rounded-[16px] overflow-hidden bg-slate-100 shadow-2xs group">
-                  <Image
-                    src={locationData.gallery[1]?.src || "/images/rooms/room_deluxe.png"}
+                  <PrivateImage
+                    fileId={locationData.gallery[1]?.src || "/images/rooms/room_deluxe.png"}
                     alt={locationData.gallery[1]?.alt || "Gallery 2"}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
                 <div className="relative h-[132px] sm:h-[170px] rounded-[16px] overflow-hidden bg-slate-100 shadow-2xs group">
-                  <Image
-                    src={locationData.gallery[2]?.src || "/images/rooms/room_single.png"}
+                  <PrivateImage
+                    fileId={locationData.gallery[2]?.src || "/images/rooms/room_single.png"}
                     alt={locationData.gallery[2]?.alt || "Gallery 3"}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -217,8 +226,8 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
                 </div>
               </div>
               <div className="md:col-span-1 relative h-[280px] sm:h-[360px] rounded-[16px] overflow-hidden bg-slate-100 shadow-2xs group">
-                <Image
-                  src={locationData.gallery[3]?.src || "/images/rooms/room_sharing.png"}
+                <PrivateImage
+                  fileId={locationData.gallery[3]?.src || "/images/rooms/room_sharing.png"}
                   alt={locationData.gallery[3]?.alt || "Gallery 4"}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"

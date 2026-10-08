@@ -104,14 +104,8 @@ export function categoryToRoomTypeEnum(cat?: string): string | null {
 }
 
 export function roomTypeEnumToCategory(roomType?: string, title?: string): RoomCategory {
-  if (roomType) {
-    const lower = roomType.toLowerCase();
-    if (lower.includes("single")) return "single";
-    if (lower.includes("double")) return "double";
-    if (lower.includes("triple")) return "triple";
-    if (lower.includes("four")) return "four";
-    if (lower.includes("five")) return "five";
-  }
+  // CMS backend data is corrupted for `roomType` (many shared rooms have roomType="Single room").
+  // Therefore, we must prioritize parsing the `title` first to classify rooms correctly in the UI.
   if (title) {
     const lowerTitle = title.toLowerCase();
     if (lowerTitle.includes("single")) return "single";
@@ -119,6 +113,14 @@ export function roomTypeEnumToCategory(roomType?: string, title?: string): RoomC
     if (lowerTitle.includes("triple") || lowerTitle.includes("three")) return "triple";
     if (lowerTitle.includes("four")) return "four";
     if (lowerTitle.includes("five")) return "five";
+  }
+  if (roomType) {
+    const lower = roomType.toLowerCase();
+    if (lower.includes("single")) return "single";
+    if (lower.includes("double")) return "double";
+    if (lower.includes("triple")) return "triple";
+    if (lower.includes("four")) return "four";
+    if (lower.includes("five")) return "five";
   }
   return "double";
 }
@@ -193,24 +195,29 @@ export async function fetchRoomsFromApi(
   category?: string,
   minPrice?: number,
   maxPrice?: number,
-  locationId?: string,
+  locations?: string[],
   amenities?: string[],
   availability?: boolean
 ): Promise<RoomItem[] | null> {
-  const roomTypeParam = categoryToRoomTypeEnum(category);
   const params = new URLSearchParams();
 
-  if (roomTypeParam) {
-    params.append("roomType", roomTypeParam);
+  // The user explicitly requested to restore the previous behavior ONLY for "single" room, 
+  // which relied on the backend API returning 7 rooms (including some misconfigured ones).
+  // For other categories, we fetch all (limit=100) and strictly filter locally by title.
+  if (category === "single") {
+    params.append("roomType", "Single room");
+  } else {
+    params.append("limit", "100");
   }
+
   if (minPrice !== undefined && minPrice !== null) {
     params.append("minPrice", minPrice.toString());
   }
   if (maxPrice !== undefined && maxPrice !== null) {
     params.append("maxPrice", maxPrice.toString());
   }
-  if (locationId) {
-    params.append("locationId", locationId);
+  if (locations && locations.length > 0) {
+    locations.forEach(loc => params.append("location", loc));
   }
   if (amenities && amenities.length > 0) {
     params.append("amenities", amenities.join(","));
@@ -222,8 +229,7 @@ export async function fetchRoomsFromApi(
   const queryString = params.toString();
   const endpoint = queryString ? `/rooms?${queryString}` : "/rooms";
 
-  console.log(`[SERVICE] requested category: '${category}', minPrice: ${minPrice}, maxPrice: ${maxPrice}, locationId: ${locationId}, amenities: ${amenities ? JSON.stringify(amenities) : "[]"}, availability: ${availability ?? "''"}`);
-  console.log(`[SERVICE] mapped roomType: '${roomTypeParam}'`);
+  console.log(`[SERVICE] requested category: '${category}', minPrice: ${minPrice}, maxPrice: ${maxPrice}, locations: ${locations ? JSON.stringify(locations) : "[]"}, amenities: ${amenities ? JSON.stringify(amenities) : "[]"}, availability: ${availability ?? "''"}`);
   console.log(`[SERVICE] final URL: '${endpoint}'`);
   
   const response = await fetchApi<any>(endpoint);
@@ -245,19 +251,26 @@ export async function fetchRoomsFromApi(
 
   console.log(`[SERVICE] extracted response.data length for '${endpoint}': ${dtoList.length}`, dtoList);
   const normalized = dtoList.map((dto, idx) => normalizeRoomDTO(dto, idx));
-  console.log(`[SERVICE] normalized result length for '${endpoint}': ${normalized.length}`, normalized);
-  return normalized;
+  
+  // Client-side category filtering to handle broken CMS data
+  // We skip this for "single" because the user explicitly wants the raw backend output
+  const filtered = (category && category !== "all" && category !== "single")
+    ? normalized.filter(room => room.category === category)
+    : normalized;
+
+  console.log(`[SERVICE] normalized result length for '${endpoint}': ${filtered.length}`, filtered);
+  return filtered;
 }
 
 export async function getRoomsData(
   categoryFilter?: string,
   minPrice?: number,
   maxPrice?: number,
-  locationId?: string,
+  locations?: string[],
   amenities?: string[],
   availability?: boolean
 ): Promise<RoomsPageData> {
-  let roomItems = await fetchRoomsFromApi(categoryFilter, minPrice, maxPrice, locationId, amenities, availability);
+  let roomItems = await fetchRoomsFromApi(categoryFilter, minPrice, maxPrice, locations, amenities, availability);
 
   // Fall back to local roomsData.json ONLY when the API request genuinely failed/unavailable.
   // A successful API response that contains 0 rooms must stay empty (show the UI empty state).
