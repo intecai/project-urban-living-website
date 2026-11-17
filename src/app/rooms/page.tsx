@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import RoomsHero from "@/components/ourRooms/RoomsHero";
@@ -32,7 +33,9 @@ export default async function RoomsPage() {
         <RoomsHero />
 
         {/* Rooms Listing Section */}
-        <RoomsSection data={roomsPageData} />
+        <Suspense fallback={<div className="w-full py-12 text-center text-slate-500 font-figtree">Loading rooms...</div>}>
+          <RoomsSection data={roomsPageData} />
+        </Suspense>
 
         {/* Frequently Asked Questions Section */}
         <FAQ data={roomsPageData.faq} />

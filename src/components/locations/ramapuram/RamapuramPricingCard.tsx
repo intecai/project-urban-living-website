@@ -18,13 +18,16 @@ export default function RamapuramPricingCard({ item }: RamapuramPricingCardProps
     <div className="bg-[#F8FAFC] rounded-[16px] p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between  gap-5 transition-all duration-200 w-full">
       {/* Left Room Thumbnail Image */}
       <div className="relative w-full sm:w-[190px] md:w-[210px] h-[130px] sm:h-[135px] rounded-[12px] overflow-hidden shrink-0 bg-slate-100">
-        <Image
-          src={item.image}
-          alt={item.title}
-          fill
-          sizes="(max-width: 640px) 100vw, 210px"
-          className="object-cover"
-        />
+        {item.image ? (
+          <Image
+            src={item.image}
+            alt={item.title}
+            fill
+            loading="lazy"
+            sizes="(max-width: 640px) 100vw, 210px"
+            className="object-cover"
+          />
+        ) : null}
       </div>
 
       {/* Middle: Room Title & Description */}

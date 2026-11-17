@@ -27,6 +27,7 @@ export default function RoomCard({ room }: RoomCardProps) {
           fileId={room.image}
           alt={room.name}
           fill
+          loading="lazy"
           sizes="(max-width: 768px) 100vw, 350px"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
@@ -57,6 +58,7 @@ export default function RoomCard({ room }: RoomCardProps) {
                     alt="Wi-Fi"
                     width={20}
                     height={20}
+                    loading="lazy"
                     className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
                   />
                   <span>Wi-Fi</span>
@@ -69,6 +71,7 @@ export default function RoomCard({ room }: RoomCardProps) {
                     alt="Food"
                     width={20}
                     height={20}
+                    loading="lazy"
                     className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
                   />
                   <span>Food</span>
@@ -81,6 +84,7 @@ export default function RoomCard({ room }: RoomCardProps) {
                     alt="AC"
                     width={20}
                     height={20}
+                    loading="lazy"
                     className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
                   />
                   <span>AC</span>
@@ -93,6 +97,7 @@ export default function RoomCard({ room }: RoomCardProps) {
                     alt="Laundry"
                     width={20}
                     height={20}
+                    loading="lazy"
                     className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
                   />
                   <span>Laundry</span>

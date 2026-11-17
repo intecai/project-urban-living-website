@@ -93,25 +93,25 @@ export const madanandapuramData: MadanandapuramData = {
       gallery: [
         {
           id: "1",
-          src: "/images/rooms/room_deluxe.png",
+          src: "",
           alt: "Ground Floor Living Room",
           span: "main",
         },
         {
           id: "2",
-          src: "/images/rooms/room_comfort.png",
+          src: "",
           alt: "Ground Floor Dining Area",
           span: "center-top",
         },
         {
           id: "3",
-          src: "/images/rooms/room_single.png",
+          src: "",
           alt: "Ground Floor Bedroom View",
           span: "center-bottom",
         },
         {
           id: "4",
-          src: "/images/rooms/room_sharing.png",
+          src: "",
           alt: "Ground Floor Lounge",
           span: "right",
         },
@@ -125,25 +125,25 @@ export const madanandapuramData: MadanandapuramData = {
       gallery: [
         {
           id: "1",
-          src: "/images/rooms/room_single.png",
+          src: "",
           alt: "First Floor Living Area",
           span: "main",
         },
         {
           id: "2",
-          src: "/images/rooms/room_sharing.png",
+          src: "",
           alt: "First Floor Dining Area",
           span: "center-top",
         },
         {
           id: "3",
-          src: "/images/rooms/room_deluxe.png",
+          src: "",
           alt: "First Floor Bedroom",
           span: "center-bottom",
         },
         {
           id: "4",
-          src: "/images/rooms/room_comfort.png",
+          src: "",
           alt: "First Floor Balcony View",
           span: "right",
         },
@@ -157,25 +157,25 @@ export const madanandapuramData: MadanandapuramData = {
       gallery: [
         {
           id: "1",
-          src: "/images/rooms/room_comfort.png",
+          src: "",
           alt: "4A Living Suite",
           span: "main",
         },
         {
           id: "2",
-          src: "/images/rooms/room_single.png",
+          src: "",
           alt: "4A Dining Table",
           span: "center-top",
         },
         {
           id: "3",
-          src: "/images/rooms/room_sharing.png",
+          src: "",
           alt: "4A Bedroom View",
           span: "center-bottom",
         },
         {
           id: "4",
-          src: "/images/rooms/room_deluxe.png",
+          src: "",
           alt: "4A View",
           span: "right",
         },
@@ -189,25 +189,25 @@ export const madanandapuramData: MadanandapuramData = {
       gallery: [
         {
           id: "1",
-          src: "/images/rooms/room_sharing.png",
+          src: "",
           alt: "4B Suite Room",
           span: "main",
         },
         {
           id: "2",
-          src: "/images/rooms/room_deluxe.png",
+          src: "",
           alt: "4B Dining Lounge",
           span: "center-top",
         },
         {
           id: "3",
-          src: "/images/rooms/room_comfort.png",
+          src: "",
           alt: "4B Bedroom View",
           span: "center-bottom",
         },
         {
           id: "4",
-          src: "/images/rooms/room_single.png",
+          src: "",
           alt: "4B Balcony",
           span: "right",
         },
@@ -224,7 +224,7 @@ export const madanandapuramData: MadanandapuramData = {
         price: "₹11,000/",
         pricePrefix: "Starting From",
         priceSuffix: "* month",
-        image: "/images/rooms/room_single.png",
+        image: "",
         available: true,
       },
       {
@@ -234,7 +234,7 @@ export const madanandapuramData: MadanandapuramData = {
         price: "₹10,000/",
         pricePrefix: "Starting From",
         priceSuffix: "* month",
-        image: "/images/rooms/room_sharing.png",
+        image: "",
         available: true,
       },
       {
@@ -244,7 +244,7 @@ export const madanandapuramData: MadanandapuramData = {
         price: "₹10,000/",
         pricePrefix: "Starting From",
         priceSuffix: "* month",
-        image: "/images/rooms/room_deluxe.png",
+        image: "",
         available: true,
       },
     ],

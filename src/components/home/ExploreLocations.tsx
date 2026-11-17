@@ -12,38 +12,12 @@ export interface ExploreLocationsProps {
   data?: any;
 }
 
-const defaultLocations: LocationCardItem[] = [
-  {
-    "id": "1",
-    "name": "Ramapuram",
-    "price": "₹8,500/mo",
-    "image": "/images/rooms/room_single.png",
-    "href": "/locations?slug=ramapuram",
-    "buttonText": "Explore Location"
-  },
-  {
-    "id": "2",
-    "name": "Madhanandapuram",
-    "price": "₹7,200/mo",
-    "image": "/images/rooms/room_deluxe.png",
-    "href": "/locations?slug=madanandapuram",
-    "buttonText": "Explore Location"
-  },
-  {
-    "id": "3",
-    "name": "Madhanandapuram",
-    "price": "₹9,000/mo",
-    "image": "/images/rooms/room_sharing.png",
-    "href": "/locations?slug=madanandapuram",
-    "buttonText": "Explore Location"
-  },
-];
-
 export default function ExploreLocations({ data }: ExploreLocationsProps) {
-  const locationList: (LocationCardData | LocationCardItem)[] =
-    data?.locations && data.locations.length > 0
-      ? data.locations
-      : defaultLocations;
+  const locationList: (LocationCardData | LocationCardItem)[] = data?.locations || [];
+
+  if (locationList.length === 0) {
+    return null;
+  }
 
   return (
     <section className="w-full py-12 sm:py-16 bg-white font-figtree">
@@ -77,6 +51,7 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
                   fileId={card.image}
                   alt={card.name}
                   fill
+                  loading="lazy"
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover"
                 />

@@ -98,7 +98,7 @@ export const metadata: Metadata = {
     siteName: "Urban Living PG",
     images: [
       {
-        url: "/images/rooms/room_single.png",
+        url: "/images/common/mainLogo1.png",
         width: 1200,
         height: 630,
         alt: "Urban Living Luxury PG Accommodation in Chennai",
@@ -110,7 +110,7 @@ export const metadata: Metadata = {
     title: "Urban Living PG | Luxury Women's Accommodation & Coliving Chennai",
     description:
       "Premium, safe and fully furnished luxury coliving and PG accommodations for women in Ramapuram & Madhanandapuram, Chennai.",
-    images: ["/images/rooms/room_single.png"],
+    images: ["/images/common/mainLogo1.png"],
   },
   robots: {
     index: true,

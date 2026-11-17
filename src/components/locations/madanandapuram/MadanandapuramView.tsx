@@ -33,13 +33,8 @@ export default function MadanandapuramView({ commonData, apiLocation }: Madanand
   const galleryItems = [...currentFloor.gallery];
   if (apiLocation?.images && apiLocation.images.length > 0) {
     const startIndex = floorIndex * 4;
-    let floorImages = apiLocation.images.slice(startIndex, startIndex + 4);
-    
-    // If we don't have images for this specific floor, fallback to whatever images we have
-    if (floorImages.length === 0) {
-      floorImages = apiLocation.images.slice(0, 4);
-    }
-    
+    const floorImages = apiLocation.images.slice(startIndex, startIndex + 4);
+
     floorImages.forEach((imgSrc, idx) => {
       if (galleryItems[idx]) {
         galleryItems[idx] = {

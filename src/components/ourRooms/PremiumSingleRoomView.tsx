@@ -28,108 +28,27 @@ export interface PremiumSingleRoomViewProps {
   roomData?: RoomDetailData;
 }
 
-const defaultGalleryImages = [
-  {
-    id: 1,
-    src: "/images/rooms/premium_single_main.png",
-    alt: "Premium Single Room Main View",
-    title: "Main Room View",
-  },
-  {
-    id: 2,
-    src: "/images/rooms/premium_single_bathroom.png",
-    alt: "Attached Bathroom View",
-    title: "Bathroom View",
-  },
-  {
-    id: 3,
-    src: "/images/rooms/premium_single_thumb2.png",
-    alt: "Bedroom View Angle 1",
-    title: "Bedroom View 1",
-  },
-  {
-    id: 4,
-    src: "/images/rooms/premium_single_thumb3.png",
-    alt: "Bedroom View Angle 2",
-    title: "Bedroom View 2",
-  },
-];
-
-const defaultRoomAmenitiesList = [
-  { id: "kitchen", label: "Kitchen", icon: "/images/rooms/Amenities-kitchen.png" },
-  { id: "geyser", label: "Geyser", icon: "/images/rooms/Amenities-Geyser.png" },
-  { id: "tv", label: "TV", icon: "/images/rooms/Amenities-TV.png" },
-  { id: "microwave", label: "Microwave", icon: "/images/rooms/Amenities-Microwave.png" },
-  { id: "fireExtinguisher", label: "Fire extinguisher", icon: "/images/rooms/Amenities-FireExtinguisher.png" },
-  { id: "washingMachine", label: "Washing Machine", icon: "/images/rooms/Amenities-WashingMachine.png" },
-  { id: "acRoom", label: "AC room", icon: "/images/rooms/Amenities-AC.png" },
-  { id: "wifi", label: "Wi-Fi", icon: "/images/rooms/Amenities-wifi.png" },
-  { id: "digitalLock", label: "Digital Lock", icon: "/images/rooms/Amenities-DigitalLock.png" },
-  { id: "cctv", label: "CCTV", icon: "/images/rooms/Amenities-CCTV.png" },
-  { id: "kettle", label: "Kettle", icon: "/images/rooms/Amenities-Kettle.png" },
-  { id: "inductionStove", label: "Induction stove", icon: "/images/rooms/Amenities-Inductionstov.png" },
-  { id: "caretaker", label: "Caretaker", icon: "/images/rooms/Amenities-Caretaker.png" },
-];
-
-const getNearbyIcon = (name?: string, fallbackIcon: any = MapPin) => {
-  if (!name) return fallbackIcon;
+const getNearbyIcon = (name?: string, defaultIcon: any = MapPin) => {
+  if (!name) return defaultIcon;
   switch (name) {
     case "MapPin": return MapPin;
     case "Footprints": return Footprints;
     case "Car": return Car;
     case "Bus": return Bus;
     case "Train": return Train;
-    default: return fallbackIcon;
+    default: return defaultIcon;
   }
 };
 
-const defaultWhatsNearbyList = [
-  {
-    id: "1",
-    name: "Shine Sports Academy",
-    time: "3 min",
-    leftIconName: "MapPin",
-    modeIconName: "Footprints",
-  },
-  {
-    id: "2",
-    name: "Sunshine Badminton Academy",
-    time: "4 min",
-    leftIconName: "MapPin",
-    modeIconName: "Footprints",
-  },
-  {
-    id: "3",
-    name: "Kovai Medical Center & Hospital",
-    time: "7 min",
-    leftIconName: "MapPin",
-    modeIconName: "Car",
-  },
-  {
-    id: "4",
-    name: "Peelamedu Bus Stand",
-    time: "12 min",
-    leftIconName: "Bus",
-    modeIconName: "Bus",
-  },
-  {
-    id: "5",
-    name: "Coimbatore Railway Station",
-    time: "15 min",
-    leftIconName: "Train",
-    modeIconName: "Train",
-  },
-];
-
 export default function PremiumSingleRoomView({ commonData, roomData }: PremiumSingleRoomViewProps) {
-  const images = (roomData?.galleryImages && roomData.galleryImages.length > 0)
-    ? roomData.galleryImages
-    : defaultGalleryImages;
-  const [selectedImage, setSelectedImage] = useState(images[0] || defaultGalleryImages[0]);
+  const images = roomData?.galleryImages || [];
+  const [selectedImage, setSelectedImage] = useState<any>(images[0] || null);
 
   useEffect(() => {
     if (images && images.length > 0) {
       setSelectedImage(images[0]);
+    } else {
+      setSelectedImage(null);
     }
   }, [roomData?.id, roomData?.slug]);
 
@@ -173,8 +92,8 @@ export default function PremiumSingleRoomView({ commonData, roomData }: PremiumS
     },
   ];
 
-  const amenitiesList = roomData?.amenities || defaultRoomAmenitiesList;
-  const nearbyList = roomData?.whatsNearby || defaultWhatsNearbyList;
+  const amenitiesList = roomData?.amenities || [];
+  const nearbyList = roomData?.whatsNearby || [];
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-[#FAFCFF] font-figtree text-slate-900">
@@ -208,7 +127,7 @@ export default function PremiumSingleRoomView({ commonData, roomData }: PremiumS
             <div className="space-y-4">
               <div className="relative w-full aspect-[16/11] sm:h-[430px] rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-100 shadow-xs border border-slate-200">
                 <PrivateImage
-                  fileId={selectedImage?.src || images[0]?.src || "/images/rooms/premium_single_main.png"}
+                  fileId={selectedImage?.src || images[0]?.src || ""}
                   alt={selectedImage?.alt || roomData?.name || "Room Image"}
                   fill
                   priority
@@ -230,7 +149,7 @@ export default function PremiumSingleRoomView({ commonData, roomData }: PremiumS
               {images.length > 1 && (
                 <div className="flex overflow-x-auto gap-3 sm:gap-4 pb-2 snap-x" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                   {images.map((img) => {
-                    const isSelected = selectedImage.id === img.id;
+                    const isSelected = selectedImage?.id === img.id;
                     return (
                       <button
                         key={img.id}
@@ -434,7 +353,7 @@ export default function PremiumSingleRoomView({ commonData, roomData }: PremiumS
 
               {/* List of Amenities */}
               <div className="space-y-4 pt-1">
-                {amenitiesList.map((amenity) => (
+                {amenitiesList.map((amenity: any) => (
                   <div
                     key={amenity.id}
                     className="flex items-center gap-3.5 text-sm sm:text-base text-slate-700 font-medium group"

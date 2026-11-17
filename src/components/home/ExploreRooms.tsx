@@ -26,6 +26,14 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [isLoading, setIsLoading] = useState<boolean>(!initialRooms || initialRooms.length === 0);
   const isFirstRender = React.useRef(true);
+  const tabCacheRef = React.useRef<Map<string, Room[]>>(new Map());
+
+  // Seed initial rooms in cache
+  React.useEffect(() => {
+    if (initialRooms && initialRooms.length > 0) {
+      tabCacheRef.current.set("all", initialRooms);
+    }
+  }, [initialRooms]);
 
   useEffect(() => {
     // Avoid re-fetching initial rooms on initial mount if server already provided them
@@ -34,6 +42,13 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
       if (initialRooms && initialRooms.length > 0) {
         return;
       }
+    }
+
+    // Cache-first: if rooms for this category already in memory, display instantly
+    if (tabCacheRef.current.has(activeCategory)) {
+      setRoomsList(tabCacheRef.current.get(activeCategory)!);
+      setIsLoading(false);
+      return;
     }
 
     let isMounted = true;
@@ -66,6 +81,7 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
             };
           });
 
+          tabCacheRef.current.set(activeCategory, mappedRooms);
           setRoomsList(mappedRooms);
         }
       } catch (err) {
@@ -124,6 +140,7 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
                       src={tab.icon}
                       alt={tab.label}
                       fill
+                      loading="lazy"
                       className="object-contain"
                     />
                   </div>

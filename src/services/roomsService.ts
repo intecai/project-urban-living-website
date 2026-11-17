@@ -1,5 +1,3 @@
-import roomsFallbackData from "@/data/rooms.json";
-import { roomsData as defaultRoomsData } from "@/components/ourRooms/roomsData";
 import { RoomsPageData } from "@/types/rooms";
 import { RoomItem, RoomCategory } from "@/components/ourRooms/types";
 import { getRoomSlug } from "@/utils/slug";
@@ -131,7 +129,7 @@ export function normalizeRoomDTO(r: RoomDTO, idx: number): RoomItem {
   const priceNum = typeof r.price === "number" ? r.price : parseFloat(r.price || "0") || 8000;
   const category = roomTypeEnumToCategory(r.roomType, r.title);
   const locationName = r.location?.name || "Ramapuram";
-  const rawImage = r.images && r.images.length > 0 ? r.images[0] : "/images/rooms/room_single.png";
+  const rawImage = r.images && r.images.length > 0 ? r.images[0] : "";
   const image = resolveImageUrl(rawImage);
   const amenitiesList = Array.isArray(r.amenities) ? r.amenities : [];
 
@@ -197,19 +195,24 @@ export async function fetchRoomsFromApi(
   maxPrice?: number,
   locations?: string[],
   amenities?: string[],
-  availability?: boolean
+  availability?: boolean,
+  search?: string
 ): Promise<RoomItem[] | null> {
   const params = new URLSearchParams();
 
-  // The user explicitly requested to restore the previous behavior ONLY for "single" room, 
-  // which relied on the backend API returning 7 rooms (including some misconfigured ones).
-  // For other categories, we fetch all (limit=100) and strictly filter locally by title.
+  // The backend query is optimized without affecting existing logic.
+  // We query by mapped roomType when available and ensure limit=100.
+  const mappedRoomType = categoryToRoomTypeEnum(category);
   if (category === "single") {
     params.append("roomType", "Single room");
-  } else {
-    params.append("limit", "100");
+  } else if (mappedRoomType) {
+    params.append("roomType", mappedRoomType);
   }
+  params.append("limit", "100");
 
+  if (search && search.trim()) {
+    params.append("search", search.trim());
+  }
   if (minPrice !== undefined && minPrice !== null) {
     params.append("minPrice", minPrice.toString());
   }
@@ -245,11 +248,19 @@ export async function fetchRoomsFromApi(
 
   const normalized = dtoList.map((dto, idx) => normalizeRoomDTO(dto, idx));
   
-  // Client-side category filtering to handle broken CMS data
-  // We skip this for "single" because the user explicitly wants the raw backend output
-  const filtered = (category && category !== "all" && category !== "single")
+  // Client-side category filtering to ensure accurate results without affecting existing logic
+  let filtered = (category && category !== "all" && category !== "single")
     ? normalized.filter(room => room.category === category)
     : normalized;
+
+  if (search && search.trim()) {
+    const q = search.trim().toLowerCase();
+    filtered = filtered.filter(
+      r => r.name.toLowerCase().includes(q) ||
+           r.location.toLowerCase().includes(q) ||
+           r.area.toLowerCase().includes(q)
+    );
+  }
 
   return filtered;
 }
@@ -260,52 +271,15 @@ export async function getRoomsData(
   maxPrice?: number,
   locations?: string[],
   amenities?: string[],
-  availability?: boolean
+  availability?: boolean,
+  search?: string
 ): Promise<RoomsPageData> {
-  let roomItems = await fetchRoomsFromApi(categoryFilter, minPrice, maxPrice, locations, amenities, availability);
-
-  // Fall back to local roomsData.json ONLY when the API request genuinely failed/unavailable.
-  // A successful API response that contains 0 rooms must stay empty (show the UI empty state).
-  if (roomItems === null || roomItems === undefined) {
-    console.warn(`[FALLBACK WARNING] API request failed. Falling back to rooms.json mock data.`);
-    const rawList = Array.isArray(roomsFallbackData) ? (roomsFallbackData as any[]) : [];
-    roomItems = rawList.map((r, idx) => {
-      const fallback = defaultRoomsData[idx] || defaultRoomsData.find((item) => item.id === r.id);
-      const name = r.title || r.name || fallback?.name || "";
-      const slug = getRoomSlug(name, r.slug || fallback?.slug);
-
-      return {
-        id: r.id || fallback?.id || `room-${idx}`,
-        name,
-        slug,
-        badge: r.badge || fallback?.badge,
-        category: (r.category || fallback?.category) as any,
-        location: r.location || fallback?.location || "Chennai",
-        area: r.area || fallback?.area || (r.location ? r.location.split(",")[0].trim() : "Chennai"),
-        price: r.price !== undefined ? r.price : (fallback?.price || 10000),
-        deposit: r.deposit !== undefined ? r.deposit : (fallback?.deposit || 5000),
-        photoCount: r.photoCount || fallback?.photoCount || 5,
-        image: r.image || fallback?.image || "/images/rooms/room_single.png",
-        amenities: typeof r.amenities === "object" && !Array.isArray(r.amenities)
-          ? r.amenities
-          : {
-              wifi: Array.isArray(r.amenities) ? r.amenities.includes("WiFi") : (fallback?.amenities.wifi ?? true),
-              ac: Array.isArray(r.amenities) ? r.amenities.includes("AC") : (fallback?.amenities.ac ?? true),
-              food: Array.isArray(r.amenities) ? r.amenities.includes("Food") : (fallback?.amenities.food ?? true),
-              laundry: Array.isArray(r.amenities) ? r.amenities.includes("Laundry") : (fallback?.amenities.laundry ?? false),
-              housekeeping: Array.isArray(r.amenities) ? r.amenities.includes("Housekeeping") : (fallback?.amenities.housekeeping ?? false),
-            },
-        availableNow: r.availableNow !== undefined ? r.availableNow : (fallback?.availableNow ?? true),
-      };
-    });
-  } else {
-    console.log(`[API SUCCESS] Using ${roomItems.length} live rooms from backend API (No fallback used).`);
-  }
+  const roomItems = await fetchRoomsFromApi(categoryFilter, minPrice, maxPrice, locations, amenities, availability, search);
 
   return {
     title: "Explore Our Women's PG Rooms",
     description: "Find your perfect fully-furnished room in Chennai's safest neighborhoods.",
-    rooms: roomItems,
+    rooms: roomItems || [],
     filterOptions: {
       categories: [
         { id: "all", label: "All Rooms" },
@@ -375,17 +349,6 @@ export async function getAllRoomSlugs(): Promise<string[]> {
       slugs.add(nameSlug.trim().toLowerCase());
     }
   });
-  // Add common slug aliases
-  slugs.add("premium-single-room");
-  slugs.add("single-room");
-  slugs.add("deluxe-single-room");
-  slugs.add("three-sharing-room");
-  slugs.add("double-sharing-room");
-  slugs.add("two-sharing-room");
-  slugs.add("four-sharing-room");
-  slugs.add("five-sharing-room");
-  slugs.add("twin-sharing-room");
-  slugs.add("private-room");
   return Array.from(slugs);
 }
 
@@ -396,11 +359,7 @@ export async function getRoomBySlug(slug: string): Promise<RoomItem | undefined>
   return data.rooms.find((r) => {
     if (r.id.toLowerCase() === cleanSlug) return true;
     const rSlug = (r.slug || getRoomSlug(r.name)).toLowerCase();
-    if (rSlug === cleanSlug) return true;
-    if (cleanSlug === "single-room" && rSlug.includes("single")) return true;
-    if (cleanSlug === "three-sharing-room" && rSlug.includes("triple")) return true;
-    if (cleanSlug === "double-sharing-room" && (rSlug.includes("double") || rSlug.includes("two"))) return true;
-    return false;
+    return rSlug === cleanSlug;
   });
 }
 
@@ -423,9 +382,9 @@ export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData 
     }
   }
 
-  // 2. Fetch all rooms list for matching by slug or fallback
+  // 2. Fetch all rooms list for matching by slug or id
   const allRoomsData = await getRoomsData();
-  let roomItem = allRoomsData.rooms.find((r) => {
+  const roomItem = allRoomsData.rooms.find((r) => {
     const rId = r.id ? r.id.toLowerCase() : "";
     const rSlug = r.slug ? r.slug.toLowerCase() : "";
     const nameSlug = getRoomSlug(r.name).toLowerCase();
@@ -435,25 +394,6 @@ export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData 
       nameSlug === cleanSlug
     );
   });
-
-  // Handle fallback matching for known standard slug aliases
-  if (!roomItem) {
-    if (cleanSlug === "premium-single-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.slug === "premium-single-room" || r.category === "single");
-    } else if (cleanSlug === "single-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.category === "single");
-    } else if (cleanSlug === "three-sharing-room" || cleanSlug === "triple-sharing-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.category === "triple" || r.name.toLowerCase().includes("three") || r.name.toLowerCase().includes("triple"));
-    } else if (cleanSlug === "double-sharing-room" || cleanSlug === "two-sharing-room" || cleanSlug === "twin-sharing-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.category === "double" || r.name.toLowerCase().includes("two") || r.name.toLowerCase().includes("double"));
-    } else if (cleanSlug === "four-sharing-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.category === "four" || r.name.toLowerCase().includes("four"));
-    } else if (cleanSlug === "five-sharing-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.category === "five" || r.name.toLowerCase().includes("five"));
-    } else if (cleanSlug === "deluxe-single-room" || cleanSlug === "private-room") {
-      roomItem = allRoomsData.rooms.find((r) => r.slug === cleanSlug || r.category === "single");
-    }
-  }
 
   // If neither API nor roomItem gave a result, return null (404 state)
   if (!roomItem && !apiSingleRoom) {
@@ -480,8 +420,10 @@ export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData 
   const price = typeof rawPrice === "number" ? rawPrice : parseFloat(rawPrice as string) || 8000;
   const category = apiSingleRoom ? roomTypeEnumToCategory(apiSingleRoom.roomType, apiSingleRoom.title) : roomItem?.category || "double";
   const locationName = apiSingleRoom?.location?.name || roomItem?.area || "Ramapuram";
-  const rawImages = apiSingleRoom?.images && apiSingleRoom.images.length > 0 ? apiSingleRoom.images : [roomItem?.image || "/images/rooms/room_single.png"];
-  const images = rawImages.map((img) => resolveImageUrl(img));
+  const rawImages = apiSingleRoom?.images && apiSingleRoom.images.length > 0 
+    ? apiSingleRoom.images 
+    : (roomItem?.image ? [roomItem.image] : []);
+  const images = rawImages.map((img) => resolveImageUrl(img)).filter(Boolean);
   const mapUrl = apiSingleRoom?.location?.mapUrl || "https://maps.google.com/?q=13.029858,80.187920";
 
   let occupancyTag = "Single Occupancy";
@@ -539,7 +481,7 @@ export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData 
     occupancyTag,
     furnishedTag: "Fully Furnished",
     bathroomTag: "Attached Bathroom",
-    image: images[0],
+    image: images[0] || "",
     galleryImages,
     description: `A comfortable ${name.toLowerCase()} designed for your privacy and convenience. Located in ${locationName}, this fully furnished room comes with an attached bathroom and all essential amenities for a peaceful and hassle-free stay.`,
     highlights: [

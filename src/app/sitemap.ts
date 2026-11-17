@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import roomsFallbackData from "@/data/rooms.json";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl =
@@ -51,19 +50,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const knownSlugs = new Set<string>([
+  const knownSlugs = [
     "premium-single-room",
     "single-room",
     "double-sharing-room",
     "triple-sharing-room",
     "four-sharing-room",
-  ]);
-
-  if (Array.isArray(roomsFallbackData)) {
-    for (const r of roomsFallbackData as any[]) {
-      if (r?.slug) knownSlugs.add(r.slug);
-    }
-  }
+  ];
 
   for (const slug of knownSlugs) {
     routes.push({

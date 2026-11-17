@@ -15,32 +15,7 @@
     "title": "Popular Locations in Chennai",
     "viewAllText": "View all areas →",
     "viewAllHref": "/locations",
-    "locations": [
-      {
-        "id": "1",
-        "name": "Ramapuram",
-        "price": "₹8,500/mo",
-        "image": "/images/rooms/room_single.png",
-        "href": "/locations?slug=ramapuram",
-        "buttonText": "Explore Location"
-      },
-      {
-        "id": "2",
-        "name": "Madhanandapuram",
-        "price": "₹7,200/mo",
-        "image": "/images/rooms/room_deluxe.png",
-        "href": "/locations?slug=madanandapuram",
-        "buttonText": "Explore Location"
-      },
-      {
-        "id": "3",
-        "name": "Madhanandapuram",
-        "price": "₹9,000/mo",
-        "image": "/images/rooms/room_sharing.png",
-        "href": "/locations?slug=madanandapuram",
-        "buttonText": "Explore Location"
-      }
-    ]
+    "locations": []
   },
   "amenities": {
     "eyebrow": "Our Amenities",

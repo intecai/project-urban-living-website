@@ -10,39 +10,16 @@ export interface PopularLocationsProps {
   data?: PopularLocationsData;
 }
 
-const defaultLocationCards: LocationCardData[] = [
-  {
-    id: "1",
-    name: "Ramapuram",
-    price: "₹10,500/mo",
-    image: "/images/rooms/room_single.png",
-    href: "/locations?slug=ramapuram",
-    buttonText: "Explore Location",
-  },
-  {
-    id: "2",
-    name: "Madhanandapuram",
-    price: "₹10,500/mo",
-    image: "/images/rooms/room_deluxe.png",
-    href: "/locations?slug=madanandapuram",
-    buttonText: "Explore Location",
-  },
-  {
-    id: "3",
-    name: "Madhanandapuram",
-    price: "₹9,000/mo",
-    image: "/images/rooms/room_comfort.png",
-    href: "/locations?slug=madanandapuram",
-    buttonText: "Explore Location",
-  },
-];
-
 export default function PopularLocations({ data }: PopularLocationsProps) {
   const eyebrow = data?.eyebrow || "NEIGHBORHOODS";
   const heading = data?.heading || "Popular Locations in Chennai";
   const viewAllText = data?.viewAllText || "View all areas";
   const viewAllHref = data?.viewAllHref || "/rooms";
-  const locations = data?.locations || defaultLocationCards;
+  const locations = data?.locations || [];
+
+  if (locations.length === 0) {
+    return null;
+  }
 
   return (
     <section className="w-full py-12 lg:py-16 bg-white font-Plus_Jakarta_Sans">
@@ -82,6 +59,7 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
                   fileId={card.image}
                   alt={card.name}
                   fill
+                  loading="lazy"
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover"
                 />

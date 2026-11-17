@@ -2,14 +2,15 @@
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Filter, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { Filter, ChevronDown, ChevronLeft, ChevronRight, Search, X } from "lucide-react";
 import { RoomCategory, FilterState, SortOption, RoomItem } from "./types";
 import { RoomsPageData } from "@/types/rooms";
-import { roomsData as fallbackRoomsData } from "./roomsData";
 import RoomCard from "./RoomCard";
 import RoomCardSkeleton from "./RoomCardSkeleton";
 import FilterModal from "./FilterModal";
 import { fetchRoomsFromApi, resolveAmenityValues } from "@/services/roomsService";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export interface RoomsSectionProps {
   data?: RoomsPageData;
@@ -42,20 +43,29 @@ const initialFilters: FilterState = {
 };
 
 export default function RoomsSection({ data }: RoomsSectionProps) {
+  const searchParams = useSearchParams();
+  const initialSearch = searchParams?.get("search") || "";
+
   const [filters, setFilters] = useState<FilterState>(initialFilters);
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const debouncedSearch = useDebounce(searchQuery, 300);
   const [sortBy, setSortBy] = useState<SortOption>("popular");
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [roomList, setRoomList] = useState<RoomItem[]>(data?.rooms || fallbackRoomsData);
+  const [roomList, setRoomList] = useState<RoomItem[]>(data?.rooms || []);
   const [isLoading, setIsLoading] = useState(false);
+
+  // In-memory tab and query cache for instant client-side SWR transitions without re-fetching
+  const tabCacheRef = useRef<Map<string, RoomItem[]>>(new Map());
 
   // Request counter to prevent stale out-of-order API responses from overwriting latest user selection
   const requestIdRef = useRef(0);
 
-  // Sync initial prop data if available
+  // Sync initial prop data if available and seed the initial cache
   useEffect(() => {
     if (data?.rooms && data.rooms.length > 0) {
       setRoomList(data.rooms);
+      tabCacheRef.current.set("initial_all", data.rooms);
     }
   }, [data]);
 
@@ -65,9 +75,20 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
     [filters.amenities]
   );
 
-  // Fetch rooms from backend API whenever room category, budget, or location filter changes
+  // Fetch rooms from backend API whenever room category, budget, location, or search filter changes
   useEffect(() => {
     const currentRequestId = ++requestIdRef.current;
+
+    const cacheKey = `${filters.category}_${filters.minPrice}_${filters.maxPrice}_${selectedLocationKey}_${selectedAmenityKey}_${filters.availableOnly}_${debouncedSearch}`;
+
+    // SWR Cache-first: if cached rooms exist for this tab/filter combination, render immediately
+    if (tabCacheRef.current.has(cacheKey)) {
+      const cached = tabCacheRef.current.get(cacheKey)!;
+      setRoomList(cached);
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
 
     async function loadCategoryRooms() {
@@ -88,12 +109,21 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
         // Resolve availability to backend availability flag (only "Available" state is supported)
         const reqAvailability = filters.availableOnly ? true : undefined;
 
-        console.log(`[ROOMS SECTION] Fetching rooms (req #${currentRequestId}) with params: category='${filters.category}', minPrice=${reqMinPrice}, maxPrice=${reqMaxPrice}, locations=${JSON.stringify(reqLocations)}, amenities=${JSON.stringify(reqAmenities)}, availability=${reqAvailability ?? "''"}`);
-        const rooms = await fetchRoomsFromApi(filters.category, reqMinPrice, reqMaxPrice, reqLocations, reqAmenities, reqAvailability);
+        console.log(`[ROOMS SECTION] Fetching rooms (req #${currentRequestId}) with params: category='${filters.category}', minPrice=${reqMinPrice}, maxPrice=${reqMaxPrice}, locations=${JSON.stringify(reqLocations)}, amenities=${JSON.stringify(reqAmenities)}, availability=${reqAvailability ?? "''"}, search='${debouncedSearch}'`);
+        const rooms = await fetchRoomsFromApi(
+          filters.category,
+          reqMinPrice,
+          reqMaxPrice,
+          reqLocations,
+          reqAmenities,
+          reqAvailability,
+          debouncedSearch
+        );
 
         // Only update state if this is still the latest active request
         if (currentRequestId === requestIdRef.current) {
           if (rooms !== null && rooms !== undefined) {
+            tabCacheRef.current.set(cacheKey, rooms);
             setRoomList(rooms);
           }
           setIsLoading(false);
@@ -109,7 +139,7 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
     }
 
     loadCategoryRooms();
-  }, [filters.category, filters.minPrice, filters.maxPrice, selectedLocationKey, selectedAmenityKey, filters.availableOnly]);
+  }, [filters.category, filters.minPrice, filters.maxPrice, selectedLocationKey, selectedAmenityKey, filters.availableOnly, debouncedSearch]);
 
   const ITEMS_PER_PAGE = 5;
 
@@ -219,8 +249,36 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
             </p>
           </div>
 
-          {/* Right: Filter & Sort Controls */}
-          <div className="flex items-center justify-between sm:justify-start gap-3 sm:gap-5 w-full sm:w-auto font-jakarta">
+          {/* Right: Search, Filter & Sort Controls */}
+          <div className="flex flex-wrap items-center justify-between sm:justify-start gap-2.5 sm:gap-3 w-full sm:w-auto font-jakarta">
+            {/* Search Input Box with 300ms debounce */}
+            <div className="relative w-full sm:w-48 lg:w-56">
+              <Search className="w-3.5 h-3.5 text-[#9CA3AF] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search rooms..."
+                className="w-full pl-8 pr-7 py-2 h-[38px] bg-white border border-[#E2E8F0] rounded-[16px] text-xs sm:text-sm text-[#1F2937] placeholder-[#9CA3AF] outline-none focus:border-[#2571A5] transition-colors font-figtree"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setCurrentPage(1);
+                  }}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  aria-label="Clear search"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
             {/* Filter Button */}
             <button
               type="button"

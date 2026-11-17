@@ -2,7 +2,7 @@ const DEFAULT_IMAGE_DOMAIN = "https://dev-urban-living-bucket.s3.us-east-1.amazo
 
 export function resolveImageUrl(path?: string): string {
   if (!path || typeof path !== "string" || path.trim().length === 0) {
-    return "/images/rooms/room_single.png";
+    return "";
   }
 
   const cleanPath = path.trim();

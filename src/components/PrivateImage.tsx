@@ -13,6 +13,7 @@ interface PrivateImageProps {
   height?: number;
   sizes?: string;
   priority?: boolean;
+  loading?: "lazy" | "eager";
 }
 
 export default function PrivateImage({
@@ -24,6 +25,7 @@ export default function PrivateImage({
   height,
   sizes,
   priority,
+  loading,
 }: PrivateImageProps) {
   const [url, setUrl] = useState<string | null>(null);
 
@@ -61,6 +63,7 @@ export default function PrivateImage({
       height={height}
       sizes={sizes}
       priority={priority}
+      loading={priority ? undefined : (loading ?? "lazy")}
     />
   );
 }

@@ -96,25 +96,25 @@ export const ramapuramData: RamapuramData = {
   gallery: [
     {
       id: "1",
-      src: "/images/rooms/room_comfort.png",
+      src: "",
       alt: "Ramapuram Main Living Room",
       span: "main",
     },
     {
       id: "2",
-      src: "/images/rooms/room_deluxe.png",
+      src: "",
       alt: "TV & Entertainment Lounge",
       span: "center-top",
     },
     {
       id: "3",
-      src: "/images/rooms/room_single.png",
+      src: "",
       alt: "Study Desk & Bedroom View",
       span: "center-bottom",
     },
     {
       id: "4",
-      src: "/images/rooms/room_sharing.png",
+      src: "",
       alt: "Spacious Double Bedroom",
       span: "right",
     },
@@ -129,7 +129,7 @@ export const ramapuramData: RamapuramData = {
         price: "₹11,000/",
         pricePrefix: "Starting From",
         priceSuffix: "* month",
-        image: "/images/rooms/room_single.png",
+        image: "",
         available: true,
       },
       {
@@ -139,7 +139,7 @@ export const ramapuramData: RamapuramData = {
         price: "₹10,000/",
         pricePrefix: "Starting From",
         priceSuffix: "* month",
-        image: "/images/rooms/room_sharing.png",
+        image: "",
         available: true,
       },
       {
@@ -149,7 +149,7 @@ export const ramapuramData: RamapuramData = {
         price: "₹10,000/",
         pricePrefix: "Starting From",
         priceSuffix: "* month",
-        image: "/images/rooms/room_deluxe.png",
+        image: "",
         available: true,
       },
     ],
