@@ -45,7 +45,7 @@ export default function Footer({ data }: FooterProps) {
                 width={120}
                 height={100}
                 className="h-14 sm:h-16 w-auto object-contain"
-                priority
+                loading="lazy"
               />
             </div>
 

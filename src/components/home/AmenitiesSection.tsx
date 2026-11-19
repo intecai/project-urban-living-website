@@ -1,7 +1,6 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Heart } from "lucide-react";
 import { AmenitiesSectionData } from "@/types/home";
 
@@ -104,12 +103,12 @@ export default function AmenitiesSection({ data }: AmenitiesSectionProps) {
               <p className="text-xs sm:text-sm lg:text-base text-[#6C6F73] font-figtree max-w-[720px] mx-auto leading-relaxed text-center">
                 At Urban Living, we create a safe, comfortable and inspiring home where you can focus on your dreams and grow every day.
               </p>
-              <a
+              <Link
                 href="/rooms"
                 className="inline-block text-xs font-semibold text-[#2571A5] hover:underline font-figtree"
               >
                 View More
-              </a>
+              </Link>
             </div>
 
           </div>

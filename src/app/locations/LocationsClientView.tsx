@@ -79,8 +79,21 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
       return (
         <div className="min-h-screen flex flex-col justify-between font-Plus_Jakarta_Sans text-slate-900 bg-white">
           <Navbar variant="solid" activeLink="Locations" data={commonData.navbar} />
-          <div className="flex-1 flex items-center justify-center py-24 text-slate-500 font-medium">
-            Loading location details...
+          <div className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 md:px-12 lg:px-16 py-8 sm:py-12 space-y-8 animate-pulse">
+            <div className="space-y-3">
+              <div className="h-8 w-64 bg-slate-200 rounded" />
+              <div className="h-4 w-96 bg-slate-200 rounded" />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 h-[320px] sm:h-[400px]">
+              <div className="col-span-1 sm:col-span-2 bg-slate-200 rounded-3xl" />
+              <div className="hidden sm:block bg-slate-200 rounded-3xl" />
+              <div className="hidden lg:block bg-slate-200 rounded-3xl" />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="h-48 bg-slate-200 rounded-3xl" />
+              ))}
+            </div>
           </div>
           <Footer data={commonData.footer} />
         </div>
@@ -204,6 +217,8 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
                   alt={locationData.gallery[0]?.alt || locationData.title}
                   fill
                   priority
+                  quality={85}
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
@@ -213,6 +228,8 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
                     fileId={locationData.gallery[1]?.src || ""}
                     alt={locationData.gallery[1]?.alt || "Gallery 2"}
                     fill
+                    quality={80}
+                    sizes="(max-width: 768px) 100vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -221,6 +238,8 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
                     fileId={locationData.gallery[2]?.src || ""}
                     alt={locationData.gallery[2]?.alt || "Gallery 3"}
                     fill
+                    quality={80}
+                    sizes="(max-width: 768px) 100vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -230,6 +249,8 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
                   fileId={locationData.gallery[3]?.src || ""}
                   alt={locationData.gallery[3]?.alt || "Gallery 4"}
                   fill
+                  quality={80}
+                  sizes="(max-width: 768px) 100vw, 25vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>

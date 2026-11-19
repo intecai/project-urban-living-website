@@ -3,6 +3,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getCommonData } from "@/services/commonService";
+import commonFallback from "@/data/common.json";
 import { Home, SearchX, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -15,7 +16,12 @@ export const metadata: Metadata = {
 };
 
 export default async function NotFound() {
-  const commonData = await getCommonData();
+  let commonData = commonFallback as any;
+  try {
+    commonData = await getCommonData();
+  } catch {
+    // Graceful fallback
+  }
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-[#FAFCFF] font-figtree text-slate-900">

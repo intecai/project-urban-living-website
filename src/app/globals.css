@@ -22,9 +22,7 @@
   --font-plus-jakarta-sans: var(--font-plus-jakarta-sans), sans-serif;
   --font-jakarta: var(--font-plus-jakarta-sans), sans-serif;
   --font-lato: var(--font-lato), 'Lato', sans-serif;
-  --font-alex-brush: var(--font-alex-brush), cursive;
-  --font-great-vibes: var(--font-great-vibes), cursive;
-  --font-brittany: 'Brittany Signature', var(--font-alex-brush), var(--font-great-vibes), cursive;
+  --font-brittany: 'Brittany Signature', cursive;
   --font-manrope: var(--font-manrope), sans-serif;
   --font-bricolage-grotesque: var(--font-bricolage-grotesque), sans-serif;
   --font-bricolage: var(--font-bricolage-grotesque), sans-serif;
@@ -35,7 +33,7 @@
 }
 
 .font-brittany {
-  font-family: 'Brittany Signature', var(--font-alex-brush), var(--font-great-vibes), cursive;
+  font-family: 'Brittany Signature', cursive;
 }
 
 .font-jakarta, .font-Plus_Jakarta_Sans {

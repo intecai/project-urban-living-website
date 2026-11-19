@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { EnquiryBannerData } from "@/types/common";
 
@@ -37,7 +38,7 @@ export default function EnquiryBanner({ data }: EnquiryBannerProps) {
               width={60}
               height={60}
               className="w-9 h-9 sm:w-11 sm:h-11 object-contain"
-              priority
+              loading="lazy"
             />
           </div>
 
@@ -53,13 +54,13 @@ export default function EnquiryBanner({ data }: EnquiryBannerProps) {
 
           {/* Compact Pill Button */}
           <div className="relative z-10 pt-1">
-            <a
+            <Link
               href="/contact"
               className="inline-flex items-center justify-center bg-[#0053B0] hover:bg-[#02569B] text-white font-figtree font-medium text-xs sm:text-sm px-6 py-2.5 sm:py-3 rounded-full transition-colors shadow-xs w-auto cursor-pointer"
             >
               <span>{buttonText}</span>
               <ArrowRight className="w-4 h-4 ml-2 shrink-0" />
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -87,7 +88,7 @@ export default function EnquiryBanner({ data }: EnquiryBannerProps) {
               width={60}
               height={60}
               className="w-9 h-9 md:w-11 md:h-11 object-contain"
-              priority
+              loading="lazy"
             />
           </div>
 
@@ -103,13 +104,13 @@ export default function EnquiryBanner({ data }: EnquiryBannerProps) {
 
           {/* Right: Enquiry Now Pill Button */}
           <div className="relative z-10 shrink-0">
-            <a
+            <Link
               href="/contact"
               className="inline-flex items-center justify-center bg-[#0053B0] hover:bg-[#02569B] text-white font-figtree font-medium text-xs md:text-sm px-6 py-3 rounded-full transition-colors shadow-xs shrink-0 cursor-pointer"
             >
               <span>{buttonText}</span>
               <ArrowRight className="w-4 h-4 ml-2 shrink-0" />
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -128,7 +129,7 @@ export default function EnquiryBanner({ data }: EnquiryBannerProps) {
               width={60}
               height={60}
               className="w-16 h-16 object-contain"
-              priority
+              loading="lazy"
             />
           </div>
 
@@ -144,13 +145,13 @@ export default function EnquiryBanner({ data }: EnquiryBannerProps) {
 
           {/* Right Side: Enquiry Now Button */}
           <div className="relative z-10 shrink-0 flex items-center justify-center pr-6 w-auto">
-            <a
+            <Link
               href="/contact"
               className="group inline-flex items-center justify-center bg-[#2571A5] hover:bg-[#02569B] text-[#FFFFFF] font-figtree font-medium text-[19px] px-8 py-3 rounded-full cursor-pointer transition-colors shadow-xs w-auto"
             >
               <span>{buttonText}</span>
               <ArrowRight className="w-5 h-5 ml-2.5" />
-            </a>
+            </Link>
           </div>
         </div>
       </section>

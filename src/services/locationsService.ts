@@ -1,3 +1,4 @@
+import { cache } from "react";
 import locationsData from "@/data/locations.json";
 import locationDetailsData from "@/data/locationDetails.json";
 import { LocationsPageData, LocationDetailData, LocationCardData } from "@/types/locations";
@@ -15,7 +16,7 @@ export interface LocationDTO {
   deletedAt: string | null;
 }
 
-export async function fetchAllApiLocations(): Promise<LocationDTO[]> {
+export const fetchAllApiLocations = cache(async function fetchAllApiLocations(): Promise<LocationDTO[]> {
   try {
     const rawResponse = await fetchApi<any>("/locations");
     let apiLocations: LocationDTO[] = [];
@@ -31,9 +32,9 @@ export async function fetchAllApiLocations(): Promise<LocationDTO[]> {
     console.warn("[LOCATION API] Exception fetching all locations:", err);
     return [];
   }
-}
+});
 
-export async function fetchLocationById(id: string): Promise<LocationDTO | null> {
+export const fetchLocationById = cache(async function fetchLocationById(id: string): Promise<LocationDTO | null> {
   try {
     const res = await fetchApi<any>(`/locations/${id}`);
     if (res && res.id) return res as LocationDTO;
@@ -42,9 +43,9 @@ export async function fetchLocationById(id: string): Promise<LocationDTO | null>
     console.warn(`[LOCATION API] Exception fetching location by ID ${id}:`, err);
   }
   return null;
-}
+});
 
-export async function fetchLocationByIdOrSlug(id?: string | null, slug?: string | null): Promise<LocationDTO | null> {
+export const fetchLocationByIdOrSlug = cache(async function fetchLocationByIdOrSlug(id?: string | null, slug?: string | null): Promise<LocationDTO | null> {
   if (id) {
     const loc = await fetchLocationById(id);
     if (loc) return loc;
@@ -67,9 +68,9 @@ export async function fetchLocationByIdOrSlug(id?: string | null, slug?: string 
   }
 
   return null;
-}
+});
 
-export async function getLocationsData(): Promise<LocationsPageData> {
+export const getLocationsData = cache(async function getLocationsData(): Promise<LocationsPageData> {
   const fallback = locationsData as LocationsPageData;
   const apiLocations = await fetchAllApiLocations();
 
@@ -98,9 +99,9 @@ export async function getLocationsData(): Promise<LocationsPageData> {
       locations: normalizedCards,
     },
   };
-}
+});
 
-export async function getLocationDetailBySlug(slug: string): Promise<LocationDetailData | undefined> {
+export const getLocationDetailBySlug = cache(async function getLocationDetailBySlug(slug: string): Promise<LocationDetailData | undefined> {
   const details = locationDetailsData as Record<string, LocationDetailData>;
   const cleanSlug = slug.toLowerCase().trim();
   const baseDetail = details[cleanSlug];
@@ -130,5 +131,5 @@ export async function getLocationDetailBySlug(slug: string): Promise<LocationDet
   }
 
   return baseDetail;
-}
+});
 

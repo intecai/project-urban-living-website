@@ -1,10 +1,8 @@
-"use client";
-
 import React from "react";
-import Image from "next/image";
+import Link from "next/link";
 import PrivateImage from "@/components/PrivateImage";
 import { ArrowRight } from "lucide-react";
-import { PopularLocationsData, LocationCardData } from "@/types/locations";
+import { PopularLocationsData } from "@/types/locations";
 
 export interface PopularLocationsProps {
   data?: PopularLocationsData;
@@ -36,13 +34,13 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
               {heading}
             </h2>
 
-            <a
+            <Link
               href={viewAllHref}
               className="text-xs sm:text-sm font-semibold text-[#0053B0] hover:underline inline-flex items-center gap-1 sm:gap-1.5 font-Plus_Jakarta_Sans transition-colors shrink-0"
             >
               <span>{viewAllText}</span>
               <ArrowRight className="w-4 h-4" />
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -60,6 +58,7 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
                   alt={card.name}
                   fill
                   loading="lazy"
+                  quality={80}
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover"
                 />

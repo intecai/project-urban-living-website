@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
@@ -24,6 +22,7 @@ export default function ContactHero({ data, navbarData }: ContactHeroProps) {
           alt="Contact Us Hero Background"
           fill
           priority
+          quality={85}
           sizes="100vw"
           className="object-cover object-center"
         />

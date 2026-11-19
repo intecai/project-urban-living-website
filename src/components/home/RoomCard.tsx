@@ -30,7 +30,8 @@ export default function RoomCard({ room }: RoomCardProps) {
           alt={room.title}
           fill
           loading="lazy"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
+          quality={80}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="object-cover rounded-t-2xl sm:rounded-t-[24px] group-hover:scale-105 transition-transform duration-500"
         />
 

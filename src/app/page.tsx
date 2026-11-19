@@ -30,9 +30,9 @@ export default async function Home() {
   const commonData = await getCommonData();
   const locationsData = await getLocationsData();
 
-  // Fetch initial rooms on server side to guarantee zero CORS delay on page load
+  // Fetch initial rooms on server side (preview up to 8 cards for optimal landing performance)
   const apiRooms = await fetchRoomsFromApi("all");
-  const initialRooms: Room[] = (apiRooms || []).map((r) => {
+  const initialRooms: Room[] = (apiRooms || []).slice(0, 8).map((r) => {
     let activeAmenities: string[] = [];
     if (r.amenities && typeof r.amenities === "object" && !Array.isArray(r.amenities)) {
       activeAmenities = Object.entries(r.amenities)

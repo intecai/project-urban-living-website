@@ -162,12 +162,24 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
 
         {/* 3. Room Cards Grid (2 Columns on Mobile, 4 Columns on Desktop) */}
         {isLoading ? (
-          <div className="py-10 text-center text-slate-500 font-medium text-sm col-span-full">
-            Loading rooms...
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 pt-1 sm:pt-2">
+            {Array.from({ length: 4 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="bg-white rounded-[20px] border border-slate-100 p-3 sm:p-4 space-y-3 shadow-xs"
+              >
+                <div className="w-full aspect-[4/3] bg-slate-200 rounded-2xl animate-pulse" />
+                <div className="space-y-2">
+                  <div className="h-5 w-3/4 bg-slate-200 rounded animate-pulse" />
+                  <div className="h-4 w-1/2 bg-slate-200 rounded animate-pulse" />
+                </div>
+                <div className="h-8 w-full bg-slate-200 rounded-xl animate-pulse" />
+              </div>
+            ))}
           </div>
         ) : roomsList.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 pt-1 sm:pt-2">
-            {roomsList.map((room) => (
+            {roomsList.slice(0, 8).map((room) => (
               <RoomCard key={room.id} room={room} />
             ))}
           </div>

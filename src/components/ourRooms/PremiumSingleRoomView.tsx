@@ -131,6 +131,7 @@ export default function PremiumSingleRoomView({ commonData, roomData }: PremiumS
                   alt={selectedImage?.alt || roomData?.name || "Room Image"}
                   fill
                   priority
+                  quality={85}
                   sizes="(max-width: 1024px) 100vw, 58vw"
                   className="object-cover transition-all duration-300"
                 />
@@ -165,6 +166,7 @@ export default function PremiumSingleRoomView({ commonData, roomData }: PremiumS
                           fileId={img.src}
                           alt={img.alt}
                           fill
+                          quality={75}
                           sizes="(max-width: 768px) 110px, 140px"
                           className="object-cover"
                         />

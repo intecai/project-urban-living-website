@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
 import { NavbarData } from "@/types/common";
@@ -99,7 +100,7 @@ export default function Navbar({
       <header className={headerContainerStyles}>
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 h-20 sm:h-24 flex items-center justify-between">
           {/* Brand Logo */}
-          <a href="/" className="flex items-center gap-2 focus:outline-hidden">
+          <Link href="/" className="flex items-center gap-2 focus:outline-hidden">
             <Image
               src={logoSrc}
               alt={logoAlt}
@@ -108,7 +109,7 @@ export default function Navbar({
               className="h-12 sm:h-16 w-auto object-contain"
               priority
             />
-          </a>
+          </Link>
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center space-x-1 lg:space-x-2 text-sm lg:text-[15px] font-figtree">

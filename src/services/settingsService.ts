@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { fetchApi } from "@/utils/apiClient";
 
 export interface SettingsDTO {
@@ -15,7 +16,7 @@ export interface SettingsDTO {
   updatedAt: string;
 }
 
-export async function getSettingsData(): Promise<SettingsDTO | null> {
+export const getSettingsData = cache(async function getSettingsData(): Promise<SettingsDTO | null> {
   try {
     const res = await fetchApi<any>('/settings');
     if (res) {
@@ -28,4 +29,4 @@ export async function getSettingsData(): Promise<SettingsDTO | null> {
     console.error("Failed to fetch settings", error);
     return null;
   }
-}
+});

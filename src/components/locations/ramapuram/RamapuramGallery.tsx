@@ -25,6 +25,7 @@ export default function RamapuramGallery({ items }: RamapuramGalleryProps) {
             alt={mainImage.alt}
             fill
             priority
+            quality={85}
             sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
@@ -39,6 +40,7 @@ export default function RamapuramGallery({ items }: RamapuramGalleryProps) {
               fileId={centerTop.src}
               alt={centerTop.alt}
               fill
+              quality={80}
               sizes="(max-width: 768px) 100vw, 25vw"
               className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
@@ -50,6 +52,7 @@ export default function RamapuramGallery({ items }: RamapuramGalleryProps) {
               fileId={centerBottom.src}
               alt={centerBottom.alt}
               fill
+              quality={80}
               sizes="(max-width: 768px) 100vw, 25vw"
               className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
@@ -64,6 +67,7 @@ export default function RamapuramGallery({ items }: RamapuramGalleryProps) {
             fileId={rightImage.src}
             alt={rightImage.alt}
             fill
+            quality={80}
             sizes="(max-width: 768px) 100vw, 25vw"
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />

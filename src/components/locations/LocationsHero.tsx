@@ -2,10 +2,12 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { useDebounce } from "@/hooks/useDebounce";
 
 export default function LocationsHero() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
@@ -13,9 +15,9 @@ export default function LocationsHero() {
     e.preventDefault();
     const query = (debouncedSearchQuery || searchQuery).trim();
     if (query) {
-      window.location.href = `/rooms?search=${encodeURIComponent(query)}`;
+      router.push(`/rooms?search=${encodeURIComponent(query)}`);
     } else {
-      window.location.href = "/rooms";
+      router.push("/rooms");
     }
   };
 
@@ -70,6 +72,7 @@ export default function LocationsHero() {
               alt="Urban Living Locations PG Hero"
               fill
               priority
+              quality={85}
               sizes="100vw"
               className="object-contain object-center"
             />
@@ -85,6 +88,7 @@ export default function LocationsHero() {
             alt="Urban Living Locations Hero Background"
             fill
             priority
+            quality={85}
             sizes="100vw"
             className="object-cover object-right"
           />

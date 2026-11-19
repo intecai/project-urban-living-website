@@ -9,6 +9,10 @@ const RETRY_BASE_DELAY_MS = 500;
 export interface FetchApiOptions extends RequestInit {
   skipCache?: boolean;
   cacheDurationMs?: number;
+  next?: {
+    revalidate?: number | false;
+    tags?: string[];
+  };
 }
 
 interface CacheEntry<T> {
@@ -68,8 +72,21 @@ export async function fetchApi<T>(
     }
   }
 
-  // Enforce request-time fetching on the server without build-time caching
-  const cacheOptions: RequestInit = isServer && isGet ? { cache: "no-store" } : {};
+  // Server-side caching configuration with safe revalidation where appropriate
+  let cacheOptions: RequestInit = {};
+  if (isServer && isGet) {
+    if (options?.cache) {
+      cacheOptions = { cache: options.cache };
+    } else if (options?.next) {
+      cacheOptions = { next: options.next };
+    } else {
+      let revalidateSeconds = 60;
+      if (cleanEndpoint.includes("/settings") || cleanEndpoint.includes("/locations")) {
+        revalidateSeconds = 300;
+      }
+      cacheOptions = { next: { revalidate: revalidateSeconds } };
+    }
+  }
 
   const executeFetch = async (): Promise<T | null> => {
     const attempts = isGet ? GET_ATTEMPTS : 1;

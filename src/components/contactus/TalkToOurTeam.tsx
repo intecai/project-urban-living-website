@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Calendar, Sun, ChevronDown, ArrowRight, Send, CheckCircle2, X } from "lucide-react";
+import { Calendar, Sun, ChevronDown, ArrowRight, Send, CheckCircle2, X, Loader2 } from "lucide-react";
 
 import { TalkToOurTeamData } from "@/types/contact";
 
@@ -30,6 +30,7 @@ export default function TalkToOurTeam({ data, isModal = false, onClose }: TalkTo
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const title = data?.title || "Talk To our Team";
   const description = data?.description || "Share a few details and we'll get back to you shortly.";
@@ -61,6 +62,7 @@ export default function TalkToOurTeam({ data, isModal = false, onClose }: TalkTo
     }
 
     setErrors({});
+    setIsSubmitting(true);
 
     // Construct formatted WhatsApp message
     const whatsappMsg = `Hello Urban Living Team,
@@ -78,6 +80,7 @@ I would like to enquire about room availability:
     const whatsappUrl = `https://wa.me/919003079966?text=${encodeURIComponent(whatsappMsg)}`;
     window.open(whatsappUrl, "_blank");
 
+    setIsSubmitting(false);
     setIsSuccess(true);
   };
 
@@ -303,10 +306,20 @@ I would like to enquire about room availability:
           {/* 5. SUBMIT BUTTON */}
           <button
             type="submit"
-            className="w-full h-11 sm:h-12 bg-[#2571A5] hover:bg-[#02569B] text-[#EFC53F] text-xs sm:text-sm font-medium font-BricolageGrotesque rounded-xl shadow-xs flex items-center justify-center gap-2 px-3 transition-all cursor-pointer transform active:scale-[0.99]"
+            disabled={isSubmitting}
+            className="w-full h-11 sm:h-12 bg-[#2571A5] hover:bg-[#02569B] disabled:opacity-60 disabled:cursor-not-allowed text-[#EFC53F] text-xs sm:text-sm font-medium font-BricolageGrotesque rounded-xl shadow-xs flex items-center justify-center gap-2 px-3 transition-all cursor-pointer transform active:scale-[0.99]"
           >
-            <span className="truncate">Let's Find Your Perfect Space</span>
-            <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#EFC53F] shrink-0" />
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-[#EFC53F]" />
+                <span className="truncate">Redirecting to WhatsApp...</span>
+              </>
+            ) : (
+              <>
+                <span className="truncate">Let's Find Your Perfect Space</span>
+                <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#EFC53F] shrink-0" />
+              </>
+            )}
           </button>
 
         </form>

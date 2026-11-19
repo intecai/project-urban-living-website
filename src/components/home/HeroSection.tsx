@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -66,6 +64,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
               alt="Designed For Modern Women Home"
               fill
               priority
+              quality={85}
               sizes="100vw"
               className="object-cover object-center"
             />
@@ -81,6 +80,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
             alt="Designed For Modern Women Home"
             fill
             priority
+            quality={85}
             sizes="100vw"
             className="object-cover object-right"
           />

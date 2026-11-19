@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { RoomsPageData } from "@/types/rooms";
 import { RoomItem, RoomCategory } from "@/components/ourRooms/types";
 import { getRoomSlug } from "@/utils/slug";
@@ -265,7 +266,7 @@ export async function fetchRoomsFromApi(
   return filtered;
 }
 
-export async function getRoomsData(
+export const getRoomsData = cache(async function getRoomsData(
   categoryFilter?: string,
   minPrice?: number,
   maxPrice?: number,
@@ -330,9 +331,9 @@ export async function getRoomsData(
       ],
     },
   };
-}
+});
 
-export async function getAllRoomSlugs(): Promise<string[]> {
+export const getAllRoomSlugs = cache(async function getAllRoomSlugs(): Promise<string[]> {
   const data = await getRoomsData();
   const slugs = new Set<string>();
   data.rooms.forEach((r) => {
@@ -350,9 +351,9 @@ export async function getAllRoomSlugs(): Promise<string[]> {
     }
   });
   return Array.from(slugs);
-}
+});
 
-export async function getRoomBySlug(slug: string): Promise<RoomItem | undefined> {
+export const getRoomBySlug = cache(async function getRoomBySlug(slug: string): Promise<RoomItem | undefined> {
   const data = await getRoomsData();
   const cleanSlug = slug.trim().toLowerCase();
 
@@ -361,14 +362,16 @@ export async function getRoomBySlug(slug: string): Promise<RoomItem | undefined>
     const rSlug = (r.slug || getRoomSlug(r.name)).toLowerCase();
     return rSlug === cleanSlug;
   });
-}
+});
 
-export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData | null> {
+export const getRoomDetailBySlug = cache(async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData | null> {
   if (!slug) return null;
   const cleanSlug = slug.trim().toLowerCase();
 
   // 1. Direct API fetch if cleanSlug is a UUID or room ID format
   let apiSingleRoom: RoomDTO | null = null;
+  let roomItem: RoomItem | undefined = undefined;
+
   if (/^[0-9a-fA-F-]{16,}$/.test(cleanSlug)) {
     const raw = await fetchApi<any>(`/rooms/${cleanSlug}`);
     if (raw) {
@@ -382,33 +385,36 @@ export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData 
     }
   }
 
-  // 2. Fetch all rooms list for matching by slug or id
-  const allRoomsData = await getRoomsData();
-  const roomItem = allRoomsData.rooms.find((r) => {
-    const rId = r.id ? r.id.toLowerCase() : "";
-    const rSlug = r.slug ? r.slug.toLowerCase() : "";
-    const nameSlug = getRoomSlug(r.name).toLowerCase();
-    return (
-      rId === cleanSlug ||
-      rSlug === cleanSlug ||
-      nameSlug === cleanSlug
-    );
-  });
-  // If neither API nor roomItem gave a result, return null (404 state)
-  if (!roomItem && !apiSingleRoom) {
-    return null;
-  }
+  // 2. Only fetch all rooms list if direct UUID fetch didn't yield a room
+  if (!apiSingleRoom) {
+    const allRoomsData = await getRoomsData();
+    roomItem = allRoomsData.rooms.find((r) => {
+      const rId = r.id ? r.id.toLowerCase() : "";
+      const rSlug = r.slug ? r.slug.toLowerCase() : "";
+      const nameSlug = getRoomSlug(r.name).toLowerCase();
+      return (
+        rId === cleanSlug ||
+        rSlug === cleanSlug ||
+        nameSlug === cleanSlug
+      );
+    });
 
-  // 3. If roomItem found by slug, fetch live details from GET /rooms/:id using its UUID if not already loaded
-  if (roomItem && !apiSingleRoom && roomItem.id && /^[0-9a-fA-F-]{16,}$/.test(roomItem.id)) {
-    const raw = await fetchApi<any>(`/rooms/${roomItem.id}`);
-    if (raw) {
-      if (raw.data && typeof raw.data === "object" && !Array.isArray(raw.data) && raw.data.id) {
-        apiSingleRoom = raw.data;
-      } else if (raw.value && typeof raw.value === "object" && !Array.isArray(raw.value) && raw.value.id) {
-        apiSingleRoom = raw.value;
-      } else if (typeof raw === "object" && !Array.isArray(raw) && raw.id) {
-        apiSingleRoom = raw;
+    // If neither API nor roomItem gave a result, return null (404 state)
+    if (!roomItem) {
+      return null;
+    }
+
+    // 3. If roomItem found by slug, fetch live details from GET /rooms/:id using its UUID if not already loaded
+    if (roomItem.id && /^[0-9a-fA-F-]{16,}$/.test(roomItem.id)) {
+      const raw = await fetchApi<any>(`/rooms/${roomItem.id}`);
+      if (raw) {
+        if (raw.data && typeof raw.data === "object" && !Array.isArray(raw.data) && raw.data.id) {
+          apiSingleRoom = raw.data;
+        } else if (raw.value && typeof raw.value === "object" && !Array.isArray(raw.value) && raw.value.id) {
+          apiSingleRoom = raw.value;
+        } else if (typeof raw === "object" && !Array.isArray(raw) && raw.id) {
+          apiSingleRoom = raw;
+        }
       }
     }
   }
@@ -500,5 +506,5 @@ export async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData 
     mapUrl,
     whatsNearby: nearbyList,
   };
-}
+});
 

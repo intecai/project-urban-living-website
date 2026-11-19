@@ -4,10 +4,27 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { fetchApi } from "@/utils/apiClient";
 
-export default function FloatingWhatsApp() {
-  const [whatsappUrl, setWhatsappUrl] = useState("https://wa.me/919003079966");
+export interface FloatingWhatsAppProps {
+  whatsappNumber?: string;
+}
+
+export default function FloatingWhatsApp({ whatsappNumber }: FloatingWhatsAppProps) {
+  const defaultNum = "919003079966";
+  const initialUrl = whatsappNumber
+    ? `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}`
+    : `https://wa.me/${defaultNum}`;
+  const [whatsappUrl, setWhatsappUrl] = useState(initialUrl);
 
   useEffect(() => {
+    // If whatsappNumber was already provided by server, no extra client fetch is needed
+    if (whatsappNumber) {
+      const num = whatsappNumber.replace(/[^0-9]/g, '');
+      if (num) {
+        setWhatsappUrl(`https://wa.me/${num}`);
+      }
+      return;
+    }
+
     async function loadSettings() {
       try {
         const res = await fetchApi<any>('/settings');
@@ -23,7 +40,7 @@ export default function FloatingWhatsApp() {
       }
     }
     loadSettings();
-  }, []);
+  }, [whatsappNumber]);
 
   return (
     <a
@@ -39,7 +56,7 @@ export default function FloatingWhatsApp() {
         width={56}
         height={56}
         className="w-full h-full object-contain pointer-events-none"
-        priority
+        loading="lazy"
       />
     </a>
   );

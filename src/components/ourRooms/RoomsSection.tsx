@@ -58,6 +58,12 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
   // In-memory tab and query cache for instant client-side SWR transitions without re-fetching
   const tabCacheRef = useRef<Map<string, RoomItem[]>>(new Map());
 
+  // Prevent hydration duplicate fetch when server data already matches initial filter
+  const isFirstMountRef = useRef(true);
+
+  // Listing top ref for smooth scroll on pagination
+  const listingTopRef = useRef<HTMLDivElement>(null);
+
   // Request counter to prevent stale out-of-order API responses from overwriting latest user selection
   const requestIdRef = useRef(0);
 
@@ -65,9 +71,10 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
   useEffect(() => {
     if (data?.rooms && data.rooms.length > 0) {
       setRoomList(data.rooms);
-      tabCacheRef.current.set("initial_all", data.rooms);
+      const initialKey = `all_5000_20000___false_${initialSearch}`;
+      tabCacheRef.current.set(initialKey, data.rooms);
     }
-  }, [data]);
+  }, [data, initialSearch]);
 
   const selectedLocationKey = filters.locations.join(",");
   const selectedAmenityKey = useMemo(
@@ -87,6 +94,17 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
       setRoomList(cached);
       setIsLoading(false);
       return;
+    }
+
+    // Skip the redundant hydration fetch if initial server data already matches this default filter
+    if (isFirstMountRef.current) {
+      isFirstMountRef.current = false;
+      if (data?.rooms && data.rooms.length > 0 && !initialSearch && filters.category === "all") {
+        tabCacheRef.current.set(cacheKey, data.rooms);
+        setRoomList(data.rooms);
+        setIsLoading(false);
+        return;
+      }
     }
 
     setIsLoading(true);
@@ -161,6 +179,11 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
     return sortedRooms.slice(start, start + ITEMS_PER_PAGE);
   }, [sortedRooms, currentPage]);
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    listingTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const handleCategorySelect = (cat: RoomCategory) => {
     setFilters((prev) => ({ ...prev, category: cat }));
     setCurrentPage(1);
@@ -202,7 +225,7 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
   const locationCountLabel = `Across ${uniqueLocationCount} ${uniqueLocationCount === 1 ? "Location" : "Locations"} in Chennai`;
 
   return (
-    <section className="w-full bg-[#FAFCFF] py-6 sm:py-8 font-figtree">
+    <section ref={listingTopRef} className="w-full bg-[#FAFCFF] py-6 sm:py-8 font-figtree">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 space-y-6 sm:space-y-8">
         
         {/* 1. Category Navigation Tabs Bar */}
@@ -351,7 +374,7 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
             <button
               type="button"
               disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
               className="flex items-center gap-1 sm:gap-2 text-xs sm:text-base font-semibold text-[#4B5563] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4 sm:w-5.5 sm:h-5.5 stroke-[2.2]" />
@@ -376,7 +399,7 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
                   <button
                     key={page}
                     type="button"
-                    onClick={() => setCurrentPage(page)}
+                    onClick={() => handlePageChange(page)}
                     className={`transition-all cursor-pointer flex items-center justify-center shrink-0 w-8 h-8 sm:w-11 sm:h-11 rounded-full text-xs sm:text-xl ${
                       isActive
                         ? "bg-[#2571A5] text-white font-bold shadow-xs"
@@ -393,7 +416,7 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
             <button
               type="button"
               disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
               className="flex items-center gap-1 sm:gap-2 text-xs sm:text-base font-semibold text-[#4B5563] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               <span>Next</span>

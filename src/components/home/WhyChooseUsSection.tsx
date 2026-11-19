@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import { CheckCircle2 } from "lucide-react";
@@ -33,7 +31,8 @@ export default function WhyChooseUsSection({ data }: WhyChooseUsSectionProps) {
           src={bgImage}
           alt="Why Women Choose Urban Living Background"
           fill
-          priority
+          loading="lazy"
+          quality={80}
           sizes="100vw"
           className="object-contain object-right opacity-100"
         />
@@ -72,6 +71,8 @@ export default function WhyChooseUsSection({ data }: WhyChooseUsSectionProps) {
             src={bgImage}
             alt="Why Women Choose Urban Living Mobile Illustration"
             fill
+            loading="lazy"
+            quality={80}
             sizes="100vw"
             className="object-contain object-bottom opacity-90"
           />

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -15,6 +13,8 @@ export default function RoomsHero() {
           alt="Our Rooms Hero Banner"
           fill
           priority
+          sizes="100vw"
+          quality={85}
           className="object-cover object-right select-none"
         />
         {/* Soft overlay gradient for responsive text readability on mobile/tablet */}

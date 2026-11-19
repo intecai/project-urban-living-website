@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Figtree, Montserrat, Plus_Jakarta_Sans, Lato, Alex_Brush, Great_Vibes, Manrope, Bricolage_Grotesque } from "next/font/google";
+import { Inter, Figtree, Montserrat, Plus_Jakarta_Sans, Lato, Manrope, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
+import { getSettingsData } from "@/services/settingsService";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -26,18 +27,6 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 const lato = Lato({
   variable: "--font-lato",
   weight: ["100", "300", "400", "700", "900"],
-  subsets: ["latin"],
-});
-
-const alexBrush = Alex_Brush({
-  variable: "--font-alex-brush",
-  weight: "400",
-  subsets: ["latin"],
-});
-
-const greatVibes = Great_Vibes({
-  variable: "--font-great-vibes",
-  weight: "400",
   subsets: ["latin"],
 });
 
@@ -166,15 +155,18 @@ const lodgingJsonLd = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSettingsData();
+  const whatsappNumber = settings?.whatsappNumber || "919003079966";
+
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${figtree.variable} ${montserrat.variable} ${plusJakartaSans.variable} ${lato.variable} ${alexBrush.variable} ${greatVibes.variable} ${manrope.variable} ${bricolageGrotesque.variable} h-full antialiased`}
+      className={`${inter.variable} ${figtree.variable} ${montserrat.variable} ${plusJakartaSans.variable} ${lato.variable} ${manrope.variable} ${bricolageGrotesque.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -185,7 +177,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         {children}
-        <FloatingWhatsApp />
+        <FloatingWhatsApp whatsappNumber={whatsappNumber} />
       </body>
     </html>
   );

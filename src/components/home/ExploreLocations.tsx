@@ -1,12 +1,8 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import React from "react";
 import PrivateImage from "@/components/PrivateImage";
 import Link from "next/link";
-import { getLocationsData } from "@/services/locationsService";
 import { LocationCardData } from "@/types/locations";
-import { ExploreLocationsData, LocationCardItem } from "@/types/home";
+import { LocationCardItem } from "@/types/home";
 
 export interface ExploreLocationsProps {
   data?: any;
@@ -52,6 +48,7 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
                   alt={card.name}
                   fill
                   loading="lazy"
+                  quality={80}
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover"
                 />
