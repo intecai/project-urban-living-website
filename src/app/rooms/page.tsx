@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 import { getRoomsData } from "@/services/roomsService";
 import { getCommonData } from "@/services/commonService";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 120;
 
 export async function generateMetadata(): Promise<Metadata> {
   const roomsData = await getRoomsData();

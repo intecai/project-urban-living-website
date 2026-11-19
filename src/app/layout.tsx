@@ -3,6 +3,7 @@ import { Inter, Figtree, Montserrat, Plus_Jakarta_Sans, Lato, Manrope, Bricolage
 import "./globals.css";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import { getSettingsData } from "@/services/settingsService";
+import { getSiteUrl } from "@/utils/siteConfig";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -40,8 +41,7 @@ const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://urbanliving.client.intecai.in";
+const siteUrl = getSiteUrl();
 
 export const viewport = {
   width: "device-width",

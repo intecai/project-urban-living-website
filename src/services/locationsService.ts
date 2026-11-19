@@ -118,7 +118,7 @@ export const getLocationDetailBySlug = cache(async function getLocationDetailByS
       if (matchedLoc.images && matchedLoc.images.length > 0) {
         updatedGallery[0] = {
           ...updatedGallery[0],
-          src: matchedLoc.images[0],
+          src: resolveImageUrl(matchedLoc.images[0]),
         };
       }
       return {

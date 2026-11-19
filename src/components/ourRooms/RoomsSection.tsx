@@ -127,7 +127,6 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
         // Resolve availability to backend availability flag (only "Available" state is supported)
         const reqAvailability = filters.availableOnly ? true : undefined;
 
-        console.log(`[ROOMS SECTION] Fetching rooms (req #${currentRequestId}) with params: category='${filters.category}', minPrice=${reqMinPrice}, maxPrice=${reqMaxPrice}, locations=${JSON.stringify(reqLocations)}, amenities=${JSON.stringify(reqAmenities)}, availability=${reqAvailability ?? "''"}, search='${debouncedSearch}'`);
         const rooms = await fetchRoomsFromApi(
           filters.category,
           reqMinPrice,
@@ -145,8 +144,6 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
             setRoomList(rooms);
           }
           setIsLoading(false);
-        } else {
-          console.log(`[ROOMS SECTION] Ignored stale response for req #${currentRequestId} (latest is #${requestIdRef.current})`);
         }
       } catch (err) {
         console.error("Failed to load category rooms:", err);

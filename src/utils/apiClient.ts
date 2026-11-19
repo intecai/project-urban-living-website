@@ -1,5 +1,6 @@
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "https://urbanliving.client.intecai.in/api";
+import { getApiBaseUrl } from "@/utils/siteConfig";
+
+const API_BASE_URL = getApiBaseUrl();
 
 const isServer = typeof window === "undefined";
 const REQUEST_TIMEOUT_MS = 20000;

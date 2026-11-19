@@ -4,6 +4,7 @@ import { RoomItem, RoomCategory } from "@/components/ourRooms/types";
 import { getRoomSlug } from "@/utils/slug";
 import { fetchApi } from "@/utils/apiClient";
 import { resolveImageUrl } from "@/utils/image";
+import { fetchAllApiLocations } from "@/services/locationsService";
 
 export interface RoomLocationDTO {
   id: string;
@@ -131,7 +132,8 @@ export function normalizeRoomDTO(r: RoomDTO, idx: number): RoomItem {
   const category = roomTypeEnumToCategory(r.roomType, r.title);
   const locationName = r.location?.name || "Ramapuram";
   const rawImage = r.images && r.images.length > 0 ? r.images[0] : "";
-  const image = resolveImageUrl(rawImage);
+  // Keep raw key/URL; PrivateImage + resolveImageUrl handle both consistently.
+  const image = rawImage ? resolveImageUrl(rawImage) : "";
   const amenitiesList = Array.isArray(r.amenities) ? r.amenities : [];
 
   return {
@@ -157,6 +159,7 @@ export function normalizeRoomDTO(r: RoomDTO, idx: number): RoomItem {
   };
 }
 
+/** Fallback when the locations API is unreachable (legacy dev/prod IDs). */
 export const LOCATION_NAME_TO_ID_MAP: Record<string, string> = {
   ramapuram: "ff1bdbf3-aba4-4a86-a0fc-a87655db7208",
   madanandapuram: "621f272c-daf5-431d-a19f-4a48bb765ac7",
@@ -171,6 +174,42 @@ export function resolveLocationId(locNameOrId?: string): string | undefined {
   const clean = locNameOrId.toLowerCase().trim().replace(/\s+/g, "");
   return LOCATION_NAME_TO_ID_MAP[clean];
 }
+
+async function resolveLocationIdsFromApi(
+  locationNames: string[],
+): Promise<string[]> {
+  const apiLocations = await fetchAllApiLocations();
+  const ids: string[] = [];
+
+  for (const name of locationNames) {
+    const normalized = name.toLowerCase().trim();
+    const fromApi = apiLocations.find(
+      (loc) => loc.name.toLowerCase().trim() === normalized,
+    );
+    if (fromApi?.id) {
+      ids.push(fromApi.id);
+      continue;
+    }
+    const fallback = resolveLocationId(name);
+    if (fallback) ids.push(fallback);
+  }
+
+  return [...new Set(ids)];
+}
+
+function parseRoomListResponse(response: unknown): RoomDTO[] {
+  if (!response) return [];
+  if (Array.isArray(response)) return response as RoomDTO[];
+  const wrapped = response as { data?: RoomDTO[]; value?: RoomDTO[] };
+  if (Array.isArray(wrapped.data)) return wrapped.data;
+  if (Array.isArray(wrapped.value)) return wrapped.value;
+  return [];
+}
+
+export const fetchAllRoomDTOs = cache(async function fetchAllRoomDTOs(): Promise<RoomDTO[]> {
+  const response = await fetchApi<unknown>("/rooms?limit=100");
+  return parseRoomListResponse(response);
+});
 
 const AMENITY_KEY_TO_API_MAP: Record<string, string> = {
   wifi: "High-Speed-Wifi",
@@ -201,8 +240,6 @@ export async function fetchRoomsFromApi(
 ): Promise<RoomItem[] | null> {
   const params = new URLSearchParams();
 
-  // The backend query is optimized without affecting existing logic.
-  // We query by mapped roomType when available and ensure limit=100.
   const mappedRoomType = categoryToRoomTypeEnum(category);
   if (category === "single") {
     params.append("roomType", "Single room");
@@ -220,9 +257,19 @@ export async function fetchRoomsFromApi(
   if (maxPrice !== undefined && maxPrice !== null) {
     params.append("maxPrice", maxPrice.toString());
   }
-  if (locations && locations.length > 0) {
-    locations.forEach(loc => params.append("location", loc));
+
+  const selectedLocations = locations?.filter(Boolean) ?? [];
+  let filterMultipleLocationsClientSide = false;
+
+  if (selectedLocations.length === 1) {
+    const locationIds = await resolveLocationIdsFromApi(selectedLocations);
+    if (locationIds[0]) {
+      params.append("locationId", locationIds[0]);
+    }
+  } else if (selectedLocations.length > 1) {
+    filterMultipleLocationsClientSide = true;
   }
+
   if (amenities && amenities.length > 0) {
     params.append("amenities", amenities.join(","));
   }
@@ -232,35 +279,25 @@ export async function fetchRoomsFromApi(
 
   const queryString = params.toString();
   const endpoint = queryString ? `/rooms?${queryString}` : "/rooms";
-  const response = await fetchApi<any>(endpoint);
+  const response = await fetchApi<unknown>(endpoint);
 
   if (!response) {
     return null;
   }
 
-  let dtoList: RoomDTO[] = [];
-  if (Array.isArray(response)) {
-    dtoList = response;
-  } else if (response && Array.isArray(response.data)) {
-    dtoList = response.data;
-  } else if (response && Array.isArray(response.value)) {
-    dtoList = response.value;
-  }
-
+  const dtoList = parseRoomListResponse(response);
   const normalized = dtoList.map((dto, idx) => normalizeRoomDTO(dto, idx));
-  
-  // Client-side category filtering to ensure accurate results without affecting existing logic
-  let filtered = (category && category !== "all" && category !== "single")
-    ? normalized.filter(room => room.category === category)
-    : normalized;
 
-  if (search && search.trim()) {
-    const q = search.trim().toLowerCase();
-    filtered = filtered.filter(
-      r => r.name.toLowerCase().includes(q) ||
-           r.location.toLowerCase().includes(q) ||
-           r.area.toLowerCase().includes(q)
+  let filtered =
+    category && category !== "all" && category !== "single"
+      ? normalized.filter((room) => room.category === category)
+      : normalized;
+
+  if (filterMultipleLocationsClientSide) {
+    const wanted = new Set(
+      selectedLocations.map((l) => l.toLowerCase().trim()),
     );
+    filtered = filtered.filter((room) => wanted.has(room.area.toLowerCase().trim()));
   }
 
   return filtered;
@@ -334,9 +371,10 @@ export const getRoomsData = cache(async function getRoomsData(
 });
 
 export const getAllRoomSlugs = cache(async function getAllRoomSlugs(): Promise<string[]> {
-  const data = await getRoomsData();
+  const dtoList = await fetchAllRoomDTOs();
+  const rooms = dtoList.map((dto, idx) => normalizeRoomDTO(dto, idx));
   const slugs = new Set<string>();
-  data.rooms.forEach((r) => {
+  rooms.forEach((r) => {
     if (r.slug) {
       slugs.add(r.slug.trim());
       slugs.add(r.slug.trim().toLowerCase());
@@ -354,10 +392,11 @@ export const getAllRoomSlugs = cache(async function getAllRoomSlugs(): Promise<s
 });
 
 export const getRoomBySlug = cache(async function getRoomBySlug(slug: string): Promise<RoomItem | undefined> {
-  const data = await getRoomsData();
+  const dtoList = await fetchAllRoomDTOs();
+  const rooms = dtoList.map((dto, idx) => normalizeRoomDTO(dto, idx));
   const cleanSlug = slug.trim().toLowerCase();
 
-  return data.rooms.find((r) => {
+  return rooms.find((r) => {
     if (r.id.toLowerCase() === cleanSlug) return true;
     const rSlug = (r.slug || getRoomSlug(r.name)).toLowerCase();
     return rSlug === cleanSlug;
@@ -385,10 +424,11 @@ export const getRoomDetailBySlug = cache(async function getRoomDetailBySlug(slug
     }
   }
 
-  // 2. Only fetch all rooms list if direct UUID fetch didn't yield a room
+  // 2. Only fetch the room index if direct UUID fetch didn't yield a room
   if (!apiSingleRoom) {
-    const allRoomsData = await getRoomsData();
-    roomItem = allRoomsData.rooms.find((r) => {
+    const dtoList = await fetchAllRoomDTOs();
+    const indexedRooms = dtoList.map((dto, idx) => normalizeRoomDTO(dto, idx));
+    roomItem = indexedRooms.find((r) => {
       const rId = r.id ? r.id.toLowerCase() : "";
       const rSlug = r.slug ? r.slug.toLowerCase() : "";
       const nameSlug = getRoomSlug(r.name).toLowerCase();

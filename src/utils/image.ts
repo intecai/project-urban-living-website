@@ -1,5 +1,23 @@
-const DEFAULT_IMAGE_DOMAIN = "https://dev-urban-living-bucket.s3.us-east-1.amazonaws.com";
+import { getApiBaseUrl, getImageDomain } from "@/utils/siteConfig";
 
+const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/** Backend `GET /api/uploads/:key` — key must be a single segment (no slashes). */
+function apiUploadUrl(objectFileName: string): string {
+  return `${getApiBaseUrl()}/uploads/${encodeURIComponent(objectFileName)}`;
+}
+
+function s3ObjectUrl(key: string): string {
+  const domain = getImageDomain();
+  const cleanKey = key.replace(/^\/+/, "");
+  return `${domain}/${cleanKey}`;
+}
+
+/**
+ * Resolves CMS/S3 image keys, UUIDs, and static paths to a URL suitable for <Image src>.
+ * Prefer the API proxy for `uploads/<file>` so dev/prod work even if bucket ACLs change.
+ */
 export function resolveImageUrl(path?: string): string {
   if (!path || typeof path !== "string" || path.trim().length === 0) {
     return "";
@@ -7,7 +25,6 @@ export function resolveImageUrl(path?: string): string {
 
   const cleanPath = path.trim();
 
-  // 1. Absolute URLs or local static asset paths
   if (
     cleanPath.startsWith("http://") ||
     cleanPath.startsWith("https://") ||
@@ -17,20 +34,26 @@ export function resolveImageUrl(path?: string): string {
     return cleanPath;
   }
 
-  const domainEnv = process.env.NEXT_PUBLIC_IMAGE_DOMAIN || DEFAULT_IMAGE_DOMAIN;
-  const domain = domainEnv.replace(/\/+$/, "");
   const targetPath = cleanPath.replace(/^\/+/, "");
 
-  // 2. S3 keys with folders or extensions (e.g. temp/xxx.png or uploads/xxx.png)
-  if (targetPath.includes("/")) {
-    return `${domain}/${targetPath}`;
-  }
-  
-  if (targetPath.includes(".")) {
-    // If it has an extension but no folder, assume it's in /uploads/
-    return `${domain}/uploads/${targetPath}`;
+  // uploads/abc.jpg → proxy via Express (same as CMS)
+  const uploadsMatch = /^uploads\/([^/]+)$/.exec(targetPath);
+  if (uploadsMatch?.[1]) {
+    return apiUploadUrl(uploadsMatch[1]);
   }
 
-  // 3. Raw UUID strings returned by CMS API -> Return as raw UUID so PrivateImage fetches presigned URL
-  return targetPath;
+  // Nested keys (cms/uploads/..., temp/...) → public S3 URL
+  if (targetPath.includes("/")) {
+    return s3ObjectUrl(targetPath);
+  }
+
+  if (targetPath.includes(".")) {
+    return apiUploadUrl(targetPath);
+  }
+
+  if (UUID_REGEX.test(targetPath)) {
+    return apiUploadUrl(targetPath);
+  }
+
+  return s3ObjectUrl(targetPath);
 }
