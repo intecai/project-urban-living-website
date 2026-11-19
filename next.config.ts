@@ -18,11 +18,13 @@ try {
 }
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  output: "export",
+  trailingSlash: true,
   experimental: {
     optimizePackageImports: ["lucide-react"],
   },
   images: {
+    unoptimized: true,
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {

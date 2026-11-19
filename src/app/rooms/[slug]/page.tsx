@@ -2,13 +2,19 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PremiumSingleRoomView from "@/components/ourRooms/PremiumSingleRoomView";
 import { getCommonData } from "@/services/commonService";
-import { getRoomDetailBySlug } from "@/services/roomsService";
+import { getAllRoomSlugs, getRoomDetailBySlug } from "@/services/roomsService";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export const revalidate = 120;
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const slugs = await getAllRoomSlugs();
+  const unique = [...new Set(slugs.filter(Boolean))];
+  return unique.map((slug) => ({ slug }));
+}
+
+export const dynamicParams = false;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;

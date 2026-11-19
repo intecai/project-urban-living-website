@@ -19,27 +19,22 @@ ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
 ARG NEXT_PUBLIC_IMAGE_DOMAIN
 ENV NEXT_PUBLIC_IMAGE_DOMAIN=$NEXT_PUBLIC_IMAGE_DOMAIN
 
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+
+ARG REQUIRE_LIVE_API=1
+ENV REQUIRE_LIVE_API=$REQUIRE_LIVE_API
+
 RUN npm run build
 
-FROM base AS runner
-WORKDIR /app
+FROM nginx:1.27-alpine AS runner
 
-ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1 \
-    PORT=3000 \
-    HOSTNAME="0.0.0.0"
-
-RUN addgroup -g 1001 -S nodejs && adduser -u 1001 -S nextjs -G nodejs
-
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/out /usr/share/nginx/html
 
 EXPOSE 3000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD wget -qO- http://127.0.0.1:3000/ > /dev/null || exit 1
 
-CMD ["node", "server.js"]
+CMD ["nginx", "-g", "daemon off;"]

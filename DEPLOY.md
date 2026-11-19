@@ -1,66 +1,63 @@
 # Deploying the Urban Living Website
 
-Public marketing site for Urban Living. Next.js 16 App Router using standalone Node server output for real-time request-time data fetching.
+Public marketing site. **Fully static** (`output: "export"`): HTML is generated at **build time** and served by **nginx** (no Node at runtime).
 
-- **Build:** `next build` with `output: "standalone"`, producing `.next/standalone`
-- **Runtime:** Node.js standalone server (`node server.js`)
-- **Port:** `3000`
-- **Data:** Room and location content is fetched from the backend API **at request time** (real-time data).
-
----
-
-## 1. Request-time Data Architecture
-
-The site uses real-time request-time rendering for rooms and locations.
-Data is fetched on demand when pages are requested from the browser.
+- **Build:** `npm run build` → `out/`
+- **Runtime:** nginx on port **3000**
+- **CMS changes:** Redeploy the website (or trigger Coolify rebuild) after publishing new rooms/locations
 
 ---
 
-## 2. Build Arguments
+## Build arguments (required)
 
 | Build arg | Notes |
 | --- | --- |
-| `NEXT_PUBLIC_API_BASE_URL` | Base URL of the backend API, including `/api`. No trailing slash. |
-| `NEXT_PUBLIC_IMAGE_DOMAIN` | Domain for S3 images. |
+| `NEXT_PUBLIC_API_BASE_URL` | Backend API base including `/api` (used only at **build** to bake content). |
+| `NEXT_PUBLIC_IMAGE_DOMAIN` | S3 bucket URL for images. |
+| `NEXT_PUBLIC_SITE_URL` | Canonical site URL (prod: `https://www.urbanlivings.co.in`). |
+| `REQUIRE_LIVE_API` | Default `1` — build fails if API is unreachable (avoids stale fallbacks). |
 
-Production values:
+Production example:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=https://api.urbanlivings.co.in/api
+NEXT_PUBLIC_IMAGE_DOMAIN=https://urban-living-bucket.s3.us-east-1.amazonaws.com
+NEXT_PUBLIC_SITE_URL=https://www.urbanlivings.co.in
+REQUIRE_LIVE_API=1
+```
+
+Dev/staging:
 
 ```env
 NEXT_PUBLIC_API_BASE_URL=https://urbanliving.client.intecai.in/api
 NEXT_PUBLIC_IMAGE_DOMAIN=https://dev-urban-living-bucket.s3.us-east-1.amazonaws.com
+NEXT_PUBLIC_SITE_URL=https://urbanliving-site.client.intecai.in
 ```
 
 ---
 
-## 3. Deploying on Coolify / Docker
+## Coolify
 
-1. **New Resource -> Application -> Public/Private Repository**, pick `intecai/project-urban-living-website`.
-2. **Branch:** `production` for live, `development` for staging.
-3. **Build Pack:** Dockerfile. **Base Directory:** `/`.
-4. Add the **build arguments** `NEXT_PUBLIC_API_BASE_URL` under **Advanced -> Build Arguments**.
-5. **Health check path:** `/`. **Health check port:** `3000`.
-6. Assign your domain and enable HTTPS. Production hostname: `https://www.urbanlivings.co.in`.
-7. Deploy.
+1. Application → `intecai/project-urban-living-website`, branch `production` / `development`.
+2. **Dockerfile** build pack, base directory `/`.
+3. Set all **build arguments** above under Advanced.
+4. Health check: path `/`, port `3000`.
+5. **After CMS content changes**, run **Redeploy** so static pages pick up new rooms.
 
 ---
 
-## 4. Local Development & Docker
+## Local
 
 ```bash
 npm ci
-npm run dev        # http://localhost:3000
-npm run build      # produces .next/standalone
-npm run lint
+export NEXT_PUBLIC_API_BASE_URL=https://urbanliving.client.intecai.in/api
+export NEXT_PUBLIC_IMAGE_DOMAIN=https://dev-urban-living-bucket.s3.us-east-1.amazonaws.com
+npm run build
+npm start   # serves out/ on :3000
 ```
 
-Docker test:
+---
 
-```bash
-docker build \
-  --build-arg NEXT_PUBLIC_API_BASE_URL="https://urbanliving.client.intecai.in/api" \
-  -t urban-living-app .
+## Client-side updates
 
-docker run -d --name urban-living-container -p 3000:3000 urban-living-app
-
-curl http://127.0.0.1:3000/
-```
+The rooms listing still refreshes filters/search in the browser via the public API. Server-rendered HTML is fixed until the next deploy.

@@ -73,19 +73,13 @@ export async function fetchApi<T>(
     }
   }
 
-  // Server-side caching configuration with safe revalidation where appropriate
+  // Static export: bake API data at build time only (no ISR).
   let cacheOptions: RequestInit = {};
   if (isServer && isGet) {
     if (options?.cache) {
       cacheOptions = { cache: options.cache };
-    } else if (options?.next) {
-      cacheOptions = { next: options.next };
     } else {
-      let revalidateSeconds = 60;
-      if (cleanEndpoint.includes("/settings") || cleanEndpoint.includes("/locations")) {
-        revalidateSeconds = 300;
-      }
-      cacheOptions = { next: { revalidate: revalidateSeconds } };
+      cacheOptions = { cache: "force-cache" };
     }
   }
 

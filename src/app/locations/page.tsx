@@ -4,8 +4,6 @@ import { getLocationsData } from "@/services/locationsService";
 import { getCommonData } from "@/services/commonService";
 import LocationsClientView from "./LocationsClientView";
 
-export const revalidate = 300;
-
 export const metadata: Metadata = {
   title: "PG Locations in Chennai | Urban Living PG",
   description: "Explore our comfortable women's PG locations across Chennai including Ramapuram and Madanandapuram.",

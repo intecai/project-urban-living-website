@@ -14,8 +14,6 @@ import { fetchRoomsFromApi } from "@/services/roomsService";
 import { getLocationsData } from "@/services/locationsService";
 import { Room } from "@/types/room";
 
-export const revalidate = 120;
-
 export async function generateMetadata(): Promise<Metadata> {
   const homeData = await getHomeData();
   const hero = homeData?.hero;
