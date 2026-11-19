@@ -56,7 +56,7 @@ export default function EverythingYouNeed({ data }: EverythingYouNeedProps) {
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 space-y-6 sm:space-y-8 lg:space-y-10">
         
         {/* Left-Aligned Heading */}
-        <h2 className="text-2xl sm:text-3xl font-semibold text-[#0B1C30] text-[26px] tracking-tight mt-0 sm:mt-8 font-figtree text-left">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-[#0B1C30] text-[26px] tracking-tight mt-0 sm:mt-8 font-figtree text-center sm:text-left">
           {heading}
         </h2>
 

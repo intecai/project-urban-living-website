@@ -86,8 +86,8 @@ export default function ReviewsSection({ data }: ReviewsSectionProps) {
           <div className="flex items-center justify-center gap-2 text-xs sm:text-sm font-figtree pt-1">
             <span className="font-semibold text-[#011A2A]">{ratingScore}</span>
             <Star className="w-4 h-4 fill-[#EFC53F] text-[#EFC53F]" />
-            <span className="font-semibold font-figtree text-[14px] text-[#011A2A]">{ratingSource}</span>
-            <span className="text-[#6B7280] text-[14px] font-figtree">{reviewsCountText}</span>
+            <span className="font-semibold font-figtree text-sm text-[#011A2A]">{ratingSource}</span>
+            <span className="text-[#6B7280] text-sm font-figtree">{reviewsCountText}</span>
           </div>
         </div>
 
@@ -96,7 +96,7 @@ export default function ReviewsSection({ data }: ReviewsSectionProps) {
           
           {/* Left Column: Fixed 3-Line Title */}
           <div className="lg:col-span-4 space-y-4">
-            <h3 className="text-3xl sm:text-4xl lg:text-[40px] text-[#051125] font-figtree leading-[1.15] text-left">
+            <h3 className="text-3xl sm:text-4xl lg:text-[40px] text-[#051125] font-figtree leading-[1.15] text-center sm:text-left">
               What our <br className="hidden sm:inline" />
               residents are <br className="hidden sm:inline" />
               saying
@@ -177,10 +177,10 @@ export default function ReviewsSection({ data }: ReviewsSectionProps) {
                         </div>
                       )}
                       <div>
-                        <h4 className="text-sm font-semibold text-[14px] text-[#051125] font-figtree leading-tight">
+                        <h4 className="text-sm font-semibold text-[#051125] font-figtree leading-tight">
                           {review.author || (review as any).name}
                         </h4>
-                        <span className="text-[12px] text-[#9CA3AF] font-figtree">
+                        <span className="text-xs text-[#9CA3AF] font-figtree">
                           {review.date}
                         </span>
                       </div>

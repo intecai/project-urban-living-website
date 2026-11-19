@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import PrivateImage from "@/components/PrivateImage";
 import Link from "next/link";
 import { RoomItem } from "./types";
 import { MapPin, Camera } from "lucide-react";
@@ -22,10 +23,11 @@ export default function RoomCard({ room }: RoomCardProps) {
     >
       {/* 1. LEFT ROOM IMAGE FRAME (16px border-radius as shown in Figma Dev Mode) */}
       <div className="relative w-full md:w-[320px] lg:w-[350px] shrink-0 h-[200px] sm:h-[225px] rounded-[16px] overflow-hidden bg-slate-100">
-        <Image
-          src={room.image}
+        <PrivateImage
+          fileId={room.image}
           alt={room.name}
           fill
+          loading="lazy"
           sizes="(max-width: 768px) 100vw, 350px"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
@@ -56,6 +58,7 @@ export default function RoomCard({ room }: RoomCardProps) {
                     alt="Wi-Fi"
                     width={20}
                     height={20}
+                    loading="lazy"
                     className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
                   />
                   <span>Wi-Fi</span>
@@ -68,6 +71,7 @@ export default function RoomCard({ room }: RoomCardProps) {
                     alt="Food"
                     width={20}
                     height={20}
+                    loading="lazy"
                     className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
                   />
                   <span>Food</span>
@@ -80,6 +84,7 @@ export default function RoomCard({ room }: RoomCardProps) {
                     alt="AC"
                     width={20}
                     height={20}
+                    loading="lazy"
                     className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
                   />
                   <span>AC</span>
@@ -92,6 +97,7 @@ export default function RoomCard({ room }: RoomCardProps) {
                     alt="Laundry"
                     width={20}
                     height={20}
+                    loading="lazy"
                     className="w-4 h-4 sm:w-5 sm:h-5 object-contain"
                   />
                   <span>Laundry</span>

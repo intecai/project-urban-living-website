@@ -10,25 +10,25 @@
     "gallery": [
       {
         "id": "1",
-        "src": "/images/rooms/room_comfort.png",
+        "src": "",
         "alt": "Ramapuram PG Main Living Space",
         "span": "main"
       },
       {
         "id": "2",
-        "src": "/images/rooms/room_deluxe.png",
+        "src": "",
         "alt": "Balcony & Utility Area",
         "span": "center-top"
       },
       {
         "id": "3",
-        "src": "/images/rooms/room_single.png",
+        "src": "",
         "alt": "Lounge & TV Unit",
         "span": "center-bottom"
       },
       {
         "id": "4",
-        "src": "/images/rooms/room_sharing.png",
+        "src": "",
         "alt": "Spacious Living Room Access",
         "span": "right"
       }
@@ -39,7 +39,7 @@
         "title": "Double Sharing",
         "description": "Comfortable shared space with access to all essential amenities",
         "price": "₹11,000 / * month",
-        "image": "/images/rooms/room_single.png",
+        "image": "",
         "available": true
       },
       {
@@ -47,7 +47,7 @@
         "title": "Four Sharing",
         "description": "Well-designed shared space with access to all essential amenities",
         "price": "₹10,000 / * month",
-        "image": "/images/rooms/room_sharing.png",
+        "image": "",
         "available": true
       },
       {
@@ -55,7 +55,7 @@
         "title": "Five Sharing",
         "description": "Spacious shared space with access to all essential amenities",
         "price": "₹10,000 / * month",
-        "image": "/images/rooms/room_deluxe.png",
+        "image": "",
         "available": true
       }
     ],
@@ -88,25 +88,25 @@
     "gallery": [
       {
         "id": "1",
-        "src": "/images/rooms/room_deluxe.png",
+        "src": "",
         "alt": "Madanandapuram Main Living Space",
         "span": "main"
       },
       {
         "id": "2",
-        "src": "/images/rooms/room_comfort.png",
+        "src": "",
         "alt": "Balcony & Utility Area",
         "span": "center-top"
       },
       {
         "id": "3",
-        "src": "/images/rooms/room_single.png",
+        "src": "",
         "alt": "Lounge & TV Unit",
         "span": "center-bottom"
       },
       {
         "id": "4",
-        "src": "/images/rooms/room_sharing.png",
+        "src": "",
         "alt": "Spacious Living Room Access",
         "span": "right"
       }
@@ -117,7 +117,7 @@
         "title": "Double Sharing",
         "description": "Comfortable shared space with access to all essential amenities",
         "price": "₹10,500 / * month",
-        "image": "/images/rooms/room_deluxe.png",
+        "image": "",
         "available": true
       },
       {
@@ -125,7 +125,7 @@
         "title": "Triple Sharing",
         "description": "Well-designed shared space with access to all essential amenities",
         "price": "₹9,000 / * month",
-        "image": "/images/rooms/room_comfort.png",
+        "image": "",
         "available": true
       }
     ],

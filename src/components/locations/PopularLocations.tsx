@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import PrivateImage from "@/components/PrivateImage";
 import { ArrowRight } from "lucide-react";
 import { PopularLocationsData, LocationCardData } from "@/types/locations";
 
@@ -9,39 +10,16 @@ export interface PopularLocationsProps {
   data?: PopularLocationsData;
 }
 
-const defaultLocationCards: LocationCardData[] = [
-  {
-    id: "1",
-    name: "Ramapuram",
-    price: "₹10,500/mo",
-    image: "/images/rooms/room_single.png",
-    href: "/locations?slug=ramapuram",
-    buttonText: "Explore Location",
-  },
-  {
-    id: "2",
-    name: "Madhanandapuram",
-    price: "₹10,500/mo",
-    image: "/images/rooms/room_deluxe.png",
-    href: "/locations?slug=madanandapuram",
-    buttonText: "Explore Location",
-  },
-  {
-    id: "3",
-    name: "Madhanandapuram",
-    price: "₹9,000/mo",
-    image: "/images/rooms/room_comfort.png",
-    href: "/locations?slug=madanandapuram",
-    buttonText: "Explore Location",
-  },
-];
-
 export default function PopularLocations({ data }: PopularLocationsProps) {
   const eyebrow = data?.eyebrow || "NEIGHBORHOODS";
   const heading = data?.heading || "Popular Locations in Chennai";
   const viewAllText = data?.viewAllText || "View all areas";
   const viewAllHref = data?.viewAllHref || "/rooms";
-  const locations = data?.locations || defaultLocationCards;
+  const locations = data?.locations || [];
+
+  if (locations.length === 0) {
+    return null;
+  }
 
   return (
     <section className="w-full py-12 lg:py-16 bg-white font-Plus_Jakarta_Sans">
@@ -49,7 +27,7 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
 
         {/* Section Eyebrow & Header Row */}
         <div>
-          <span className="block text-xs sm:text-sm tracking-wider text-[#0053B0] text-[12px] font-figtree uppercase mb-1">
+          <span className="block text-xs sm:text-sm tracking-wider text-[#0053B0] font-figtree uppercase mb-1">
             {eyebrow}
           </span>
 
@@ -77,10 +55,11 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
             >
               {/* Inner Image Frame with Rounded Corners */}
               <div className="relative w-full h-[200px] sm:h-[215px] overflow-hidden rounded-[14px] sm:rounded-[16px] bg-slate-100 mb-4">
-                <Image
-                  src={card.image}
+                <PrivateImage
+                  fileId={card.image}
                   alt={card.name}
                   fill
+                  loading="lazy"
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover"
                 />
@@ -89,16 +68,16 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
               {/* Card Title & Price Area */}
               <div className="flex items-start sm:items-center justify-between gap-2 mb-4 px-0.5">
                 {/* Location Name */}
-                <h3 className="text-base sm:text-lg font-bold text-[#0B1C30] text-[16px] font-figtree tracking-tight leading-snug">
+                <h3 className="text-base sm:text-lg font-bold text-[#0B1C30] font-figtree tracking-tight leading-snug">
                   {card.name}
                 </h3>
 
                 {/* Price Block */}
                 <div className="text-right shrink-0">
-                  <span className="block text-[10px] sm:text-[11px] font-semibold text-[#424753] text-[12px] tracking-wider uppercase font-figtree whitespace-nowrap">
+                  <span className="block text-[10px] sm:text-[11px] font-semibold text-[#424753] tracking-wider uppercase font-figtree whitespace-nowrap">
                     STARTS FROM
                   </span>
-                  <span className="block text-base sm:text-lg font-bold text-[#0053B0] text-[16px] font-figtree tracking-tight whitespace-nowrap">
+                  <span className="block text-base sm:text-lg font-bold text-[#0053B0] font-figtree tracking-tight whitespace-nowrap">
                     {card.price}
                   </span>
                 </div>

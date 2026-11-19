@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import { getContactData } from "@/services/contactService";
 import { getCommonData } from "@/services/commonService";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(): Promise<Metadata> {
   const contactData = await getContactData();
   return {

@@ -3,14 +3,17 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Search } from "lucide-react";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function LocationsHero() {
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      window.location.href = `/rooms?search=${encodeURIComponent(searchQuery.trim())}`;
+    const query = (debouncedSearchQuery || searchQuery).trim();
+    if (query) {
+      window.location.href = `/rooms?search=${encodeURIComponent(query)}`;
     } else {
       window.location.href = "/rooms";
     }

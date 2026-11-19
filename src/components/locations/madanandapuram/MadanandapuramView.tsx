@@ -29,12 +29,20 @@ export default function MadanandapuramView({ commonData, apiLocation }: Madanand
     ? `${apiLocation.pgName} - ${apiLocation.name}`
     : madanandapuramData.hero.title;
 
+  const floorIndex = Math.max(0, madanandapuramData.floors.findIndex(f => f.id === selectedFloorId));
   const galleryItems = [...currentFloor.gallery];
-  if (apiLocation?.images && apiLocation.images.length > 0 && galleryItems.length > 0) {
-    galleryItems[0] = {
-      ...galleryItems[0],
-      src: apiLocation.images[0],
-    };
+  if (apiLocation?.images && apiLocation.images.length > 0) {
+    const startIndex = floorIndex * 4;
+    const floorImages = apiLocation.images.slice(startIndex, startIndex + 4);
+
+    floorImages.forEach((imgSrc, idx) => {
+      if (galleryItems[idx]) {
+        galleryItems[idx] = {
+          ...galleryItems[idx],
+          src: imgSrc,
+        };
+      }
+    });
   }
 
   const aboutPropertyData = {

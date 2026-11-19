@@ -2,6 +2,7 @@ import locationsData from "@/data/locations.json";
 import locationDetailsData from "@/data/locationDetails.json";
 import { LocationsPageData, LocationDetailData, LocationCardData } from "@/types/locations";
 import { fetchApi } from "@/utils/apiClient";
+import { resolveImageUrl } from "@/utils/image";
 
 export interface LocationDTO {
   id: string;
@@ -72,29 +73,18 @@ export async function getLocationsData(): Promise<LocationsPageData> {
   const fallback = locationsData as LocationsPageData;
   const apiLocations = await fetchAllApiLocations();
 
-  if (apiLocations.length === 0) {
-    console.warn(`[FALLBACK WARNING] /locations API returned 0 locations. Using fallback.`);
-    return fallback;
-  }
-
-  console.log(`[API SUCCESS] Loaded ${apiLocations.length} live locations from backend API.`);
-
   const normalizedCards: LocationCardData[] = apiLocations.map((loc) => {
     const slug = loc.name.toLowerCase().trim().replace(/\s+/g, "");
-    const image =
+    const rawImage =
       loc.images && loc.images.length > 0
         ? loc.images[0]
-        : "/images/rooms/room_single.png";
-
-    // Default starting price per location based on fallback if present
-    const matchedFallback = fallback.popularLocations.locations.find(
-      (f) => f.name.toLowerCase().includes(slug) || slug.includes(f.name.toLowerCase())
-    );
+        : "";
+    const image = resolveImageUrl(rawImage);
 
     return {
       id: loc.id,
       name: loc.name,
-      price: (loc as any).price || matchedFallback?.price || "₹10,500/mo",
+      price: (loc as any).price || "₹10,500/mo",
       image,
       href: `/locations?slug=${slug}&id=${loc.id}`,
       buttonText: "Explore Location",
@@ -113,7 +103,8 @@ export async function getLocationsData(): Promise<LocationsPageData> {
 export async function getLocationDetailBySlug(slug: string): Promise<LocationDetailData | undefined> {
   const details = locationDetailsData as Record<string, LocationDetailData>;
   const cleanSlug = slug.toLowerCase().trim();
-  const baseDetail = details[cleanSlug] || details["ramapuram"];
+  const baseDetail = details[cleanSlug];
+  if (!baseDetail) return undefined;
 
   const apiLocations = await fetchAllApiLocations();
 

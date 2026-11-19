@@ -44,12 +44,14 @@ export default function HeroSection({ data }: HeroSectionProps) {
             <div className="flex items-center gap-3 sm:gap-4 pt-1">
               <Link
                 href={primaryCtaHref}
+                prefetch={false}
                 className="px-5 sm:px-7 py-2.5 sm:py-3 bg-[#2571A5] hover:bg-[#00428C] text-[#FFFFFF] text-xs sm:text-sm font-medium rounded-full transition-colors shadow-xs cursor-pointer flex items-center justify-center"
               >
                 {primaryCtaText}
               </Link>
               <Link
                 href={secondaryCtaHref}
+                prefetch={false}
                 className="px-5 sm:px-7 py-2.5 sm:py-3 shadow-2xs text-[#0053B0] bg-[#FFFFFF] border border-[#E2E8F0] hover:bg-[#0053B0] hover:text-white text-xs sm:text-sm font-semibold rounded-full transition-colors cursor-pointer flex items-center justify-center"
               >
                 {secondaryCtaText}
@@ -103,12 +105,14 @@ export default function HeroSection({ data }: HeroSectionProps) {
             <div className="flex items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
               <Link
                 href={primaryCtaHref}
+                prefetch={false}
                 className="px-5 sm:px-7 py-2.5 sm:py-3.5 bg-[#2571A5] hover:bg-[#00428C] text-[#FFFFFF] text-xs sm:text-sm rounded-full transition-colors shadow-xs cursor-pointer flex items-center justify-center"
               >
                 {primaryCtaText}
               </Link>
               <Link
                 href={secondaryCtaHref}
+                prefetch={false}
                 className="px-5 sm:px-7 py-2.5 sm:py-3.5 shadow-2xs text-[#0053B0] bg-[#FFFFFF] backdrop-blur-xs hover:bg-[#0053B0] hover:text-white text-xs sm:text-sm font-semibold rounded-full transition-colors cursor-pointer flex items-center justify-center"
               >
                 {secondaryCtaText}

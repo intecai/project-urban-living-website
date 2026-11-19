@@ -8,6 +8,10 @@ import { Home, SearchX, ArrowLeft } from "lucide-react";
 export const metadata: Metadata = {
   title: "Room Not Found | Urban Living PG",
   description: "The requested room accommodation could not be found.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function NotFound() {

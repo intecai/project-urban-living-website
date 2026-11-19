@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import PrivateImage from "@/components/PrivateImage";
 import Link from "next/link";
 import { getLocationsData } from "@/services/locationsService";
 import { LocationCardData } from "@/types/locations";
@@ -11,63 +12,12 @@ export interface ExploreLocationsProps {
   data?: any;
 }
 
-const defaultLocations: LocationCardItem[] = [
-  {
-    "id": "1",
-    "name": "Ramapuram",
-    "price": "₹8,500/mo",
-    "image": "/images/rooms/room_single.png",
-    "href": "/locations?slug=ramapuram",
-    "buttonText": "Explore Location"
-  },
-  {
-    "id": "2",
-    "name": "Madhanandapuram",
-    "price": "₹7,200/mo",
-    "image": "/images/rooms/room_deluxe.png",
-    "href": "/locations?slug=madanandapuram",
-    "buttonText": "Explore Location"
-  },
-  {
-    "id": "3",
-    "name": "Madhanandapuram",
-    "price": "₹9,000/mo",
-    "image": "/images/rooms/room_sharing.png",
-    "href": "/locations?slug=madanandapuram",
-    "buttonText": "Explore Location"
-  },
-];
-
 export default function ExploreLocations({ data }: ExploreLocationsProps) {
-  const [locations, setLocations] = useState<LocationCardData[]>(data?.locations || []);
+  const locationList: (LocationCardData | LocationCardItem)[] = data?.locations || [];
 
-  useEffect(() => {
-    console.log("[HOME LOCATIONS] fetching locations");
-    let isMounted = true;
-
-    async function loadApiLocations() {
-      try {
-        const locationsData = await getLocationsData();
-        console.log("[HOME LOCATIONS] API result:", locationsData);
-        const normalizedLocations = locationsData?.popularLocations?.locations || [];
-        console.log("[HOME LOCATIONS] normalized locations:", normalizedLocations);
-
-        if (isMounted && normalizedLocations.length > 0) {
-          setLocations(normalizedLocations);
-        }
-      } catch (err) {
-        console.error("[HOME LOCATIONS ERROR]", err);
-      }
-    }
-
-    loadApiLocations();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const locationList: (LocationCardData | LocationCardItem)[] = locations.length > 0 ? locations : (data?.locations || defaultLocations);
+  if (locationList.length === 0) {
+    return null;
+  }
 
   return (
     <section className="w-full py-12 sm:py-16 bg-white font-figtree">
@@ -75,15 +25,13 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
         {/* Section Heading matching Figma */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <span className="block text-xs font-bold text-[#2571A5] uppercase tracking-widest font-figtree mb-1">
-              NEIGHBORHOODS
-            </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-[28px] font-bold text-[#0E1C36] text-left tracking-tight font-lato">
-              Popular Locations in Chennai
+            <h2 className="text-2xl sm:text-3xl lg:text-[28px] font-bold text-[#0E1C36] text-center sm:text-left tracking-tight font-lato">
+              Explore Our PG Locations
             </h2>
           </div>
           <Link
             href="/locations"
+            prefetch={false}
             className="text-xs sm:text-sm font-semibold text-[#2571A5] hover:text-[#00428C] transition-colors flex items-center gap-1 shrink-0 font-figtree cursor-pointer"
           >
             View all areas &rarr;
@@ -99,10 +47,11 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
             >
               {/* Image inside card padding with rounded corners */}
               <div className="relative w-full aspect-[4/3] sm:h-[220px] overflow-hidden rounded-[16px] bg-slate-100">
-                <Image
-                  src={card.image}
+                <PrivateImage
+                  fileId={card.image}
                   alt={card.name}
                   fill
+                  loading="lazy"
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover"
                 />
@@ -111,15 +60,15 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
               {/* Card Body */}
               <div className="pt-4 flex flex-col justify-between flex-1 space-y-4">
                 <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-base sm:text-[18px] text-[16px] font-semibold text-[#051125] font-Plus_Jakarta_Sans tracking-tight">
+                  <h3 className="text-base sm:text-[18px] font-semibold text-[#051125] font-Plus_Jakarta_Sans tracking-tight">
                     {card.name}
                   </h3>
 
                   <div className="text-right shrink-0">
-                    <span className="block text-[12px] font-medium text-[#424753] tracking-wider uppercase font-figtree mb-0.5">
+                    <span className="block text-xs font-medium text-[#424753] tracking-wider uppercase font-figtree mb-0.5">
                       STARTS FROM
                     </span>
-                    <span className="block text-base sm:text-lg font-bold text-[#0053B0] text-[16px] font-figtree tracking-tight">
+                    <span className="block text-base sm:text-lg font-bold text-[#0053B0] font-figtree tracking-tight">
                       {card.price}
                     </span>
                   </div>
@@ -128,7 +77,8 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
                 {/* Explore Location Button */}
                 <Link
                   href={card.href}
-                  className="w-full py-2.5 sm:py-3 rounded-full border border-[#0053B0] text-[#0053B0] text-[16px] bg-white hover:bg-[#02569B] hover:text-white text-xs sm:text-sm font-semibold text-center transition-colors duration-200 shadow-2xs font-figtree flex items-center justify-center cursor-pointer mt-3"
+                  prefetch={false}
+                  className="w-full py-2.5 sm:py-3 rounded-full border border-[#0053B0] text-[#0053B0] bg-white hover:bg-[#02569B] hover:text-white text-xs sm:text-sm font-semibold text-center transition-colors duration-200 shadow-2xs font-figtree flex items-center justify-center cursor-pointer mt-3"
                 >
                   {card.buttonText || "Explore Location"}
                 </Link>

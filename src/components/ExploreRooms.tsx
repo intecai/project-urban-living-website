@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
+import PrivateImage from "@/components/PrivateImage";
 import { Crown, User, Users, ArrowRight } from "lucide-react";
 
 export interface Room {
@@ -15,88 +15,7 @@ export interface Room {
   badgeVariant: "popular" | "left" | "new" | "choice";
 }
 
-const allRooms: Room[] = [
-  {
-    id: "1",
-    title: "Premium Single Room",
-    category: "premium",
-    amenities: "WiFi • AC • Food • Laundry",
-    price: "₹8,500",
-    image: "/images/rooms/room_single.png",
-    badgeText: "Most Popular",
-    badgeVariant: "popular",
-  },
-  {
-    id: "2",
-    title: "Deluxe Single Room",
-    category: "single",
-    amenities: "WiFi • AC • Food • Housekeeping",
-    price: "₹8,000",
-    image: "/images/rooms/room_deluxe.png",
-    badgeText: "Only 1 Room Left",
-    badgeVariant: "left",
-  },
-  {
-    id: "3",
-    title: "Three sharing",
-    category: "triple",
-    amenities: "WiFi • AC • Food",
-    price: "₹7,200",
-    image: "/images/rooms/room_sharing.png",
-    badgeText: "New",
-    badgeVariant: "new",
-  },
-  {
-    id: "4",
-    title: "Comfort Three sharing",
-    category: "triple",
-    amenities: "WiFi • AC • Food • Laundry",
-    price: "₹7,800",
-    image: "/images/rooms/room_comfort.png",
-    badgeText: "Women Choice",
-    badgeVariant: "choice",
-  },
-  {
-    id: "5",
-    title: "Premium Double Room",
-    category: "premium",
-    amenities: "WiFi • AC • Food • Laundry",
-    price: "₹6,500",
-    image: "/images/rooms/room_single.png",
-    badgeText: "Most Popular",
-    badgeVariant: "popular",
-  },
-  {
-    id: "6",
-    title: "Deluxe Double Room",
-    category: "double",
-    amenities: "WiFi • AC • Food • Housekeeping",
-    price: "₹6,000",
-    image: "/images/rooms/room_deluxe.png",
-    badgeText: "Only 2 Rooms Left",
-    badgeVariant: "left",
-  },
-  {
-    id: "7",
-    title: "Standard Three sharing",
-    category: "triple",
-    amenities: "WiFi • AC • Food",
-    price: "₹5,500",
-    image: "/images/rooms/room_sharing.png",
-    badgeText: "New",
-    badgeVariant: "new",
-  },
-  {
-    id: "8",
-    title: "Comfort Three sharing",
-    category: "triple",
-    amenities: "WiFi • AC • Food • Laundry",
-    price: "₹5,800",
-    image: "/images/rooms/room_comfort.png",
-    badgeText: "Women Choice",
-    badgeVariant: "choice",
-  },
-];
+const allRooms: Room[] = [];
 
 const tabs = [
   { id: "premium", label: "All Rooms", icon: Crown, isGold: true },
@@ -204,8 +123,8 @@ export default function ExploreRooms() {
             >
               {/* Card Header Image & Overlay Badge */}
               <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-slate-100">
-                <Image
-                  src={room.image}
+                <PrivateImage
+                  fileId={room.image}
                   alt={room.title}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

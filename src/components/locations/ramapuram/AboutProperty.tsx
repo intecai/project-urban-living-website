@@ -20,7 +20,7 @@ export default function AboutProperty({ data }: AboutPropertyProps) {
       </h2>
 
       {/* Description Paragraphs */}
-      <div className="space-y-4 text-[14px] sm:text-[15px] text-[#9CA3AF] font-normal leading-relaxed max-w-5xl font-figtree">
+      <div className="space-y-4 text-sm sm:text-[15px] text-[#9CA3AF] font-normal leading-relaxed max-w-5xl font-figtree">
         <p>{data.paragraph1}</p>
         <p>{data.paragraph2}</p>
       </div>
