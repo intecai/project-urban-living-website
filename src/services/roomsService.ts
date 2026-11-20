@@ -4,7 +4,7 @@ import { RoomItem, RoomCategory } from "@/components/ourRooms/types";
 import { getRoomSlug } from "@/utils/slug";
 import { fetchApi } from "@/utils/apiClient";
 import { resolveImageUrl } from "@/utils/image";
-import { fetchAllApiLocations } from "@/services/locationsService";
+import { fetchAllApiLocations, LocationDTO } from "@/services/locationsService";
 
 export interface RoomLocationDTO {
   id: string;
@@ -104,8 +104,17 @@ export function categoryToRoomTypeEnum(cat?: string): string | null {
 }
 
 export function roomTypeEnumToCategory(roomType?: string, title?: string): RoomCategory {
-  // CMS backend data is corrupted for `roomType` (many shared rooms have roomType="Single room").
-  // Therefore, we must prioritize parsing the `title` first to classify rooms correctly in the UI.
+  // 1. Respect explicit roomType from CMS first
+  if (roomType) {
+    const lower = roomType.toLowerCase().trim();
+    if (lower.includes("single")) return "single";
+    if (lower.includes("double") || lower.includes("two") || lower.includes("twin")) return "double";
+    if (lower.includes("triple") || lower.includes("three")) return "triple";
+    if (lower.includes("four")) return "four";
+    if (lower.includes("five")) return "five";
+  }
+
+  // 2. Fall back to title parsing if roomType is missing
   if (title) {
     const lowerTitle = title.toLowerCase();
     if (lowerTitle.includes("single")) return "single";
@@ -114,14 +123,7 @@ export function roomTypeEnumToCategory(roomType?: string, title?: string): RoomC
     if (lowerTitle.includes("four")) return "four";
     if (lowerTitle.includes("five")) return "five";
   }
-  if (roomType) {
-    const lower = roomType.toLowerCase();
-    if (lower.includes("single")) return "single";
-    if (lower.includes("double")) return "double";
-    if (lower.includes("triple")) return "triple";
-    if (lower.includes("four")) return "four";
-    if (lower.includes("five")) return "five";
-  }
+
   return "double";
 }
 
@@ -132,7 +134,6 @@ export function normalizeRoomDTO(r: RoomDTO, idx: number): RoomItem {
   const category = roomTypeEnumToCategory(r.roomType, r.title);
   const locationName = r.location?.name || "Ramapuram";
   const rawImage = r.images && r.images.length > 0 ? r.images[0] : "";
-  // Keep raw key/URL; PrivateImage + resolveImageUrl handle both consistently.
   const image = rawImage ? resolveImageUrl(rawImage) : "";
   const amenitiesList = Array.isArray(r.amenities) ? r.amenities : [];
 
@@ -159,39 +160,41 @@ export function normalizeRoomDTO(r: RoomDTO, idx: number): RoomItem {
   };
 }
 
-/** Fallback when the locations API is unreachable (legacy dev/prod IDs). */
-export const LOCATION_NAME_TO_ID_MAP: Record<string, string> = {
-  ramapuram: "ff1bdbf3-aba4-4a86-a0fc-a87655db7208",
-  madanandapuram: "621f272c-daf5-431d-a19f-4a48bb765ac7",
-  madhanandapuram: "621f272c-daf5-431d-a19f-4a48bb765ac7",
-};
-
-export function resolveLocationId(locNameOrId?: string): string | undefined {
+/**
+ * Dynamically resolves a location name or ID using live API locations
+ * without hardcoding IDs that differ between dev and prod.
+ */
+export async function resolveLocationId(locNameOrId?: string): Promise<string | undefined> {
   if (!locNameOrId || locNameOrId === "all") return undefined;
   if (/^[0-9a-fA-F-]{16,}$/.test(locNameOrId)) {
     return locNameOrId;
   }
+  const apiLocations = await fetchAllApiLocations();
   const clean = locNameOrId.toLowerCase().trim().replace(/\s+/g, "");
-  return LOCATION_NAME_TO_ID_MAP[clean];
+  const found = apiLocations.find(
+    (loc) =>
+      loc.name.toLowerCase().trim().replace(/\s+/g, "") === clean ||
+      loc.id.toLowerCase() === clean
+  );
+  return found?.id;
 }
 
-async function resolveLocationIdsFromApi(
-  locationNames: string[],
-): Promise<string[]> {
+async function resolveLocationIdsFromApi(locationNames: string[]): Promise<string[]> {
   const apiLocations = await fetchAllApiLocations();
   const ids: string[] = [];
 
   for (const name of locationNames) {
+    if (/^[0-9a-fA-F-]{16,}$/.test(name)) {
+      ids.push(name);
+      continue;
+    }
     const normalized = name.toLowerCase().trim();
     const fromApi = apiLocations.find(
-      (loc) => loc.name.toLowerCase().trim() === normalized,
+      (loc) => loc.name.toLowerCase().trim() === normalized
     );
     if (fromApi?.id) {
       ids.push(fromApi.id);
-      continue;
     }
-    const fallback = resolveLocationId(name);
-    if (fallback) ids.push(fallback);
   }
 
   return [...new Set(ids)];
@@ -210,9 +213,39 @@ function parseRoomListResponse(response: unknown): RoomDTO[] {
   return list.filter((r) => !r.deletedAt);
 }
 
+/**
+ * Scalable room list fetcher: paginates through all pages if total > limit.
+ */
 export const fetchAllRoomDTOs = cache(async function fetchAllRoomDTOs(): Promise<RoomDTO[]> {
-  const response = await fetchApi<unknown>("/rooms?limit=100");
-  return parseRoomListResponse(response);
+  try {
+    let page = 1;
+    let allRooms: RoomDTO[] = [];
+    let hasMore = true;
+
+    while (hasMore && page <= 20) {
+      const response = await fetchApi<unknown>(`/rooms?limit=100&page=${page}`);
+      if (!response) break;
+
+      const pageRooms = parseRoomListResponse(response);
+      allRooms = allRooms.concat(pageRooms);
+
+      if (response && typeof response === "object") {
+        const wrapped = response as { totalPages?: number; total?: number; limit?: number };
+        const totalPages = wrapped.totalPages || (wrapped.total ? Math.ceil(wrapped.total / (wrapped.limit || 100)) : 1);
+        hasMore = page < totalPages;
+      } else {
+        hasMore = false;
+      }
+
+      if (pageRooms.length === 0 || !hasMore) break;
+      page++;
+    }
+
+    return allRooms.filter((r) => !r.deletedAt);
+  } catch (err) {
+    console.warn("[ROOMS API] Exception fetching all room DTOs:", err);
+    return [];
+  }
 });
 
 const AMENITY_KEY_TO_API_MAP: Record<string, string> = {
@@ -266,6 +299,7 @@ export async function fetchRoomsFromApi(
   const selectedLocations = locations?.filter(Boolean) ?? [];
   let filterMultipleLocationsClientSide = false;
 
+  // Always send locationId to backend, never location
   if (selectedLocations.length === 1) {
     const locationIds = await resolveLocationIdsFromApi(selectedLocations);
     if (locationIds[0]) {
@@ -319,6 +353,59 @@ export const getRoomsData = cache(async function getRoomsData(
 ): Promise<RoomsPageData> {
   const roomItems = await fetchRoomsFromApi(categoryFilter, minPrice, maxPrice, locations, amenities, availability, search);
 
+  // Dynamic FAQs from CMS API
+  let dynamicFaqs = [
+    {
+      id: "1",
+      question: "Is food included in the rent?",
+      answer:
+        "Yes, all our rooms include nutritious breakfast, lunch, and dinner. We offer both vegetarian and non-vegetarian meal options on a rotating menu.",
+    },
+    {
+      id: "2",
+      question: "Can i visit the room before booking?",
+      answer:
+        "Yes, you can schedule a physical site visit or request a virtual tour with our property manager prior to booking.",
+    },
+    {
+      id: "3",
+      question: "What documents are required for booking?",
+      answer:
+        "You will need a valid government photo ID (Aadhaar Card/Passport), proof of employment or college admission, and passport-size photographs.",
+    },
+    {
+      id: "4",
+      question: "Is the security deposit refundable?",
+      answer:
+        "Yes, the security deposit is fully refundable at the time of check-out after adjusting any pending dues or damages.",
+    },
+    {
+      id: "5",
+      question: "Are utilities (Wi-Fi, electricity, water) included?",
+      answer:
+        "High-speed Wi-Fi and water supply are fully included. Electricity is billed based on individual sub-meter usage.",
+    },
+  ];
+
+  try {
+    const rawFaqs = await fetchApi<any>("/faqs?limit=100");
+    let faqList: any[] = [];
+    if (Array.isArray(rawFaqs)) faqList = rawFaqs;
+    else if (rawFaqs && Array.isArray(rawFaqs.data)) faqList = rawFaqs.data;
+    else if (rawFaqs && Array.isArray(rawFaqs.value)) faqList = rawFaqs.value;
+
+    const publishedFaqs = faqList.filter((f) => !f.status || f.status.toLowerCase() === "published");
+    if (publishedFaqs.length > 0) {
+      dynamicFaqs = publishedFaqs.map((f, i) => ({
+        id: f.id || String(i + 1),
+        question: f.question,
+        answer: f.answer,
+      }));
+    }
+  } catch (err) {
+    console.warn("[ROOMS SERVICE] Error loading dynamic FAQs:", err);
+  }
+
   return {
     title: "Explore Our Women's PG Rooms",
     description: "Find your perfect fully-furnished room in Chennai's safest neighborhoods.",
@@ -339,38 +426,7 @@ export const getRoomsData = cache(async function getRoomsData(
     faq: {
       title: "Frequently Asked Questions",
       subtitle: "Find answers to common questions about our rooms and services.",
-      faqs: [
-        {
-          id: "1",
-          question: "Is food included in the rent?",
-          answer:
-            "Yes, all our rooms include nutritious breakfast, lunch, and dinner. We offer both vegetarian and non-vegetarian meal options on a rotating menu.",
-        },
-        {
-          id: "2",
-          question: "Can i visit the room before booking?",
-          answer:
-            "Yes, you can schedule a physical site visit or request a virtual tour with our property manager prior to booking.",
-        },
-        {
-          id: "3",
-          question: "What documents are required for booking?",
-          answer:
-            "You will need a valid government photo ID (Aadhaar Card/Passport), proof of employment or college admission, and passport-size photographs.",
-        },
-        {
-          id: "4",
-          question: "Is the security deposit refundable?",
-          answer:
-            "Yes, the security deposit is fully refundable at the time of check-out after adjusting any pending dues or damages.",
-        },
-        {
-          id: "5",
-          question: "Are utilities (Wi-Fi, electricity, water) included?",
-          answer:
-            "High-speed Wi-Fi and water supply are fully included. Electricity is billed based on individual sub-meter usage.",
-        },
-      ],
+      faqs: dynamicFaqs,
     },
   };
 });
@@ -408,73 +464,15 @@ export const getRoomBySlug = cache(async function getRoomBySlug(slug: string): P
   });
 });
 
-export const getRoomDetailBySlug = cache(async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData | null> {
-  if (!slug) return null;
-  const cleanSlug = slug.trim().toLowerCase();
-
-  // 1. Direct API fetch if cleanSlug is a UUID or room ID format
-  let apiSingleRoom: RoomDTO | null = null;
-  let roomItem: RoomItem | undefined = undefined;
-
-  if (/^[0-9a-fA-F-]{16,}$/.test(cleanSlug)) {
-    const raw = await fetchApi<any>(`/rooms/${cleanSlug}`);
-    if (raw) {
-      if (raw.data && typeof raw.data === "object" && !Array.isArray(raw.data) && raw.data.id) {
-        apiSingleRoom = raw.data;
-      } else if (raw.value && typeof raw.value === "object" && !Array.isArray(raw.value) && raw.value.id) {
-        apiSingleRoom = raw.value;
-      } else if (typeof raw === "object" && !Array.isArray(raw) && raw.id) {
-        apiSingleRoom = raw;
-      }
-    }
-  }
-
-  // 2. Only fetch the room index if direct UUID fetch didn't yield a room
-  if (!apiSingleRoom) {
-    const dtoList = await fetchAllRoomDTOs();
-    const indexedRooms = dtoList.map((dto, idx) => normalizeRoomDTO(dto, idx));
-    roomItem = indexedRooms.find((r) => {
-      const rId = r.id ? r.id.toLowerCase() : "";
-      const rSlug = r.slug ? r.slug.toLowerCase() : "";
-      const nameSlug = getRoomSlug(r.name).toLowerCase();
-      return (
-        rId === cleanSlug ||
-        rSlug === cleanSlug ||
-        nameSlug === cleanSlug
-      );
-    });
-
-    // If neither API nor roomItem gave a result, return null (404 state)
-    if (!roomItem) {
-      return null;
-    }
-
-    // 3. If roomItem found by slug, fetch live details from GET /rooms/:id using its UUID if not already loaded
-    if (roomItem.id && /^[0-9a-fA-F-]{16,}$/.test(roomItem.id)) {
-      const raw = await fetchApi<any>(`/rooms/${roomItem.id}`);
-      if (raw) {
-        if (raw.data && typeof raw.data === "object" && !Array.isArray(raw.data) && raw.data.id) {
-          apiSingleRoom = raw.data;
-        } else if (raw.value && typeof raw.value === "object" && !Array.isArray(raw.value) && raw.value.id) {
-          apiSingleRoom = raw.value;
-        } else if (typeof raw === "object" && !Array.isArray(raw) && raw.id) {
-          apiSingleRoom = raw;
-        }
-      }
-    }
-  }
-
-  // 4. Construct normalized RoomDetailData
-  const name = apiSingleRoom?.title || roomItem?.name || "Premium Room";
-  const rawPrice = apiSingleRoom?.price ?? roomItem?.price ?? 8000;
+function buildRoomDetailData(dto: RoomDTO, fallbackSlug?: string): RoomDetailData {
+  const name = dto.title || "Premium Room";
+  const rawPrice = dto.price ?? 8000;
   const price = typeof rawPrice === "number" ? rawPrice : parseFloat(rawPrice as string) || 8000;
-  const category = apiSingleRoom ? roomTypeEnumToCategory(apiSingleRoom.roomType, apiSingleRoom.title) : roomItem?.category || "double";
-  const locationName = apiSingleRoom?.location?.name || roomItem?.area || "Ramapuram";
-  const rawImages = apiSingleRoom?.images && apiSingleRoom.images.length > 0 
-    ? apiSingleRoom.images 
-    : (roomItem?.image ? [roomItem.image] : []);
+  const category = roomTypeEnumToCategory(dto.roomType, dto.title);
+  const locationName = dto.location?.name || "Ramapuram";
+  const rawImages = dto.images && dto.images.length > 0 ? dto.images : [];
   const images = rawImages.map((img) => resolveImageUrl(img)).filter(Boolean);
-  const mapUrl = apiSingleRoom?.location?.mapUrl || "https://maps.google.com/?q=13.029858,80.187920";
+  const mapUrl = dto.location?.mapUrl || "https://maps.google.com/?q=13.029858,80.187920";
 
   let occupancyTag = "Single Occupancy";
   if (category === "triple") occupancyTag = "Triple Occupancy";
@@ -505,8 +503,6 @@ export const getRoomDetailBySlug = cache(async function getRoomDetailBySlug(slug
     title: idx === 0 ? "Main Room View" : `Room View ${idx + 1}`,
   }));
 
-
-
   const nearbyList: WhatsNearbyItem[] = [
     { id: "1", name: "Shine Sports Academy", time: "3 min", leftIconName: "MapPin", modeIconName: "Footprints" },
     { id: "2", name: "Sunshine Badminton Academy", time: "4 min", leftIconName: "MapPin", modeIconName: "Footprints" },
@@ -516,8 +512,8 @@ export const getRoomDetailBySlug = cache(async function getRoomDetailBySlug(slug
   ];
 
   return {
-    id: apiSingleRoom?.id || roomItem?.id || cleanSlug,
-    slug: roomItem?.slug || cleanSlug,
+    id: dto.id || fallbackSlug || "",
+    slug: fallbackSlug || getRoomSlug(name, dto.id || dto.refId),
     name,
     category,
     location: `${locationName}, Chennai`,
@@ -526,7 +522,7 @@ export const getRoomDetailBySlug = cache(async function getRoomDetailBySlug(slug
     price,
     priceLabel: "month",
     deposit: 5000,
-    badge: apiSingleRoom?.badges?.[0] || roomItem?.badge,
+    badge: dto.badges?.[0] || (dto.availability ? "Available Now" : undefined),
     foodInfo: "Homely Food Included",
     occupancyTag,
     furnishedTag: "Fully Furnished",
@@ -551,5 +547,49 @@ export const getRoomDetailBySlug = cache(async function getRoomDetailBySlug(slug
     mapUrl,
     whatsNearby: nearbyList,
   };
-});
+}
 
+/**
+ * Optimized room detail fetcher:
+ * - If cleanSlug is a UUID: fetches GET /rooms/:id directly and constructs data immediately (1 request).
+ * - If cleanSlug is a name slug: loads the room list, finds the match, and constructs data directly from that DTO (1 request).
+ */
+export const getRoomDetailBySlug = cache(async function getRoomDetailBySlug(slug: string): Promise<RoomDetailData | null> {
+  if (!slug) return null;
+  const cleanSlug = slug.trim().toLowerCase();
+
+  // 1. Direct single room API fetch if cleanSlug is a UUID (prevents loading the entire room list)
+  if (/^[0-9a-fA-F-]{16,}$/.test(cleanSlug)) {
+    const raw = await fetchApi<any>(`/rooms/${cleanSlug}`);
+    if (raw) {
+      let singleRoom: RoomDTO | null = null;
+      if (raw.data && typeof raw.data === "object" && !Array.isArray(raw.data) && raw.data.id) {
+        singleRoom = raw.data;
+      } else if (raw.value && typeof raw.value === "object" && !Array.isArray(raw.value) && raw.value.id) {
+        singleRoom = raw.value;
+      } else if (typeof raw === "object" && !Array.isArray(raw) && raw.id) {
+        singleRoom = raw;
+      }
+
+      if (singleRoom) {
+        return buildRoomDetailData(singleRoom, cleanSlug);
+      }
+    }
+  }
+
+  // 2. Fall back to finding by slug in the room list
+  const dtoList = await fetchAllRoomDTOs();
+  const foundDto = dtoList.find((dto) => {
+    const dId = dto.id ? dto.id.toLowerCase() : "";
+    const nameSlug = getRoomSlug(dto.title).toLowerCase();
+    const refSlug = dto.refId ? dto.refId.toLowerCase() : "";
+    return dId === cleanSlug || nameSlug === cleanSlug || refSlug === cleanSlug;
+  });
+
+  if (foundDto) {
+    // Construct directly from the found DTO without an extra round-trip!
+    return buildRoomDetailData(foundDto, cleanSlug);
+  }
+
+  return null;
+});

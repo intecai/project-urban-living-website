@@ -2,9 +2,9 @@ import type { NextConfig } from "next";
 
 const rawImageDomain =
   process.env.NEXT_PUBLIC_IMAGE_DOMAIN ||
-  "https://dev-urban-living-bucket.s3.us-east-1.amazonaws.com";
+  "https://urban-living-bucket.s3.us-east-1.amazonaws.com";
 
-let customHost = "dev-urban-living-bucket.s3.us-east-1.amazonaws.com";
+let customHost = "urban-living-bucket.s3.us-east-1.amazonaws.com";
 let customProtocol: "http" | "https" = "https";
 
 try {
