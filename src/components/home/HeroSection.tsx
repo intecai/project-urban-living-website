@@ -15,9 +15,9 @@ export default function HeroSection({ data }: HeroSectionProps) {
     data?.description ||
     "Experience safe, comfortable, and affordable living in the heart of Chennai. Designed exclusively for modern women who seek a perfect blend of privacy and community.";
   const primaryCtaText = data?.primaryCtaText || "Explore Rooms";
-  const primaryCtaHref = data?.primaryCtaHref || "/rooms";
+  const primaryCtaHref = data?.primaryCtaHref || "/rooms/";
   const secondaryCtaText = data?.secondaryCtaText || "View Locations";
-  const secondaryCtaHref = data?.secondaryCtaHref || "/locations";
+  const secondaryCtaHref = data?.secondaryCtaHref || "/locations/";
   const heroImage = data?.heroImage || "/images/home/homeHero.png";
 
   return (

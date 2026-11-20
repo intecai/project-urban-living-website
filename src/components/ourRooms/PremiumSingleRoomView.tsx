@@ -108,7 +108,7 @@ export default function PremiumSingleRoomView({ commonData, roomData }: PremiumS
             Home
           </Link>
           <ChevronRight className="w-3.5 h-3.5 text-[#6B7280]" />
-          <Link href="/rooms" className="hover:text-[#02569B] transition-colors">
+          <Link href="/rooms/" className="hover:text-[#02569B] transition-colors">
             Rooms
           </Link>
           <ChevronRight className="w-3.5 h-3.5 text-[#111827]" />

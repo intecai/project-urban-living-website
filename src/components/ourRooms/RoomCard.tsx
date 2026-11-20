@@ -18,7 +18,7 @@ export default function RoomCard({ room }: RoomCardProps) {
 
   return (
     <Link
-      href={`/rooms/${roomSlug}`}
+      href={`/rooms/${roomSlug}/`}
       className="w-full bg-white border border-[#E2E8F0] hover:border-[#02569B]/40 hover:shadow-md rounded-[20px] sm:rounded-[24px] p-4 sm:p-5 flex flex-col md:flex-row gap-4 sm:gap-5 lg:gap-8 justify-between items-stretch transition-all duration-300 font-jakarta group cursor-pointer"
     >
       {/* 1. LEFT ROOM IMAGE FRAME (16px border-radius as shown in Figma Dev Mode) */}

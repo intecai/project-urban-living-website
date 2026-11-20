@@ -20,7 +20,7 @@ export default function RoomCard({ room }: RoomCardProps) {
 
   return (
     <Link
-      href={`/rooms/${roomSlug}`}
+      href={`/rooms/${roomSlug}/`}
       className="group bg-white rounded-2xl sm:rounded-[24px] border border-[#E5E7EB] overflow-hidden shadow-2xs hover:shadow-md hover:border-[#02569B]/40 transition-all duration-300 flex flex-col justify-between h-full font-figtree cursor-pointer"
     >
       {/* 1. Image & Badge Container */}

@@ -107,7 +107,7 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
           </h2>
 
           <Link
-            href="/rooms"
+            href="/rooms/"
             prefetch={false}
             className="hidden sm:inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#02569B] hover:text-[#01417a] transition-colors group"
           >
@@ -192,7 +192,7 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
         {/* 4. Mobile Bottom Explore All Rooms CTA Pill Button */}
         <div className="sm:hidden pt-2 flex justify-center">
           <Link
-            href="/rooms"
+            href="/rooms/"
             prefetch={false}
             className="inline-flex items-center justify-center gap-2 bg-[#2571A5] hover:bg-[#02569B] text-white text-xs font-semibold px-7 py-3 rounded-full shadow-xs cursor-pointer transition-colors"
           >

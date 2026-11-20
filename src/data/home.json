@@ -5,16 +5,16 @@
     "titleAccent": "Home",
     "description": "Experience safe, comfortable, and affordable living in the heart of Chennai. Designed exclusively for modern women who seek a perfect blend of privacy and community.",
     "primaryCtaText": "Explore Rooms",
-    "primaryCtaHref": "/rooms",
+    "primaryCtaHref": "/rooms/",
     "secondaryCtaText": "View Locations",
-    "secondaryCtaHref": "/locations",
+    "secondaryCtaHref": "/locations/",
     "heroImage": "/images/home/homeHero.png"
   },
   "exploreLocations": {
     "eyebrow": "NEIGHBORHOODS",
     "title": "Popular Locations in Chennai",
     "viewAllText": "View all areas →",
-    "viewAllHref": "/locations",
+    "viewAllHref": "/locations/",
     "locations": []
   },
   "amenities": {

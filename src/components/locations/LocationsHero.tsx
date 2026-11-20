@@ -15,9 +15,9 @@ export default function LocationsHero() {
     e.preventDefault();
     const query = (debouncedSearchQuery || searchQuery).trim();
     if (query) {
-      router.push(`/rooms?search=${encodeURIComponent(query)}`);
+      router.push(`/rooms/?search=${encodeURIComponent(query)}`);
     } else {
-      router.push("/rooms");
+      router.push("/rooms/");
     }
   };
 
