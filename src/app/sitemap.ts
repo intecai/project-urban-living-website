@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getSiteUrl } from "@/utils/siteConfig";
-import { getAllRoomSlugs } from "@/services/roomsService";
+import { fetchAllRoomDTOs } from "@/services/roomsService";
+import { fetchAllApiLocations } from "@/services/locationsService";
 
 export const dynamic = "force-static";
 
@@ -41,14 +42,49 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const slugs = await getAllRoomSlugs();
-  for (const slug of slugs) {
-    routes.push({
-      url: `${baseUrl}/rooms/?id=${encodeURIComponent(slug)}`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.75,
-    });
+  const addedUrls = new Set<string>();
+
+  // 1. Dynamic Room URLs with actual CMS updatedAt timestamps
+  try {
+    const dtoList = await fetchAllRoomDTOs();
+    for (const room of dtoList) {
+      if (room.id) {
+        const lastModified = room.updatedAt ? new Date(room.updatedAt) : now;
+        const url = `${baseUrl}/rooms/?id=${encodeURIComponent(room.id)}`;
+        if (!addedUrls.has(url)) {
+          addedUrls.add(url);
+          routes.push({
+            url,
+            lastModified,
+            changeFrequency: "daily",
+            priority: 0.85,
+          });
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("[SITEMAP] Error fetching dynamic rooms:", err);
+  }
+
+  // 2. Dynamic Location URLs
+  try {
+    const locations = await fetchAllApiLocations();
+    for (const loc of locations) {
+      const slug = loc.name.toLowerCase().trim().replace(/\s+/g, "");
+      const lastModified = loc.updatedAt ? new Date(loc.updatedAt) : now;
+      const url = `${baseUrl}/locations/?slug=${encodeURIComponent(slug)}&id=${encodeURIComponent(loc.id)}`;
+      if (!addedUrls.has(url)) {
+        addedUrls.add(url);
+        routes.push({
+          url,
+          lastModified,
+          changeFrequency: "weekly",
+          priority: 0.8,
+        });
+      }
+    }
+  } catch (err) {
+    console.warn("[SITEMAP] Error fetching dynamic locations:", err);
   }
 
   return routes;

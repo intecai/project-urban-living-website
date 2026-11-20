@@ -1,4 +1,4 @@
-/** Shared env resolution — avoids silently pointing production at dev buckets/APIs. */
+/** Shared env resolution — defaults to production so missing env variables never accidentally point to dev buckets/APIs. */
 
 function trimTrailingSlashes(value: string): string {
   return value.replace(/\/+$/, "");
@@ -9,10 +9,8 @@ export function getApiBaseUrl(): string {
   if (configured) {
     return trimTrailingSlashes(configured);
   }
-  if (process.env.NODE_ENV === "production") {
-    return "https://api.urbanlivings.co.in/api";
-  }
-  return "https://urbanliving.client.intecai.in/api";
+  // Default to production API when env is missing
+  return "https://api.urbanlivings.co.in/api";
 }
 
 export function getImageDomain(): string {
@@ -22,10 +20,8 @@ export function getImageDomain(): string {
       configured.startsWith("http") ? configured : `https://${configured}`,
     );
   }
-  if (process.env.NODE_ENV === "production") {
-    return "https://urban-living-bucket.s3.us-east-1.amazonaws.com";
-  }
-  return "https://dev-urban-living-bucket.s3.us-east-1.amazonaws.com";
+  // Default to production bucket when env is missing
+  return "https://urban-living-bucket.s3.us-east-1.amazonaws.com";
 }
 
 export function getSiteUrl(): string {
@@ -33,8 +29,6 @@ export function getSiteUrl(): string {
   if (configured) {
     return trimTrailingSlashes(configured);
   }
-  if (process.env.NODE_ENV === "production") {
-    return "https://urbanlivings.co.in";
-  }
-  return "https://urbanliving-site.client.intecai.in";
+  // Default to production site URL when env is missing
+  return "https://urbanlivings.co.in";
 }

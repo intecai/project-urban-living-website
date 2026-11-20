@@ -1,7 +1,7 @@
 import { cache } from "react";
 import locationsData from "@/data/locations.json";
 import locationDetailsData from "@/data/locationDetails.json";
-import { LocationsPageData, LocationDetailData, LocationCardData } from "@/types/locations";
+import { LocationsPageData, LocationDetailData, LocationCardData, GalleryImage } from "@/types/locations";
 import { fetchApi } from "@/utils/apiClient";
 import { resolveImageUrl } from "@/utils/image";
 
@@ -18,16 +18,35 @@ export interface LocationDTO {
 
 export const fetchAllApiLocations = cache(async function fetchAllApiLocations(): Promise<LocationDTO[]> {
   try {
-    const rawResponse = await fetchApi<any>("/locations");
-    let apiLocations: LocationDTO[] = [];
-    if (Array.isArray(rawResponse)) {
-      apiLocations = rawResponse;
-    } else if (rawResponse && Array.isArray(rawResponse.data)) {
-      apiLocations = rawResponse.data;
-    } else if (rawResponse && Array.isArray(rawResponse.value)) {
-      apiLocations = rawResponse.value;
+    let page = 1;
+    let allLocations: LocationDTO[] = [];
+    let hasMore = true;
+
+    // Paginate to retrieve all locations from the API (not just first page)
+    while (hasMore && page <= 10) {
+      const rawResponse = await fetchApi<any>(`/locations?limit=100&page=${page}`);
+      let pageLocations: LocationDTO[] = [];
+      let totalPages = 1;
+
+      if (Array.isArray(rawResponse)) {
+        pageLocations = rawResponse;
+        hasMore = false;
+      } else if (rawResponse && typeof rawResponse === "object") {
+        if (Array.isArray(rawResponse.data)) pageLocations = rawResponse.data;
+        else if (Array.isArray(rawResponse.value)) pageLocations = rawResponse.value;
+
+        totalPages = rawResponse.totalPages || (rawResponse.total ? Math.ceil(rawResponse.total / (rawResponse.limit || 100)) : 1);
+        hasMore = page < totalPages;
+      } else {
+        hasMore = false;
+      }
+
+      allLocations = allLocations.concat(pageLocations);
+      if (pageLocations.length === 0 || !hasMore) break;
+      page++;
     }
-    return apiLocations;
+
+    return allLocations.filter((l) => !l.deletedAt);
   } catch (err) {
     console.warn("[LOCATION API] Exception fetching all locations:", err);
     return [];
@@ -39,6 +58,7 @@ export const fetchLocationById = cache(async function fetchLocationById(id: stri
     const res = await fetchApi<any>(`/locations/${id}`);
     if (res && res.id) return res as LocationDTO;
     if (res && res.data && res.data.id) return res.data as LocationDTO;
+    if (res && res.value && res.value.id) return res.value as LocationDTO;
   } catch (err) {
     console.warn(`[LOCATION API] Exception fetching location by ID ${id}:`, err);
   }
@@ -74,6 +94,10 @@ export const getLocationsData = cache(async function getLocationsData(): Promise
   const fallback = locationsData as LocationsPageData;
   const apiLocations = await fetchAllApiLocations();
 
+  if (apiLocations.length === 0) {
+    return fallback;
+  }
+
   const normalizedCards: LocationCardData[] = apiLocations.map((loc) => {
     const slug = loc.name.toLowerCase().trim().replace(/\s+/g, "");
     const rawImage =
@@ -105,31 +129,61 @@ export const getLocationDetailBySlug = cache(async function getLocationDetailByS
   const details = locationDetailsData as Record<string, LocationDetailData>;
   const cleanSlug = slug.toLowerCase().trim();
   const baseDetail = details[cleanSlug];
-  if (!baseDetail) return undefined;
 
   const apiLocations = await fetchAllApiLocations();
 
   if (apiLocations.length > 0) {
     const matchedLoc = apiLocations.find(
-      (loc) => loc.name.toLowerCase().trim().replace(/\s+/g, "") === cleanSlug
+      (loc) => loc.name.toLowerCase().trim().replace(/\s+/g, "") === cleanSlug || loc.id === cleanSlug
     );
     if (matchedLoc) {
-      const updatedGallery = [...baseDetail.gallery];
+      const updatedGallery: GalleryImage[] = baseDetail ? [...baseDetail.gallery] : [];
       if (matchedLoc.images && matchedLoc.images.length > 0) {
-        updatedGallery[0] = {
-          ...updatedGallery[0],
-          src: resolveImageUrl(matchedLoc.images[0]),
+        if (updatedGallery.length > 0) {
+          updatedGallery[0] = {
+            ...updatedGallery[0],
+            src: resolveImageUrl(matchedLoc.images[0]),
+          };
+        } else {
+          matchedLoc.images.forEach((img, i) => {
+            updatedGallery.push({
+              id: String(i + 1),
+              src: resolveImageUrl(img),
+              alt: `${matchedLoc.name} Image ${i + 1}`,
+              span: i === 0 ? "col-span-2 row-span-2" : "col-span-1 row-span-1",
+            });
+          });
+        }
+      }
+
+      if (baseDetail) {
+        return {
+          ...baseDetail,
+          name: matchedLoc.name,
+          mapUrl: matchedLoc.mapUrl || baseDetail.mapUrl,
+          gallery: updatedGallery,
         };
       }
+
+      // Generate dynamic location detail if not in static fallback
       return {
-        ...baseDetail,
+        slug: cleanSlug,
         name: matchedLoc.name,
-        mapUrl: matchedLoc.mapUrl || baseDetail.mapUrl,
+        title: `Urban Living in ${matchedLoc.name}`,
+        subtitle: `Premium Women's PG Accommodation in ${matchedLoc.name}, Chennai`,
+        mapUrl: matchedLoc.mapUrl || "https://maps.google.com/?q=13.029858,80.187920",
         gallery: updatedGallery,
+        pricingPlans: [],
+        aboutProperty: {
+          badge: "Featured Location",
+          title: `Welcome to Urban Living ${matchedLoc.name}`,
+          description: `Fully furnished, safe, and comfortable women's accommodations in ${matchedLoc.name}. Includes nutritious food, Wi-Fi, 24/7 security, and modern amenities.`,
+          highlights: ["Nutritious Food Included", "High-Speed Wi-Fi", "24/7 Security & CCTV", "Daily Housekeeping"],
+        },
+        whatsIncluded: ["Fully Furnished Rooms", "3 Times Food", "Wi-Fi & Electricity", "Washing Machine & Geyser"],
       };
     }
   }
 
   return baseDetail;
 });
-
