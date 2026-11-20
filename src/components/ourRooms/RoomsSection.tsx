@@ -67,15 +67,6 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
   // Request counter to prevent stale out-of-order API responses from overwriting latest user selection
   const requestIdRef = useRef(0);
 
-  // Sync initial prop data if available and seed the initial cache
-  useEffect(() => {
-    if (data?.rooms && data.rooms.length > 0) {
-      setRoomList(data.rooms);
-      const initialKey = `all_5000_20000___false_${initialSearch}`;
-      tabCacheRef.current.set(initialKey, data.rooms);
-    }
-  }, [data, initialSearch]);
-
   const selectedLocationKey = filters.locations.join(",");
   const selectedAmenityKey = useMemo(
     () => filters.amenities ? Object.keys(filters.amenities).filter((k) => filters.amenities[k as keyof FilterState["amenities"]]).sort().join(",") : "",
@@ -85,24 +76,19 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
   // Fetch rooms from backend API whenever room category, budget, location, or search filter changes
   useEffect(() => {
     const currentRequestId = ++requestIdRef.current;
-
     const cacheKey = `${filters.category}_${filters.minPrice}_${filters.maxPrice}_${selectedLocationKey}_${selectedAmenityKey}_${filters.availableOnly}_${debouncedSearch}`;
+    const isInitialMount = isFirstMountRef.current;
 
-    // SWR Cache-first: if cached rooms exist for this tab/filter combination, render immediately
-    if (tabCacheRef.current.has(cacheKey)) {
+    // SWR Cache-first: only use in-memory cache for subsequent user tab switches, NOT on initial mount
+    if (!isInitialMount && tabCacheRef.current.has(cacheKey)) {
       const cached = tabCacheRef.current.get(cacheKey)!;
       setRoomList(cached);
       setIsLoading(false);
       return;
     }
 
-    const isInitialMount = isFirstMountRef.current;
     if (isFirstMountRef.current) {
       isFirstMountRef.current = false;
-      if (data?.rooms && data.rooms.length > 0 && !initialSearch && filters.category === "all") {
-        tabCacheRef.current.set(cacheKey, data.rooms);
-        setRoomList(data.rooms);
-      }
     }
 
     // Only show full loading skeleton when transitioning without existing data

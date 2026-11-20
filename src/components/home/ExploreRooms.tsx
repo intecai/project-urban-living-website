@@ -28,21 +28,10 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
   const isFirstRender = React.useRef(true);
   const tabCacheRef = React.useRef<Map<string, Room[]>>(new Map());
 
-  // Seed initial rooms in cache
-  React.useEffect(() => {
-    if (initialRooms && initialRooms.length > 0) {
-      tabCacheRef.current.set("all", initialRooms);
-    }
-  }, [initialRooms]);
-
   useEffect(() => {
     const isInitialMount = isFirstRender.current;
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      if (initialRooms && initialRooms.length > 0) {
-        tabCacheRef.current.set("all", initialRooms);
-        setRoomsList(initialRooms);
-      }
     } else if (tabCacheRef.current.has(activeCategory)) {
       // Cache-first: if rooms for this category already in memory, display instantly
       setRoomsList(tabCacheRef.current.get(activeCategory)!);
