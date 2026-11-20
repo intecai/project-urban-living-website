@@ -16,6 +16,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { FilterState, RoomCategory } from "./types";
+import { fetchAllApiLocations } from "@/services/locationsService";
 
 interface FilterModalProps {
   isOpen: boolean;
@@ -62,6 +63,26 @@ export default function FilterModal({
   onReset,
 }: FilterModalProps) {
   const [localFilters, setLocalFilters] = useState<FilterState>(filters);
+  const [availableLocations, setAvailableLocations] = useState(locationOptions);
+
+  useEffect(() => {
+    async function loadLocations() {
+      try {
+        const apiLocs = await fetchAllApiLocations();
+        if (apiLocs && apiLocs.length > 0) {
+          const opts = [
+            { label: "All Locations", value: "all" },
+            ...apiLocs.map((loc) => ({ label: loc.name, value: loc.name })),
+          ];
+          const unique = opts.filter((o, i, self) => self.findIndex((x) => x.value.toLowerCase() === o.value.toLowerCase()) === i);
+          setAvailableLocations(unique);
+        }
+      } catch (err) {
+        console.warn("[FILTER MODAL] Failed to fetch dynamic locations:", err);
+      }
+    }
+    loadLocations();
+  }, []);
 
   useEffect(() => {
     // If opening with wide default bounds, set initial range to ₹6,000 – ₹8,000 matching Figma
@@ -347,7 +368,7 @@ export default function FilterModal({
           </p>
 
           <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
-            {locationOptions.map((loc) => {
+            {availableLocations.map((loc) => {
               const isSelected = isLocationSelected(loc.value);
 
               return (

@@ -16,13 +16,77 @@ export interface LocationDTO {
   deletedAt: string | null;
 }
 
+export function normalizeLocationDTO(loc: LocationDTO): LocationCardData {
+  const slug = loc.name.toLowerCase().trim().replace(/\s+/g, "");
+  const rawImage =
+    loc.images && loc.images.length > 0
+      ? loc.images[0]
+      : "";
+  const image = resolveImageUrl(rawImage);
+
+  return {
+    id: loc.id,
+    name: loc.name,
+    price: (loc as any).price || "₹10,500/mo",
+    image,
+    href: `/locations?slug=${slug}&id=${loc.id}`,
+    buttonText: "Explore Location",
+  };
+}
+
+/**
+ * Fetch a single paginated page of locations from GET /locations?page=:page&limit=:limit
+ * Used for listing locations dynamically on the locations page.
+ */
+export async function fetchLocationsFromApi(
+  page: number = 1,
+  limit: number = 10,
+  skipCache?: boolean
+): Promise<{ locations: LocationCardData[]; total: number; totalPages: number } | null> {
+  try {
+    const rawResponse = await fetchApi<any>(`/locations?page=${page}&limit=${limit}`, { skipCache });
+    if (!rawResponse) return null;
+
+    let dtoList: LocationDTO[] = [];
+    let total = 0;
+    let totalPages = 1;
+
+    if (Array.isArray(rawResponse)) {
+      dtoList = rawResponse;
+      total = rawResponse.length;
+      totalPages = Math.ceil(total / limit) || 1;
+    } else if (rawResponse && typeof rawResponse === "object") {
+      if (Array.isArray(rawResponse.data)) dtoList = rawResponse.data;
+      else if (Array.isArray(rawResponse.value)) dtoList = rawResponse.value;
+
+      total = typeof rawResponse.total === "number" ? rawResponse.total : dtoList.length;
+      totalPages = typeof rawResponse.totalPages === "number" ? rawResponse.totalPages : Math.ceil(total / limit) || 1;
+    }
+
+    const filtered = dtoList.filter((l) => !l.deletedAt);
+    const normalized = filtered.map(normalizeLocationDTO);
+
+    return {
+      locations: normalized,
+      total,
+      totalPages,
+    };
+  } catch (err) {
+    console.warn("[LOCATIONS API] Exception fetching paginated locations:", err);
+    return null;
+  }
+}
+
+/**
+ * Paginate to retrieve all locations from the API across all pages.
+ * Used for sitemap generation, dropdowns, and location ID resolution.
+ */
 export const fetchAllApiLocations = cache(async function fetchAllApiLocations(): Promise<LocationDTO[]> {
   try {
     let page = 1;
     let allLocations: LocationDTO[] = [];
     let hasMore = true;
 
-    // Paginate to retrieve all locations from the API (not just first page)
     while (hasMore && page <= 10) {
       const rawResponse = await fetchApi<any>(`/locations?limit=100&page=${page}`);
       let pageLocations: LocationDTO[] = [];
@@ -90,37 +154,19 @@ export const fetchLocationByIdOrSlug = cache(async function fetchLocationByIdOrS
   return null;
 });
 
-export const getLocationsData = cache(async function getLocationsData(): Promise<LocationsPageData> {
+export const getLocationsData = cache(async function getLocationsData(page: number = 1, limit: number = 10): Promise<LocationsPageData> {
   const fallback = locationsData as LocationsPageData;
-  const apiLocations = await fetchAllApiLocations();
+  const result = await fetchLocationsFromApi(page, limit);
 
-  if (apiLocations.length === 0) {
+  if (!result || result.locations.length === 0) {
     return fallback;
   }
-
-  const normalizedCards: LocationCardData[] = apiLocations.map((loc) => {
-    const slug = loc.name.toLowerCase().trim().replace(/\s+/g, "");
-    const rawImage =
-      loc.images && loc.images.length > 0
-        ? loc.images[0]
-        : "";
-    const image = resolveImageUrl(rawImage);
-
-    return {
-      id: loc.id,
-      name: loc.name,
-      price: (loc as any).price || "₹10,500/mo",
-      image,
-      href: `/locations?slug=${slug}&id=${loc.id}`,
-      buttonText: "Explore Location",
-    };
-  });
 
   return {
     ...fallback,
     popularLocations: {
       ...fallback.popularLocations,
-      locations: normalizedCards,
+      locations: result.locations,
     },
   };
 });
