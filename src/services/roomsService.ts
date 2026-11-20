@@ -236,7 +236,8 @@ export async function fetchRoomsFromApi(
   locations?: string[],
   amenities?: string[],
   availability?: boolean,
-  search?: string
+  search?: string,
+  skipCache?: boolean
 ): Promise<RoomItem[] | null> {
   const params = new URLSearchParams();
 
@@ -279,7 +280,7 @@ export async function fetchRoomsFromApi(
 
   const queryString = params.toString();
   const endpoint = queryString ? `/rooms?${queryString}` : "/rooms";
-  const response = await fetchApi<unknown>(endpoint);
+  const response = await fetchApi<unknown>(endpoint, { skipCache });
 
   if (!response) {
     return null;

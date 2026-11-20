@@ -36,16 +36,15 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
   }, [initialRooms]);
 
   useEffect(() => {
-    // Avoid re-fetching initial rooms on initial mount if server already provided them
+    const isInitialMount = isFirstRender.current;
     if (isFirstRender.current) {
       isFirstRender.current = false;
       if (initialRooms && initialRooms.length > 0) {
-        return;
+        tabCacheRef.current.set("all", initialRooms);
+        setRoomsList(initialRooms);
       }
-    }
-
-    // Cache-first: if rooms for this category already in memory, display instantly
-    if (tabCacheRef.current.has(activeCategory)) {
+    } else if (tabCacheRef.current.has(activeCategory)) {
+      // Cache-first: if rooms for this category already in memory, display instantly
       setRoomsList(tabCacheRef.current.get(activeCategory)!);
       setIsLoading(false);
       return;
@@ -53,9 +52,20 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
 
     let isMounted = true;
     async function loadApiRooms() {
-      setIsLoading(true);
+      if (!isInitialMount && (!roomsList || roomsList.length === 0)) {
+        setIsLoading(true);
+      }
       try {
-        const apiRooms = await fetchRoomsFromApi(activeCategory);
+        const apiRooms = await fetchRoomsFromApi(
+          activeCategory,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          isInitialMount
+        );
 
         if (isMounted && apiRooms !== null && apiRooms !== undefined) {
           const mappedRooms: Room[] = (apiRooms || []).map((r) => {

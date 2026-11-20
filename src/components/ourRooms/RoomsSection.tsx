@@ -96,18 +96,19 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
       return;
     }
 
-    // Skip the redundant hydration fetch if initial server data already matches this default filter
+    const isInitialMount = isFirstMountRef.current;
     if (isFirstMountRef.current) {
       isFirstMountRef.current = false;
       if (data?.rooms && data.rooms.length > 0 && !initialSearch && filters.category === "all") {
         tabCacheRef.current.set(cacheKey, data.rooms);
         setRoomList(data.rooms);
-        setIsLoading(false);
-        return;
       }
     }
 
-    setIsLoading(true);
+    // Only show full loading skeleton when transitioning without existing data
+    if (!isInitialMount && (!roomList || roomList.length === 0)) {
+      setIsLoading(true);
+    }
 
     async function loadCategoryRooms() {
       try {
@@ -127,6 +128,7 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
         // Resolve availability to backend availability flag (only "Available" state is supported)
         const reqAvailability = filters.availableOnly ? true : undefined;
 
+        // On initial mount revalidate with skipCache=true to ensure live CMS changes (e.g. deletions) reflect immediately
         const rooms = await fetchRoomsFromApi(
           filters.category,
           reqMinPrice,
@@ -134,7 +136,8 @@ export default function RoomsSection({ data }: RoomsSectionProps) {
           reqLocations,
           reqAmenities,
           reqAvailability,
-          debouncedSearch
+          debouncedSearch,
+          isInitialMount
         );
 
         // Only update state if this is still the latest active request
