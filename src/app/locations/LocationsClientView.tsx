@@ -194,7 +194,7 @@ export default function LocationsClientView({ locationsData, commonData }: Locat
                   Home
                 </Link>
                 <ChevronRight className="w-3.5 h-3.5 text-[#9CA3AF]" />
-                <Link href="/locations" className="hover:text-[#1F2937] transition-colors">
+                <Link href="/locations/" className="hover:text-[#1F2937] transition-colors">
                   Locations
                 </Link>
                 <ChevronRight className="w-3.5 h-3.5 text-[#9CA3AF]" />

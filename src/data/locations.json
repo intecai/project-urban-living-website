@@ -3,7 +3,7 @@
     "eyebrow": "NEIGHBORHOODS",
     "heading": "Popular Locations in Chennai",
     "viewAllText": "View all areas",
-    "viewAllHref": "/rooms",
+    "viewAllHref": "/rooms/",
     "locations": []
   },
   "everythingYouNeed": {

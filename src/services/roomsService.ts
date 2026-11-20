@@ -199,11 +199,15 @@ async function resolveLocationIdsFromApi(
 
 function parseRoomListResponse(response: unknown): RoomDTO[] {
   if (!response) return [];
-  if (Array.isArray(response)) return response as RoomDTO[];
-  const wrapped = response as { data?: RoomDTO[]; value?: RoomDTO[] };
-  if (Array.isArray(wrapped.data)) return wrapped.data;
-  if (Array.isArray(wrapped.value)) return wrapped.value;
-  return [];
+  let list: RoomDTO[] = [];
+  if (Array.isArray(response)) list = response as RoomDTO[];
+  else {
+    const wrapped = response as { data?: RoomDTO[]; value?: RoomDTO[] };
+    if (Array.isArray(wrapped.data)) list = wrapped.data;
+    else if (Array.isArray(wrapped.value)) list = wrapped.value;
+  }
+  // Safeguard: explicitly exclude any soft-deleted rooms
+  return list.filter((r) => !r.deletedAt);
 }
 
 export const fetchAllRoomDTOs = cache(async function fetchAllRoomDTOs(): Promise<RoomDTO[]> {
@@ -236,7 +240,8 @@ export async function fetchRoomsFromApi(
   locations?: string[],
   amenities?: string[],
   availability?: boolean,
-  search?: string
+  search?: string,
+  skipCache?: boolean
 ): Promise<RoomItem[] | null> {
   const params = new URLSearchParams();
 
@@ -279,7 +284,7 @@ export async function fetchRoomsFromApi(
 
   const queryString = params.toString();
   const endpoint = queryString ? `/rooms?${queryString}` : "/rooms";
-  const response = await fetchApi<unknown>(endpoint);
+  const response = await fetchApi<unknown>(endpoint, { skipCache });
 
   if (!response) {
     return null;

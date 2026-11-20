@@ -12,7 +12,7 @@ export default function PopularLocations({ data }: PopularLocationsProps) {
   const eyebrow = data?.eyebrow || "NEIGHBORHOODS";
   const heading = data?.heading || "Popular Locations in Chennai";
   const viewAllText = data?.viewAllText || "View all areas";
-  const viewAllHref = data?.viewAllHref || "/rooms";
+  const viewAllHref = data?.viewAllHref || "/rooms/";
   const locations = data?.locations || [];
 
   if (locations.length === 0) {

@@ -28,24 +28,12 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
   const isFirstRender = React.useRef(true);
   const tabCacheRef = React.useRef<Map<string, Room[]>>(new Map());
 
-  // Seed initial rooms in cache
-  React.useEffect(() => {
-    if (initialRooms && initialRooms.length > 0) {
-      tabCacheRef.current.set("all", initialRooms);
-    }
-  }, [initialRooms]);
-
   useEffect(() => {
-    // Avoid re-fetching initial rooms on initial mount if server already provided them
+    const isInitialMount = isFirstRender.current;
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      if (initialRooms && initialRooms.length > 0) {
-        return;
-      }
-    }
-
-    // Cache-first: if rooms for this category already in memory, display instantly
-    if (tabCacheRef.current.has(activeCategory)) {
+    } else if (tabCacheRef.current.has(activeCategory)) {
+      // Cache-first: if rooms for this category already in memory, display instantly
       setRoomsList(tabCacheRef.current.get(activeCategory)!);
       setIsLoading(false);
       return;
@@ -53,9 +41,20 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
 
     let isMounted = true;
     async function loadApiRooms() {
-      setIsLoading(true);
+      if (!isInitialMount && (!roomsList || roomsList.length === 0)) {
+        setIsLoading(true);
+      }
       try {
-        const apiRooms = await fetchRoomsFromApi(activeCategory);
+        const apiRooms = await fetchRoomsFromApi(
+          activeCategory,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          isInitialMount
+        );
 
         if (isMounted && apiRooms !== null && apiRooms !== undefined) {
           const mappedRooms: Room[] = (apiRooms || []).map((r) => {
@@ -107,7 +106,7 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
           </h2>
 
           <Link
-            href="/rooms"
+            href="/rooms/"
             prefetch={false}
             className="hidden sm:inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#02569B] hover:text-[#01417a] transition-colors group"
           >
@@ -192,7 +191,7 @@ export default function ExploreRooms({ initialRooms }: ExploreRoomsProps) {
         {/* 4. Mobile Bottom Explore All Rooms CTA Pill Button */}
         <div className="sm:hidden pt-2 flex justify-center">
           <Link
-            href="/rooms"
+            href="/rooms/"
             prefetch={false}
             className="inline-flex items-center justify-center gap-2 bg-[#2571A5] hover:bg-[#02569B] text-white text-xs font-semibold px-7 py-3 rounded-full shadow-xs cursor-pointer transition-colors"
           >

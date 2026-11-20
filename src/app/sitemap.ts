@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const slugs = await getAllRoomSlugs();
   for (const slug of slugs) {
     routes.push({
-      url: `${baseUrl}/rooms/${encodeURIComponent(slug)}/`,
+      url: `${baseUrl}/rooms/?id=${encodeURIComponent(slug)}`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.75,

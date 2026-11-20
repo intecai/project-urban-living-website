@@ -55,7 +55,7 @@ export default function EnquiryBanner({ data }: EnquiryBannerProps) {
           {/* Compact Pill Button */}
           <div className="relative z-10 pt-1">
             <Link
-              href="/contact"
+              href="/contact/"
               className="inline-flex items-center justify-center bg-[#0053B0] hover:bg-[#02569B] text-white font-figtree font-medium text-xs sm:text-sm px-6 py-2.5 sm:py-3 rounded-full transition-colors shadow-xs w-auto cursor-pointer"
             >
               <span>{buttonText}</span>
@@ -105,7 +105,7 @@ export default function EnquiryBanner({ data }: EnquiryBannerProps) {
           {/* Right: Enquiry Now Pill Button */}
           <div className="relative z-10 shrink-0">
             <Link
-              href="/contact"
+              href="/contact/"
               className="inline-flex items-center justify-center bg-[#0053B0] hover:bg-[#02569B] text-white font-figtree font-medium text-xs md:text-sm px-6 py-3 rounded-full transition-colors shadow-xs shrink-0 cursor-pointer"
             >
               <span>{buttonText}</span>
@@ -146,7 +146,7 @@ export default function EnquiryBanner({ data }: EnquiryBannerProps) {
           {/* Right Side: Enquiry Now Button */}
           <div className="relative z-10 shrink-0 flex items-center justify-center pr-6 w-auto">
             <Link
-              href="/contact"
+              href="/contact/"
               className="group inline-flex items-center justify-center bg-[#2571A5] hover:bg-[#02569B] text-[#FFFFFF] font-figtree font-medium text-[19px] px-8 py-3 rounded-full cursor-pointer transition-colors shadow-xs w-auto"
             >
               <span>{buttonText}</span>
