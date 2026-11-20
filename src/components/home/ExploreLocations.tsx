@@ -26,7 +26,7 @@ export default function ExploreLocations({ data }: ExploreLocationsProps) {
             </h2>
           </div>
           <Link
-            href="/locations"
+            href="/locations/"
             prefetch={false}
             className="text-xs sm:text-sm font-semibold text-[#2571A5] hover:text-[#00428C] transition-colors flex items-center gap-1 shrink-0 font-figtree cursor-pointer"
           >

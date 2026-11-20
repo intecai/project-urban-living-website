@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { getCommonData } from "@/services/commonService";
 import commonFallback from "@/data/common.json";
 import { Home, SearchX, ArrowLeft } from "lucide-react";
+import NotFoundRedirect from "@/components/NotFoundRedirect";
 
 export const metadata: Metadata = {
   title: "Room Not Found | Urban Living PG",
@@ -25,6 +26,7 @@ export default async function NotFound() {
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-[#FAFCFF] font-figtree text-slate-900">
+      <NotFoundRedirect />
       <Navbar variant="solid" activeLink="Our Rooms" data={commonData.navbar} />
 
       <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 md:px-12 lg:px-16 py-16 flex items-center justify-center">
@@ -44,7 +46,7 @@ export default async function NotFound() {
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              href="/rooms"
+              href="/rooms/"
               className="w-full sm:w-auto bg-[#2571A5] hover:bg-[#02569B] text-white py-3.5 px-6 rounded-xl font-medium text-sm sm:text-base transition-all duration-200 flex items-center justify-center gap-2"
             >
               <Home className="w-4 h-4" />

@@ -89,7 +89,7 @@ export const ramapuramData: RamapuramData = {
     subtitle: "Comfortable PG Living • Private & Shared Rooms • All Essential Amenities",
     breadcrumbs: [
       { label: "Home", href: "/" },
-      { label: "Locations", href: "/locations" },
+      { label: "Locations", href: "/locations/" },
       { label: "Ramapuram" },
     ],
   },

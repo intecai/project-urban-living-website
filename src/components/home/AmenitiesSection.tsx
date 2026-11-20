@@ -104,7 +104,7 @@ export default function AmenitiesSection({ data }: AmenitiesSectionProps) {
                 At Urban Living, we create a safe, comfortable and inspiring home where you can focus on your dreams and grow every day.
               </p>
               <Link
-                href="/rooms"
+                href="/rooms/"
                 className="inline-block text-xs font-semibold text-[#2571A5] hover:underline font-figtree"
               >
                 View More

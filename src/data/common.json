@@ -6,15 +6,15 @@
     },
     "navLinks": [
       { "label": "Home", "href": "/" },
-      { "label": "Our Rooms", "href": "/rooms" },
-      { "label": "Locations", "href": "/locations" },
-      { "label": "Contact Us", "href": "/contact" }
+      { "label": "Our Rooms", "href": "/rooms/" },
+      { "label": "Locations", "href": "/locations/" },
+      { "label": "Contact Us", "href": "/contact/" }
     ],
     "phoneNumber": "+91 98765 43210",
     "phoneRaw": "+919876543210",
     "ctaButton": {
       "label": "Book Now",
-      "href": "/contact"
+      "href": "/contact/"
     }
   },
   "enquiryBanner": {
@@ -38,16 +38,16 @@
     "quickLinksTitle": "Quick Links",
     "quickLinks": [
       { "label": "Home", "href": "/" },
-      { "label": "Our Rooms", "href": "/rooms" },
-      { "label": "Locations", "href": "/locations" },
-      { "label": "Contact Us", "href": "/contact" }
+      { "label": "Our Rooms", "href": "/rooms/" },
+      { "label": "Locations", "href": "/locations/" },
+      { "label": "Contact Us", "href": "/contact/" }
     ],
     "locationsTitle": "Locations",
     "locations": [
-      { "label": "Ramapuram", "href": "/rooms?location=Ramapuram" },
-      { "label": "Madanandapuram", "href": "/rooms?location=Madanandapuram" },
-      { "label": "Porur", "href": "/rooms?location=Porur" },
-      { "label": "Guindy", "href": "/rooms?location=Guindy" }
+      { "label": "Ramapuram", "href": "/rooms/?location=Ramapuram" },
+      { "label": "Madanandapuram", "href": "/rooms/?location=Madanandapuram" },
+      { "label": "Porur", "href": "/rooms/?location=Porur" },
+      { "label": "Guindy", "href": "/rooms/?location=Guindy" }
     ],
     "contactTitle": "Contact Info",
     "contactInfo": {
